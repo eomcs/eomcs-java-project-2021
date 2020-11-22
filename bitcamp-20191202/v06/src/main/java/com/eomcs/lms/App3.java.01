@@ -1,0 +1,116 @@
+package com.eomcs.lms;
+
+import java.sql.Date;
+import java.util.Scanner;
+
+// 낱개 변수 사용
+public class App3 {
+  public static void main(String[] args) {
+    Scanner keyboard = new Scanner(System.in);
+    
+    int no1 = 0, no2 = 0, no3 = 0, no4 = 0, no5 = 0;
+    String title1 = "", title2 = "", title3 = "", title4 = "", title5 = "";
+    Date date1 = null, date2 = null, date3 = null,
+        date4 = null, date5 = null;
+    int count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+    String response;
+    
+    System.out.print("번호? ");
+    no1 = keyboard.nextInt();
+    keyboard.nextLine(); // 줄바꿈 기호 제거용
+    
+    System.out.print("내용? ");
+    title1 = keyboard.nextLine();
+    
+    date1 = new Date(System.currentTimeMillis());
+    count1 = 0;
+    
+    System.out.println();
+    
+    System.out.print("계속 입력하시겠습니까?(Y/n) ");
+    response = keyboard.nextLine();
+    
+    if (response.equalsIgnoreCase("y")) {
+      System.out.print("번호? ");
+      no2 = keyboard.nextInt();
+      keyboard.nextLine(); // 줄바꿈 기호 제거용
+      
+      System.out.print("내용? ");
+      title2 = keyboard.nextLine();
+      
+      date2 = new Date(System.currentTimeMillis());
+      count2 = 0;
+      
+      System.out.println();
+      
+      System.out.print("계속 입력하시겠습니까?(Y/n) ");
+      response = keyboard.nextLine();
+      
+      if (response.equalsIgnoreCase("y")) {
+        System.out.print("번호? ");
+        no3 = keyboard.nextInt();
+        keyboard.nextLine(); // 줄바꿈 기호 제거용
+        
+        System.out.print("내용? ");
+        title3 = keyboard.nextLine();
+        
+        date3 = new Date(System.currentTimeMillis());
+        count3 = 0;
+        
+        System.out.println();
+        
+        System.out.print("계속 입력하시겠습니까?(Y/n) ");
+        response = keyboard.nextLine();
+        
+        if (response.equalsIgnoreCase("y")) {
+          System.out.print("번호? ");
+          no4 = keyboard.nextInt();
+          keyboard.nextLine(); // 줄바꿈 기호 제거용
+          
+          System.out.print("내용? ");
+          title4 = keyboard.nextLine();
+          
+          date4 = new Date(System.currentTimeMillis());
+          count4 = 0;
+          
+          System.out.println();
+          
+          System.out.print("계속 입력하시겠습니까?(Y/n) ");
+          response = keyboard.nextLine();
+          
+          if (response.equalsIgnoreCase("y")) {
+            System.out.print("번호? ");
+            no5 = keyboard.nextInt();
+            keyboard.nextLine(); // 줄바꿈 기호 제거용
+            
+            System.out.print("내용? ");
+            title5 = keyboard.nextLine();
+            
+            date5 = new Date(System.currentTimeMillis());
+            count5 = 0;
+            
+            System.out.println();
+          }
+        }
+      }
+    }
+    
+    keyboard.close();
+    
+    System.out.println();
+    
+    System.out.printf("%d, %s, %s, %d\n", no1, title1, date1, count1);
+    System.out.printf("%d, %s, %s, %d\n", no2, title2, date2, count2);
+    System.out.printf("%d, %s, %s, %d\n", no3, title3, date3, count3);
+    System.out.printf("%d, %s, %s, %d\n", no4, title4, date4, count4);
+    System.out.printf("%d, %s, %s, %d\n", no5, title5, date5, count5);
+  }
+}
+
+
+
+
+
+
+
+
