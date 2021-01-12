@@ -66,7 +66,7 @@ Initialized empty Git repository in /Users/eomjinyoung/mini-pms/.git/
 - 제외 대상 선정하기
   - **gitignore.io** 사이트에 접속한다.
   - 제외 대상 목록을 생성한다.
-    - java,linux,macos,gradle,windows,eclipse,java-web,visualstudiocode 으로 검색.
+    - java,linux,macos,gradle,windows,eclipse,java-web,visualstudiocode,node 으로 검색.
 - `.gitignore` 파일 변경
   - `~/mini-pms/.gitignore` 파일에 위에서 준비한 대상 목록을 복사한다.
 
