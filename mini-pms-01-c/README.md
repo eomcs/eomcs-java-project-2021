@@ -120,6 +120,14 @@ github.com 사이트에 로그인하여 mini-pms를 보관할 원격 저장소�
 ```console
 [~/mini-pms]$ git remote add origin https://github.com/eomjinyoung/mini-pms.git   <== 5단계에서 만든 원격 깃 저장소의 URL을 등록
 
+[~/mini-pms]$ git branch   <== 현재 로컬 저장소에 존재하는 소스 브랜치 목록
+* master
+
+[~/mini-pms]$ git branch -M main   <== 현재 작업 브랜치의 이름을 "main" 으로 변경
+
+[~/mini-pms]$ git branch   <== 브랜치 이름 변경 확인
+* main
+
 [~/mini-pms]$ git remote   <== 등록한 원격 저장소의 이름 확인
 origin
 
@@ -139,17 +147,19 @@ origin	https://github.com/eomjinyoung/mini-pms.git (push)
 `[로컬브랜치]`는 로컬 깃 저장소의 현재 버전을 가리키는 브랜치 이름이다.
 프로젝트 내용물을 로컬 깃 저장소에 백업하기 위해서 `git commit` 명령을 처음 실행할 때
 `master`라는 이름의 로컬 브랜치가 자동 생성된다.
+위에서 `$ git branch -M main` 명령을 시행하여 브랜치 이름을 바꿨다면,
+`main` 이름을 사용하라.
 
 ```console
-[~/mini-pms]$ git push -u origin master:master
+[~/mini-pms]$ git push -u origin main:main
 Counting objects: 29, done.
 Delta compression using up to 4 threads.
 Compressing objects: 100% (18/18), done.
 Writing objects: 100% (29/29), 59.11 KiB | 6.57 MiB/s, done.
 Total 29 (delta 0), reused 0 (delta 0)
 To https://github.com/eomjinyoung/mini-pms.git
- * [new branch]      master -> master
-Branch 'master' set up to track remote branch 'master' from 'origin'.
+ * [new branch]      main -> main
+Branch 'main' set up to track remote branch 'main' from 'origin'.
 
 ```
 
