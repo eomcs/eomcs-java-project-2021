@@ -30,10 +30,8 @@ package com.eomcs.pms;
 //    - 메서드의 이름을 변경한다.
 //      - addTask() ==> add()
 //      - listTask() ==> list();
-// 5) 다른 클래스에 소속된 값은 그 클래스에게 맡긴다.
-//    - Prompt 클래스에 close() 메서드를 추가한다.
-//    - App 클래스는 Prompt의 close()를 호출하여 키보드 스캐너를 닫는다.
-public class App {
+//
+public class App_d {
 
   public static void main(String[] args) {
 
@@ -70,6 +68,6 @@ public class App {
         System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
       }
 
-    Prompt.close();
+    Prompt.keyboardScan.close();
   }
 }

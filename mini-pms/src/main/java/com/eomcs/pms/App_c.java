@@ -18,19 +18,15 @@ import java.sql.Date;
 //    - 메서드의 이름을 변경한다.
 //      - addMember() ==> add()
 //      - listMember() ==> list();
-//  
-public class App_b {
-
-  // 프로젝트 데이터
-  static final int PLENGTH = 100;
-  static int[] pno = new int[PLENGTH];
-  static String[] ptitle = new String[PLENGTH];
-  static String[] pcontent = new String[PLENGTH];
-  static Date[] pstartDate = new Date[PLENGTH];
-  static Date[] pendDate = new Date[PLENGTH];
-  static String[] powner = new String[PLENGTH];
-  static String[] pmembers = new String[PLENGTH];  
-  static int psize = 0;
+// 3) 프로젝트 데이터를 다루는 메서드를 별도로 분류한다.
+//    - ProjectHandler 클래스를 생성한다.
+//    - addProject(), listProject() 메서드를 옮긴다.
+//    - ProjectHandler의 메서드들이 사용할 변수를 App에서 옮겨 온다.
+//    - 메서드의 이름을 변경한다.
+//      - addProject() ==> add()
+//      - listProject() ==> list();
+//
+public class App_c {
 
   // 작업 데이터
   static final int TLENGTH = 100;
@@ -55,10 +51,10 @@ public class App_b {
             MemberHandler.list();
             break;
           case "/project/add":
-            addProject();
+            ProjectHandler.add();
             break;
           case "/project/list":
-            listProject();
+            ProjectHandler.list();
             break;
           case "/task/add":
             addTask();
@@ -77,32 +73,6 @@ public class App_b {
       }
 
     Prompt.keyboardScan.close();
-  }
-
-
-
-  static void addProject() {
-    System.out.println("[프로젝트 등록]");
-
-    pno[psize] = Prompt.inputInt("번호? ");
-    ptitle[psize] = Prompt.inputString("프로젝트명? ");
-    pcontent[psize] = Prompt.inputString("내용? ");
-    pstartDate[psize] = Prompt.inputDate("시작일? ");
-    pendDate[psize] = Prompt.inputDate("종료일? ");
-    powner[psize] = Prompt.inputString("만든이? ");
-    pmembers[psize] = Prompt.inputString("팀원? ");
-
-    psize++;
-  }
-
-  static void listProject() {
-    System.out.println("[프로젝트 목록]");
-
-    for (int i = 0; i < psize; i++) {
-      // 번호, 프로젝트명, 시작일, 종료일, 만든이
-      System.out.printf("%d, %s, %s, %s, %s\n", // 출력 형식 지정
-          pno[i], ptitle[i], pstartDate[i], pendDate[i], powner[i]);
-    }
   }
 
   static void addTask() {
