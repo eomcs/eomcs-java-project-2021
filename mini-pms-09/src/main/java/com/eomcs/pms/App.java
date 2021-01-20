@@ -5,15 +5,23 @@ import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
 import com.eomcs.util.Prompt;
 
-// 1) `Prompt` 클래스를 별도의 패키지로 분류한다
+// 1) Prompt 클래스를 별도의 패키지로 분류한다
+//    - com.eomcs.util 패키지 생성
+//    - Prompt 클래스를 이 패키지로 옮긴다.
+//    - Prompt 클래스를 다른 패키지의 클래스가 사용할 수 있도록 public 으로 공개한다.
+//    - Prompt의 메서드를 다른 패키지의 클래스가 사용할 수 있도록 public 으로 공개한다.
 // 2) 핸들러 클래스들을 별도의 패키지로 분류한다
+//    - com.eomcs.pms.handler 패키지 생성
+//    - XxxHandler 클래스를 이 패키지로 옮긴다.
+//    - 핸들러 클래스를 다른 패키지의 클래스가 사용할 수 있도록 public 으로 공개한다.
+//    - 핸들러의 메서드를 다른 패키지의 클래스가 사용할 수 있도록 public 으로 공개한다.
 public class App {
 
   public static void main(String[] args) {
-    
+
     loop:
       while (true) {
-        String command = Prompt.inputString("명령> ");
+        String command = com.eomcs.util.Prompt.inputString("명령> ");
 
         switch (command) {
           case "/member/add":

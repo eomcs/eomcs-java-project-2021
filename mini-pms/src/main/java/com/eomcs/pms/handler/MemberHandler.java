@@ -1,6 +1,7 @@
-package com.eomcs.pms;
+package com.eomcs.pms.handler;
 
 import java.sql.Date;
+import com.eomcs.util.Prompt;
 
 public class MemberHandler {
 
@@ -22,7 +23,7 @@ public class MemberHandler {
   static Member[] members = new Member[LENGTH];  // 레퍼런스 배열 준비  
   static int size = 0;
 
-  static void add() {
+  public static void add() {
     System.out.println("[회원 등록]");
 
     // 1) 회원 정보를 담을 메모리를 준비한다.
@@ -46,7 +47,7 @@ public class MemberHandler {
 
   }
 
-  static void list() {
+  public static void list() {
     System.out.println("[회원 목록]");
 
     for (int i = 0; i < size; i++) {

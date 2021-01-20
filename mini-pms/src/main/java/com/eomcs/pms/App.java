@@ -1,22 +1,27 @@
 package com.eomcs.pms;
 
-// 1) 회원 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
-//    - MemberHandler 클래스 안에 Member 클래스를 정의한다.
-//    - Member 클래스를 사용하여 회원 정보를 다룬다.
-// 2) 프로젝트 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
-//    - ProjectHandler 클래스 안에 Project 클래스를 정의한다.
-//    - Project 클래스를 사용하여 프로젝트 정보를 다룬다.
-// 3) 작업 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
-//    - TaskHandler 클래스 안에 Task 클래스를 정의한다.
-//    - Task 클래스를 사용하여 작업 정보를 다룬다.
-//
+import com.eomcs.pms.handler.MemberHandler;
+import com.eomcs.pms.handler.ProjectHandler;
+import com.eomcs.pms.handler.TaskHandler;
+import com.eomcs.util.Prompt;
+
+// 1) Prompt 클래스를 별도의 패키지로 분류한다
+//    - com.eomcs.util 패키지 생성
+//    - Prompt 클래스를 이 패키지로 옮긴다.
+//    - Prompt 클래스를 다른 패키지의 클래스가 사용할 수 있도록 public 으로 공개한다.
+//    - Prompt의 메서드를 다른 패키지의 클래스가 사용할 수 있도록 public 으로 공개한다.
+// 2) 핸들러 클래스들을 별도의 패키지로 분류한다
+//    - com.eomcs.pms.handler 패키지 생성
+//    - XxxHandler 클래스를 이 패키지로 옮긴다.
+//    - 핸들러 클래스를 다른 패키지의 클래스가 사용할 수 있도록 public 으로 공개한다.
+//    - 핸들러의 메서드를 다른 패키지의 클래스가 사용할 수 있도록 public 으로 공개한다.
 public class App {
 
   public static void main(String[] args) {
 
     loop:
       while (true) {
-        String command = Prompt.inputString("명령> ");
+        String command = com.eomcs.util.Prompt.inputString("명령> ");
 
         switch (command) {
           case "/member/add":
