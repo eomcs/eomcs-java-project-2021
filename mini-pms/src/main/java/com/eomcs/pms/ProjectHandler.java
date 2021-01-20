@@ -4,37 +4,42 @@ import java.sql.Date;
 
 public class ProjectHandler {
 
-  static final int PLENGTH = 100;
-  static int[] pno = new int[PLENGTH];
-  static String[] ptitle = new String[PLENGTH];
-  static String[] pcontent = new String[PLENGTH];
-  static Date[] pstartDate = new Date[PLENGTH];
-  static Date[] pendDate = new Date[PLENGTH];
-  static String[] powner = new String[PLENGTH];
-  static String[] pmembers = new String[PLENGTH];  
-  static int psize = 0;
+  static class Project {
+    int no;
+    String title;
+    String content;
+    Date startDate;
+    Date endDate;
+    String owner;
+    String members;  
+  }
+
+  static final int LENGTH = 100;
+  static Project[] projects = new Project[LENGTH];
+  static int size = 0;
 
   static void add() {
     System.out.println("[프로젝트 등록]");
 
-    pno[psize] = Prompt.inputInt("번호? ");
-    ptitle[psize] = Prompt.inputString("프로젝트명? ");
-    pcontent[psize] = Prompt.inputString("내용? ");
-    pstartDate[psize] = Prompt.inputDate("시작일? ");
-    pendDate[psize] = Prompt.inputDate("종료일? ");
-    powner[psize] = Prompt.inputString("만든이? ");
-    pmembers[psize] = Prompt.inputString("팀원? ");
+    Project p = new Project();
+    p.no = Prompt.inputInt("번호? ");
+    p.title = Prompt.inputString("프로젝트명? ");
+    p.content = Prompt.inputString("내용? ");
+    p.startDate = Prompt.inputDate("시작일? ");
+    p.endDate = Prompt.inputDate("종료일? ");
+    p.owner = Prompt.inputString("만든이? ");
+    p.members = Prompt.inputString("팀원? ");
 
-    psize++;
+    projects[size++] = p;
   }
 
   static void list() {
     System.out.println("[프로젝트 목록]");
 
-    for (int i = 0; i < psize; i++) {
-      // 번호, 프로젝트명, 시작일, 종료일, 만든이
-      System.out.printf("%d, %s, %s, %s, %s\n", // 출력 형식 지정
-          pno[i], ptitle[i], pstartDate[i], pendDate[i], powner[i]);
+    for (int i = 0; i < size; i++) {
+      Project p = projects[i];
+      System.out.printf("%d, %s, %s, %s, %s\n",
+          p.no, p.title, p.startDate, p.endDate, p.owner);
     }
   }
 

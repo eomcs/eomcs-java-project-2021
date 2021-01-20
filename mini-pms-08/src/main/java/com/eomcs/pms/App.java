@@ -1,13 +1,19 @@
 package com.eomcs.pms;
 
-// 1) 사용자의 입력을 받는 프롬프트 메서드를 별도의 클래스로 분리한다
-// 2) 회원 데이터 처리와 관련된 메서드를 별도의 클래스로 분리한다
-// 3) 프로젝트 데이터 처리와 관련된 메서드를 별도의 클래스로 분리한다
-// 4) 작업 데이터 처리와 관련된 메서드를 별도의 클래스로 분리한다
+// 1) 회원 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
+//    - MemberHandler 클래스 안에 Member 클래스를 정의한다.
+//    - Member 클래스를 사용하여 회원 정보를 다룬다.
+// 2) 프로젝트 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
+//    - ProjectHandler 클래스 안에 Project 클래스를 정의한다.
+//    - Project 클래스를 사용하여 프로젝트 정보를 다룬다.
+// 3) 작업 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
+//    - TaskHandler 클래스 안에 Task 클래스를 정의한다.
+//    - Task 클래스를 사용하여 작업 정보를 다룬다.
+//
 public class App {
 
   public static void main(String[] args) {
-    
+
     loop:
       while (true) {
         String command = Prompt.inputString("명령> ");
