@@ -1,38 +1,15 @@
 package com.eomcs.pms;
 
-// 1) 프롬프트 관련 메서드를 별도로 분류한다.
-//    - Prompt 클래스를 생성한다.
-//    - promptString(), promptInt(), promptDate() 메서드를 옮긴다.
-//    - 메서드 이름을 변경한다.
-//      - promptString() ==> inputString()
-//      - promptInt() ==> inputInt()
-//      - promptDate() ==> inputDate()
-//    - Prompt 클래스의 메서드들이 사용하는 변수도 옮긴다.
-//      - keyboardScan 변수를 옮긴다.
-// 2) 회원 데이터를 다루는 메서드를 별도로 분류한다.
-//    - MemberHandler 클래스를 생성한다.
-//    - addMember(), listMember() 메서드를 옮긴다.
-//    - MemberHandler의 메서드들이 사용할 변수를 App에서 옮겨 온다.
-//    - 메서드의 이름을 변경한다.
-//      - addMember() ==> add()
-//      - listMember() ==> list();
-// 3) 프로젝트 데이터를 다루는 메서드를 별도로 분류한다.
-//    - ProjectHandler 클래스를 생성한다.
-//    - addProject(), listProject() 메서드를 옮긴다.
-//    - ProjectHandler의 메서드들이 사용할 변수를 App에서 옮겨 온다.
-//    - 메서드의 이름을 변경한다.
-//      - addProject() ==> add()
-//      - listProject() ==> list();
-// 4) 작업 데이터를 다루는 메서드를 별도로 분류한다.
-//    - TaskHandler 클래스를 생성한다.
-//    - addTask(), listTask() 메서드를 옮긴다.
-//    - TaskHandler의 메서드들이 사용할 변수를 App에서 옮겨 온다.
-//    - 메서드의 이름을 변경한다.
-//      - addTask() ==> add()
-//      - listTask() ==> list();
-// 5) 다른 클래스에 소속된 값은 그 클래스에게 맡긴다.
-//    - Prompt 클래스에 close() 메서드를 추가한다.
-//    - App 클래스는 Prompt의 close()를 호출하여 키보드 스캐너를 닫는다.
+// 1) 회원 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
+//    - MemberHandler 클래스 안에 Member 클래스를 정의한다.
+//    - Member 클래스를 사용하여 회원 정보를 다룬다.
+// 2) 프로젝트 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
+//    - ProjectHandler 클래스 안에 Project 클래스를 정의한다.
+//    - Project 클래스를 사용하여 프로젝트 정보를 다룬다.
+// 3) 작업 정보 저장할 때 사용할 메모리의 설계도를 정의한다.
+//    - TaskHandler 클래스 안에 Task 클래스를 정의한다.
+//    - Task 클래스를 사용하여 작업 정보를 다룬다.
+//
 public class App {
 
   public static void main(String[] args) {
