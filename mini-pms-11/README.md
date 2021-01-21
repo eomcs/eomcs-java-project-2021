@@ -1,7 +1,8 @@
 # 11. 클래스 필드와 클래스 메서드의 한계
 
 **클래스 필드(스태틱 필드)** 는 클래스를 로딩할 때 생성된다.
-클래스는 최초 사용 시점에 **한 번만 로딩** 되기 때문에 스태틱 필드도 **한 번만 생성** 된다.
+클래스는 최초 사용 시점에 **한 번만 로딩** 되기 때문에 
+스태틱 필드도 **한 번만 생성** 된다.
 
 이번 훈련에서는 이런 스태틱 필드의 구동 특성을 이해하고 
 그에 따른 한계가 무엇인지 알아 볼 것이다. 
@@ -150,8 +151,71 @@
 - com.eomcs.pms.handler.BoardHandler6 클래스 추가
 - com.eomcs.pms.App 변경
 
+### 5단계 - 여러 BoardHandler에서 중복으로 작성하는 Board 클래스를 별도의 파일로 뽑아낸다.
+
+- 여러 클래스에서 공통으로 사용하는 클래스라면 패키지 멤버로 선언하여 중복 작성을 없앤다.
+  - Board 패키지 클래스 생성 
+- 또한 클래스를 관리하기 쉽게 별도의 패키지로 분류한다. 
+  - com.eomcs.pms.domain 패키지 생성
+  - Board 클래스를 이 패키지로 옮긴다.
+- 기본의 BoardHandler 클래스에서 Board 클래스를 제거한다.
+  - 대신 별도로 정의한 Board 클래스를 사용한다.
+
+#### 작업 파일 
+
+- com.eomcs.pms.domain 패키지 생성
+- com.eomcs.pms.domain.Board 클래스 생성
+  - 백업: com.eomcs.pms.domain.Board_a
+- com.eomcs.pms.handler.BoardHandler 클래스 변경
+  - 백업: com.eomcs.pms.handler.BoardHandler_b 
+- com.eomcs.pms.handler.BoardHandler2 클래스 변경
+  - 백업: com.eomcs.pms.handler.BoardHandler_b 
+- com.eomcs.pms.handler.BoardHandler3 클래스 변경
+  - 백업: com.eomcs.pms.handler.BoardHandler_b 
+- com.eomcs.pms.handler.BoardHandler4 클래스 변경
+  - 백업: com.eomcs.pms.handler.BoardHandler_b 
+- com.eomcs.pms.handler.BoardHandler5 클래스 변경
+  - 백업: com.eomcs.pms.handler.BoardHandler_b 
+- com.eomcs.pms.handler.BoardHandler6 클래스 변경
+  - 백업: com.eomcs.pms.handler.BoardHandler_b 
+
+### 6단계 - 모든 게시판에 좋아요 수를 출력한다.
+
+다음과 같이 동작하도록 클래스를 변경한다.
+
+```
+명령> /board2/list
+1, 게시글1                  , 2019-01-01, 0, 10
+2, 게시글2                  , 2019-01-01, 0, 11
+```
+
+- 각 Board 클래스에 좋아요 수를 저장할 인스턴스 변수를 추가한다.
+- 좋아요 수를 출력하기 위해 각 BoardHandler의 list()를 변경한다.
+- 문제점!
+  - 게시판을 추가할 때 BoardHandler 클래스를 복제하는 방식으로 처리했다.
+  - 새 게시판을 추가할 때는 편했다.
+  - 문제는 게시판의 기능을 변경하거나 삭제, 추가하는 경우 모든 클래스를 변경해야 한다.
+  - 변경하는 어떤 클래스는 누락되는 경우도 있을 것이다.
+  - 이 방식은 유지보수를 매우 힘들게 한다.
+- 해결책!
+  - 코드 중복을 없앤다.
+  - 즉 add(), list() 메서드를 공유한다.
+  - 다음 단계에서...!!!
+
+#### 작업 파일 
+
+- com.eomcs.pms.domain.Board 클래스 변경
+- com.eomcs.pms.handler.BoardHandler 클래스 변경
+- com.eomcs.pms.handler.BoardHandler2 클래스 변경
+- com.eomcs.pms.handler.BoardHandler3 클래스 변경
+- com.eomcs.pms.handler.BoardHandler4 클래스 변경
+- com.eomcs.pms.handler.BoardHandler5 클래스 변경
+- com.eomcs.pms.handler.BoardHandler6 클래스 변경
+
 ## 실습 결과
 
+- src/main/java/com/eomcs/pms/domain 패키지 생성
+- src/main/java/com/eomcs/pms/domain/Board.java 추가
 - src/main/java/com/eomcs/pms/handler/BoardHandler.java 추가
 - src/main/java/com/eomcs/pms/handler/BoardHandler2.java 추가
 - src/main/java/com/eomcs/pms/handler/BoardHandler3.java 추가

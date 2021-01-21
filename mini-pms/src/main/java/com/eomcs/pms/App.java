@@ -1,10 +1,20 @@
 package com.eomcs.pms;
 
+import com.eomcs.pms.handler.BoardHandler;
+import com.eomcs.pms.handler.BoardHandler2;
+import com.eomcs.pms.handler.BoardHandler3;
+import com.eomcs.pms.handler.BoardHandler4;
+import com.eomcs.pms.handler.BoardHandler5;
+import com.eomcs.pms.handler.BoardHandler6;
 import com.eomcs.pms.handler.MemberHandler;
 import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
 import com.eomcs.util.Prompt;
 
+// 1) '/board/add' 명령 처리 추가
+// 2) '/board/list' 명령 처리 추가
+// 3) 두 번째 게시판 추가
+// 4) 세 번째, 네 번째, 다섯 번째, 여섯 번째 게시판 추가
 public class App {
 
   public static void main(String[] args) {
@@ -31,6 +41,42 @@ public class App {
             break;
           case "/task/list":
             TaskHandler.list();
+            break;
+          case "/board/add":
+            BoardHandler.add();
+            break;
+          case "/board/list":
+            BoardHandler.list();
+            break;
+          case "/board2/add":
+            BoardHandler2.add();
+            break;
+          case "/board2/list":
+            BoardHandler2.list();
+            break;
+          case "/board3/add":
+            BoardHandler3.add();
+            break;
+          case "/board3/list":
+            BoardHandler3.list();
+            break;
+          case "/board4/add":
+            BoardHandler4.add();
+            break;
+          case "/board4/list":
+            BoardHandler4.list();
+            break;
+          case "/board5/add":
+            BoardHandler5.add();
+            break;
+          case "/board5/list":
+            BoardHandler5.list();
+            break;
+          case "/board6/add":
+            BoardHandler6.add();
+            break;
+          case "/board6/list":
+            BoardHandler6.list();
             break;
           case "quit":
           case "exit":

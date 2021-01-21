@@ -4,7 +4,7 @@ import java.sql.Date;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
-public class BoardHandler4 {
+public class BoardHandler_b {
 
   static final int LENGTH = 100;
   static Board[] boards = new Board[LENGTH];   
@@ -32,13 +32,12 @@ public class BoardHandler4 {
     for (int i = 0; i < size; i++) {
       Board b = boards[i];
       // 번호, 제목, 등록일, 작성자, 조회수
-      System.out.printf("%d, %s, %s, %s, %d, %d\n", 
+      System.out.printf("%d, %s, %s, %s, %s\n", 
           b.no, 
           b.title, 
           b.registeredDate, 
           b.writer, 
-          b.viewCount,
-          b.like);
+          b.viewCount);
     }
   }
 }

@@ -11,37 +11,73 @@ import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
 import com.eomcs.util.Prompt;
 
-// 1) `/board/add` 명령을 처리한다.
-// 2) `/board/list` 명령을 처리한다.
-// 3) 새 게시판을 추가한다.
-// 4) 새 게시판을 4개 더 추가한다.
+// 1) '/board/add' 명령 처리 추가
+// 2) '/board/list' 명령 처리 추가
+// 3) 두 번째 게시판 추가
+// 4) 세 번째, 네 번째, 다섯 번째, 여섯 번째 게시판 추가
 public class App {
 
   public static void main(String[] args) {
-    
+
     loop:
       while (true) {
-        String command = Prompt.inputString("명령> ");
+        String command = com.eomcs.util.Prompt.inputString("명령> ");
 
         switch (command) {
-          case "/member/add": MemberHandler.add(); break;
-          case "/member/list": MemberHandler.list(); break;
-          case "/project/add": ProjectHandler.add(); break;
-          case "/project/list": ProjectHandler.list(); break;
-          case "/task/add": TaskHandler.add(); break;
-          case "/task/list": TaskHandler.list(); break;
-          case "/board/add": BoardHandler.add(); break;
-          case "/board/list": BoardHandler.list(); break;
-          case "/board2/add": BoardHandler2.add(); break;
-          case "/board2/list": BoardHandler2.list(); break;
-          case "/board3/add": BoardHandler3.add(); break;
-          case "/board3/list": BoardHandler3.list(); break;
-          case "/board4/add": BoardHandler4.add(); break;
-          case "/board4/list": BoardHandler4.list(); break;
-          case "/board5/add": BoardHandler5.add(); break;
-          case "/board5/list": BoardHandler5.list(); break;
-          case "/board6/add": BoardHandler6.add(); break;
-          case "/board6/list": BoardHandler6.list(); break;
+          case "/member/add":
+            MemberHandler.add();
+            break;
+          case "/member/list":
+            MemberHandler.list();
+            break;
+          case "/project/add":
+            ProjectHandler.add();
+            break;
+          case "/project/list":
+            ProjectHandler.list();
+            break;
+          case "/task/add":
+            TaskHandler.add();
+            break;
+          case "/task/list":
+            TaskHandler.list();
+            break;
+          case "/board/add":
+            BoardHandler.add();
+            break;
+          case "/board/list":
+            BoardHandler.list();
+            break;
+          case "/board2/add":
+            BoardHandler2.add();
+            break;
+          case "/board2/list":
+            BoardHandler2.list();
+            break;
+          case "/board3/add":
+            BoardHandler3.add();
+            break;
+          case "/board3/list":
+            BoardHandler3.list();
+            break;
+          case "/board4/add":
+            BoardHandler4.add();
+            break;
+          case "/board4/list":
+            BoardHandler4.list();
+            break;
+          case "/board5/add":
+            BoardHandler5.add();
+            break;
+          case "/board5/list":
+            BoardHandler5.list();
+            break;
+          case "/board6/add":
+            BoardHandler6.add();
+            break;
+          case "/board6/list":
+            BoardHandler6.list();
+            break;
           case "quit":
           case "exit":
             System.out.println("안녕!");
