@@ -3,7 +3,7 @@ package com.eomcs.pms.handler;
 import java.sql.Date;
 import com.eomcs.util.Prompt;
 
-public class ProjectHandler_a {
+public class ProjectHandler_a3 {
 
   static class Project {
     int no;
@@ -50,7 +50,6 @@ public class ProjectHandler_a {
           p.no, p.title, p.startDate, p.endDate, p.owner);
     }
   }
-
 }
 
 
