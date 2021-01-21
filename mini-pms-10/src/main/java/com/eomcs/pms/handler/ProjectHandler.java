@@ -5,7 +5,6 @@ import com.eomcs.util.Prompt;
 
 public class ProjectHandler {
 
-  // 프로젝트 데이터
   static class Project {
     int no;
     String title;
@@ -13,69 +12,70 @@ public class ProjectHandler {
     Date startDate;
     Date endDate;
     String owner;
-    String members;
+    String members;  
   }
-  static final int LENGTH = 100;  // PLENGTH 를 LENGTH 로 변경한다.
-  static Project[] list = new Project[LENGTH]; // projects 를 list 로 변경한다.
-  static int size = 0; // psize 를 size 로 변경한다.
 
-  //다른 패키지에서 이 메서드를 사용할 수 있도록 public 으로 사용 범위를 공개한다.
+  static final int LENGTH = 100;
+  static Project[] projects = new Project[LENGTH];
+  static int size = 0;
+
   public static void add() {
     System.out.println("[프로젝트 등록]");
-    
-    Project project = new Project();
-    project.no = Prompt.inputInt("번호? ");
-    project.title = Prompt.inputString("프로젝트명? ");
-    project.content = Prompt.inputString("내용? ");
-    project.startDate = Prompt.inputDate("시작일? ");
-    project.endDate = Prompt.inputDate("종료일? ");
-    
+
+    Project p = new Project();
+    p.no = Prompt.inputInt("번호? ");
+    p.title = Prompt.inputString("프로젝트명? ");
+    p.content = Prompt.inputString("내용? ");
+    p.startDate = Prompt.inputDate("시작일? ");
+    p.endDate = Prompt.inputDate("종료일? ");
+
     while (true) {
       String name = Prompt.inputString("만든이?(취소: 빈 문자열) ");
-      
       if (name.length() == 0) {
         System.out.println("프로젝트 등록을 취소합니다.");
         return;
-      } else if (MemberHandler.findByName(name) != null) {
-        project.owner = name;
+      } 
+      if (MemberHandler.exist(name)) {
+        p.owner = name;
         break;
       }
-      
       System.out.println("등록된 회원이 아닙니다.");
     }
-    
-    StringBuilder members = new StringBuilder();
+
+    p.members = "";
     while (true) {
       String name = Prompt.inputString("팀원?(완료: 빈 문자열) ");
-      
       if (name.length() == 0) {
         break;
-      } else if (MemberHandler.findByName(name) != null) {
-        if (members.length() > 0) {
-          members.append(",");
+      } else if (MemberHandler.exist(name)) {
+        if (!p.members.isEmpty()) {
+          p.members += ",";
         }
-        members.append(name);
+        p.members += name;
       } else {
         System.out.println("등록된 회원이 아닙니다.");
       }
     }
-    project.members = members.toString();
 
-    list[size++] = project;
+    projects[size++] = p;
   }
-  
+
   public static void list() {
     System.out.println("[프로젝트 목록]");
-    
+
     for (int i = 0; i < size; i++) {
-      Project project = list[i];
+      Project p = projects[i];
       System.out.printf("%d, %s, %s, %s, %s, [%s]\n",
-          project.no, 
-          project.title, 
-          project.startDate, 
-          project.endDate, 
-          project.owner,
-          project.members);
+          p.no, p.title, p.startDate, p.endDate, p.owner, p.members);
     }
   }
+
 }
+
+
+
+
+
+
+
+

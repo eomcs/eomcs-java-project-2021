@@ -56,13 +56,13 @@
 
 ```
 
-- `MemberHandler`에 이름으로 회원 정보를 찾는 findByName() 메서드를 추가한다.
-- `ProjectHandler.add()`에서 `MemberHandler.findByName()` 메서드를 사용하여 이름의 유효 여부를 검사한다.
+- `MemberHandler`에 이름으로 회원 정보를 찾는 exist() 메서드를 추가한다.
+- `ProjectHandler.add()`에서 `MemberHandler.exist()` 메서드를 사용하여 이름의 유효 여부를 검사한다.
 
 #### 작업 파일
 
 - com.eomcs.pms.handler.MemberHandler 클래스 변경
-  - findByName(String) 메서드 추가
+  - exist(String) 메서드 추가
 - com.eomcs.pms.handler.ProjectHandler 클래스 변경
   - add() 변경
   - 백업: ProjectHandler_a.java
@@ -209,7 +209,7 @@
 명령>
 ```
 
-- `TaskHandler.add()`에서 `MemberHandler.findByName()` 메서드를 사용하여 이름의 유효 여부를 검사한다.
+- `TaskHandler.add()`에서 `MemberHandler.exist()` 메서드를 사용하여 이름의 유효 여부를 검사한다.
 
 #### 작업 파일
 

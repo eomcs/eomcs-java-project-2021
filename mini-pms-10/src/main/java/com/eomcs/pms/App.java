@@ -5,15 +5,13 @@ import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
 import com.eomcs.util.Prompt;
 
-// 1) `Prompt` 클래스를 별도의 패키지로 분류한다
-// 2) 핸들러 클래스들을 별도의 패키지로 분류한다
 public class App {
 
   public static void main(String[] args) {
-    
+
     loop:
       while (true) {
-        String command = Prompt.inputString("명령> ");
+        String command = com.eomcs.util.Prompt.inputString("명령> ");
 
         switch (command) {
           case "/member/add":
