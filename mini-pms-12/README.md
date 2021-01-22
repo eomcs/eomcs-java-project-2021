@@ -1,4 +1,4 @@
-# 12. 인스턴스 필드와 인스턴스 메서드가 필요한 이유
+# 12-a. 인스턴스 필드와 인스턴스 메서드가 필요한 이유 : Information Expert 디자인 패턴
 
 **인스턴스 필드(non-static field)** 는 new 명령을 통해 Heap 영역에 생성된다.
 개별적으로 다뤄야 할 값이라면 인스턴스 필드로 선언하라.
@@ -23,6 +23,30 @@
 - 기존의 MemberHandler와 ProjectHandler, TaskHandler도 필드와 메서드를 인스턴스 멤버로 전환한다.
 
 ## 실습
+
+### 1단계 - 게시판 데이터 타입을 정의한 클래스와 그 인스턴스 변수를 다루는 클래스를 합친다. 
+
+- BoardList의 인스턴스 변수를 BoardHandler로 옮긴다.
+  - 필드와 그 필드를 다루는 메서드를 한 클래스에 두면 관리하기가 편하다. 
+
+#### 작업 파일 
+- com.eomcs.pms.handler.BoardHandler 클래스 변경
+- com.eomcs.pms.handler.BoardList 클래스 삭제
+
+### 2단계 - BoardList 인스턴스를 사용하여 게시글을 보관하거나 조회한다.
+
+- BoardHandler 클래스 변경
+  - 기존의 게시글 목록을 보관했던 스태틱 필드를 삭제한다.
+  - BoardList의 인스턴스를 사용하여 게시글을 보관하도록 add(), list() 메서드를 변경한다.
+
+#### 작업 파일 
+- com.eomcs.pms.handler.BoardHandler 클래스 변경
+
+### 3단계 - BoardList 인스턴스를 사용하여 각각의 게시판에서 사용할 메모리를 준비한다.
+
+- App 클래스 변경
+  - 6 개의 게시판 데이터를 저장할 인스턴스를 준비한다.
+  - 게시글을 추가하거나 조회할 때 BoardList 인스턴스를 사용하여 구분한다.
 
 ### 1단계 - BoardHandler의 스태틱 멤버를 인스턴스 멤버로 전환한다.
 
