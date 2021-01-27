@@ -79,7 +79,6 @@
 
 - `BoardHandler`에 상세 조회 기능을 수행하는 `detail()` 메서드를 추가한다.
 - 호출될 때 마다 조회수 필드의 값을 1 증가시킨다.
-- 목록에서 번호로 게시글을 찾는 `findByNo(int)` 메서드를 추가한다.
 - `App` 클래스에 `/board/detail` 명령을 추가한다.
 
 
@@ -208,24 +207,33 @@
 
 ### 5단계 - 리팩토링
 
-- 게시글을 조회하거나 변경, 삭제할 때 사용자가 지정한 번호의 게시글을 배열에서 찾는다.
-- 중복되는 코드를 별도의 메서드를 분리한다.
+- 게시글 번호를 비교하여 배열에서 게시글을 찾는 부분을 리팩토링 한다.
+- 즉 중복되는 코드를 별도의 메서드를 분리한다.
 
 #### 작업 파일
 
 - com.eomcs.pms.handler.BoardHandler 클래스 변경
-  - 삭제할 게시글의 인덱스를 리턴하는 `indexOf(int)` 메서드를 추가한다.
-  
+  - 게시글의 인덱스를 리턴하는 `indexOf(int)` 메서드를 추가한다.
+    - delete() 메서드에 적용
+  - 게시글을 리턴하는 `findByNo(int)` 메서드를 추가한다.
+    - detail(), update() 메서드에 적용 
+  - 백업: BoardHandler_c.java
 
+### 6단계 - 배열 항목 삭제할 때 메모리 절약하기
 
-
-### 6단계 - 버전 12 에서 만든 나머지 게시판은 삭제한다.
-
-- 첫 번째 게시판만 남겨두고 나머지는 제거한다.
+- 기존 방식은 삭제한 항목의 주소를 null로 설정하였다.
+- 문제? 
+  - 삭제할 때 마다 배열에서 해당 항목을 사용할 수 없어 메모리가 낭비되는 문제가 있었다.
+- 해결책?
+  - 항목을 삭제하면 그 항목 뒤에 값을 앞으로 당긴다.
 
 #### 작업 파일
 
-- com.eomcs.pms.App 클래스 변경
+- com.eomcs.pms.handler.BoardHandler 클래스 변경
+  - delete() 메서드 변경
+    - 항목을 삭제할 때 뒷 항목의 값을 앞으로 당긴다.
+  - indexOf() 메서드 변경
+    - 배열 중간에 비어있는 항목이 없기 때문에 조건 검사에서 제외한다.
 
 
 ### 7단계 - 게시글 CRUD를 참고하여 회원, 프로젝트, 작업에 대해서도 CRUD를 완성한다.
@@ -239,8 +247,8 @@
 
 ## 실습 결과
 
-- src/main/java/com/eomcs/util/ArrayList.java 변경
 - src/main/java/com/eomcs/pms/handler/BoardHandler.java 변경
 - src/main/java/com/eomcs/pms/handler/MemberHandler.java 변경
 - src/main/java/com/eomcs/pms/handler/ProjectHandler.java 변경
 - src/main/java/com/eomcs/pms/handler/TaskHandler.java 변경
+- src/main/java/com/eomcs/pms/App.java 변경

@@ -54,13 +54,12 @@ public class BoardHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    int i = indexOf(no);
-    if (i == -1) {
+    Board board = findByNo(no);
+    if (board == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
 
-    Board board = this.boards[i];
     board.viewCount++;
     System.out.printf("제목: %s\n", board.title);
     System.out.printf("내용: %s\n", board.content);
@@ -75,13 +74,11 @@ public class BoardHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    int i = indexOf(no);
-    if (i == -1) {
+    Board board = findByNo(no);
+    if (board == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
-
-    Board board = this.boards[i];
 
     String title = Prompt.inputString(String.format("제목(%s)? ", board.title));
     String content = Prompt.inputString(String.format("내용(%s)? ", board.content));
@@ -112,7 +109,11 @@ public class BoardHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      this.boards[i] = null;
+      for (int x = i + 1; x < this.size; x++) {
+        this.boards[x-1] = this.boards[x];
+      }
+      boards[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
+
       System.out.println("게시글을 삭제하였습니다.");
 
     } else {
@@ -125,11 +126,20 @@ public class BoardHandler {
   int indexOf(int boardNo) {
     for (int i = 0; i < this.size; i++) {
       Board board = this.boards[i];
-      if (board != null && board.no == boardNo) {
+      if (board.no == boardNo) {
         return i;
       }
     }
     return -1;
+  }
+
+  // 게시글 번호에 해당하는 인스턴스를 찾아 리턴한다.
+  Board findByNo(int boardNo) {
+    int i = indexOf(boardNo);
+    if (i == -1) 
+      return null;
+    else 
+      return this.boards[i];
   }
 }
 

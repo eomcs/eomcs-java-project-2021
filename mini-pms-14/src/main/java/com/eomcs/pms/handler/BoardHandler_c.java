@@ -4,7 +4,7 @@ import java.sql.Date;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
-public class BoardHandler {
+public class BoardHandler_c {
 
   // 공동으로 사용하는 값은 스태틱 필드로 선언한다.
   static final int LENGTH = 100;
@@ -109,11 +109,7 @@ public class BoardHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      for (int x = i + 1; x < this.size; x++) {
-        this.boards[x-1] = this.boards[x];
-      }
-      boards[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
-
+      this.boards[i] = null;
       System.out.println("게시글을 삭제하였습니다.");
 
     } else {
@@ -126,7 +122,7 @@ public class BoardHandler {
   int indexOf(int boardNo) {
     for (int i = 0; i < this.size; i++) {
       Board board = this.boards[i];
-      if (board.no == boardNo) {
+      if (board != null && board.no == boardNo) {
         return i;
       }
     }
@@ -139,7 +135,7 @@ public class BoardHandler {
     if (i == -1) 
       return null;
     else 
-      return this.boards[i];
+      return boards[i];
   }
 }
 

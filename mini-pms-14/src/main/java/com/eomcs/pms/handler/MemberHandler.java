@@ -5,48 +5,50 @@ import com.eomcs.util.Prompt;
 
 public class MemberHandler {
 
-  // MemberHandler가 데이터를 다루기 위해 의존하는 객체를 준비한다.
-  MemberList memberList = new MemberList();
+  static final int LENGTH = 100;
 
-  // 다른 패키지에서 이 메서드를 사용할 수 있도록 public 으로 사용 범위를 공개한다.
+  Member[] members = new Member[LENGTH];  // 레퍼런스 배열 준비  
+  int size = 0;
+
   public void add() {
     System.out.println("[회원 등록]");
 
-    Member member = new Member();
-    member.no = Prompt.inputInt("번호? ");
-    member.name = Prompt.inputString("이름? ");
-    member.email = Prompt.inputString("이메일? ");
-    member.password = Prompt.inputString("암호? ");
-    member.photo = Prompt.inputString("사진? ");
-    member.tel = Prompt.inputString("전화? ");
-    member.registeredDate = new java.sql.Date(System.currentTimeMillis());
+    Member m = new Member();
 
-    memberList.add(member);
+    m.no = Prompt.inputInt("번호? ");
+    m.name = Prompt.inputString("이름? ");
+    m.email = Prompt.inputString("이메일? ");
+    m.password = Prompt.inputString("암호? ");
+    m.photo = Prompt.inputString("사진? ");
+    m.tel = Prompt.inputString("전화? ");
+    m.registeredDate = new java.sql.Date(System.currentTimeMillis());
+
+    this.members[this.size++] = m;
   }
 
   public void list() {
     System.out.println("[회원 목록]");
 
-    Member[] members = memberList.toArray();
-
-    for (Member member : members) {
-      System.out.printf("%d, %s, %s, %s, %s\n",
-          member.no,
-          member.name,
-          member.email,
-          member.tel,
-          member.registeredDate);
+    for (int i = 0; i < this.size; i++) {
+      Member m = this.members[i];
+      // 번호, 이름, 이메일, 전화, 가입일
+      System.out.printf("%d, %s, %s, %s, %s\n", // 출력 형식 지정
+          m.no, m.name, m.email, m.tel, m.registeredDate);
     }
   }
 
-  public Member findByName(String name) {
-    Member[] members = memberList.toArray();
-
-    for (Member member : members) {
-      if (member.name.equals(name)) {
-        return member;
+  public boolean exist(String name) {
+    for (int i = 0; i < this.size; i++) {
+      if (name.equals(this.members[i].name)) {
+        return true;
       }
     }
-    return null;
+    return false;
   }
 }
+
+
+
+
+
+
