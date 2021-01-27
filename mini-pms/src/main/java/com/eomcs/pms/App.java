@@ -10,25 +10,9 @@ public class App {
 
   public static void main(String[] args) {
 
-    // 각 게시판 데이터를 저장할 메모리 준비
-    BoardHandler boardList1 = new BoardHandler();
-    BoardHandler boardList2 = new BoardHandler();
-    BoardHandler boardList3 = new BoardHandler();
-    BoardHandler boardList4 = new BoardHandler();
-    BoardHandler boardList5 = new BoardHandler();
-    BoardHandler boardList6 = new BoardHandler();
-
-    // 각 회원 목록 데이터를 저장할 메모리 준비
+    BoardHandler boardList = new BoardHandler();
     MemberHandler memberList = new MemberHandler();
-
-    // 각 프로젝트 목록 데이터를 저장할 메모리 준비
-    // - 생성자에서 MemberHandler 객체를 주입하라고 강요한다.
-    // - ProjectHandler 객체를 만들려면 반드시 주입해야 한다.
     ProjectHandler projectList = new ProjectHandler(memberList);
-
-    // 각 작업 목록 데이터를 저장할 메모리 준비
-    // - 생성자에서 MemberHandler 객체를 주입하라고 강요한다.
-    // - TaskHandler 객체를 만들려면 반드시 주입해야 한다.
     TaskHandler taskList = new TaskHandler(memberList);
 
 
@@ -56,41 +40,17 @@ public class App {
             taskList.list();
             break;
           case "/board/add":
-            boardList1.add();
+            boardList.add();
             break;
           case "/board/list":
-            boardList1.list();
+            boardList.list();
             break;
-          case "/board2/add":
-            boardList2.add();
-            break;
-          case "/board2/list":
-            boardList2.list();
-            break;
-          case "/board3/add":
-            boardList3.add();
-            break;
-          case "/board3/list":
-            boardList3.list();
-            break;
-          case "/board4/add":
-            boardList4.add();
-            break;
-          case "/board4/list":
-            boardList4.list();
-            break;
-          case "/board5/add":
-            boardList5.add();
-            break;
-          case "/board5/list":
-            boardList5.list();
-            break;
-          case "/board6/add":
-            boardList6.add();
-            break;
-          case "/board6/list":
-            boardList6.list();
-            break;
+          case "/board/detail":
+            boardList.detail();
+            break;  
+          case "/board/update":
+            boardList.update();
+            break; 
           case "quit":
           case "exit":
             System.out.println("안녕!");
