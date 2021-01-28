@@ -197,8 +197,19 @@
 
 - com.eomcs.pms.handler.MemberHandler 클래스 변경
 - com.eomcs.pms.handler.ProjectHandler 클래스 변경
+  - 백업: ProjectHandler_a.java
 - com.eomcs.pms.handler.TaskHandler 클래스 변경
+  - 백업: TaskHandler_a.java
 - com.eomcs.pms.App 클래스 변경
+
+### 8단계 - 리팩토링 II
+
+- 중복되는 코드를 메서드를 추출한다.
+
+#### 작업 파일
+
+- com.eomcs.pms.handler.ProjectHandler 클래스 변경
+- com.eomcs.pms.handler.TaskHandler 클래스 변경
 
 ## 실습 결과
 

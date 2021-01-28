@@ -4,7 +4,7 @@ import java.sql.Date;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.util.Prompt;
 
-public class ProjectHandler {
+public class ProjectHandler_a {
 
   static final int LENGTH = 100;
 
@@ -18,7 +18,7 @@ public class ProjectHandler {
   // 생성자 정의
   // - ProjectHandler가 의존하는 객체를 반드시 주입하도록 강요한다.
   // - 다른 패키지에서 생성자를 호출할 수 있도록 공개한다.
-  public ProjectHandler(MemberHandler memberHandler) {
+  public ProjectHandler_a(MemberHandler memberHandler) {
     this.memberList = memberHandler;
   }
 
@@ -33,13 +33,33 @@ public class ProjectHandler {
     p.startDate = Prompt.inputDate("시작일? ");
     p.endDate = Prompt.inputDate("종료일? ");
 
-    p.owner = inputMember("만든이?(취소: 빈 문자열) ");
-    if (p.owner == null) {
-      System.out.println("프로젝트 입력을 취소합니다.");
-      return;
+    while (true) {
+      String name = Prompt.inputString("만든이?(취소: 빈 문자열) ");
+      if (name.length() == 0) {
+        System.out.println("프로젝트 등록을 취소합니다.");
+        return;
+      } 
+      if (this.memberList.exist(name)) {
+        p.owner = name;
+        break;
+      }
+      System.out.println("등록된 회원이 아닙니다.");
     }
 
-    p.members = inputMembers("팀원?(완료: 빈 문자열) ");
+    p.members = "";
+    while (true) {
+      String name = Prompt.inputString("팀원?(완료: 빈 문자열) ");
+      if (name.length() == 0) {
+        break;
+      } else if (this.memberList.exist(name)) {
+        if (!p.members.isEmpty()) {
+          p.members += ",";
+        }
+        p.members += name;
+      } else {
+        System.out.println("등록된 회원이 아닙니다.");
+      }
+    }
 
     this.projects[this.size++] = p;
   }
@@ -90,14 +110,33 @@ public class ProjectHandler {
     Date startDate = Prompt.inputDate(String.format("시작일(%s)? ", project.startDate));
     Date endDate = Prompt.inputDate(String.format("종료일(%s)? ", project.endDate));
 
-    String owner = inputMember(String.format("만든이(%s)?(취소: 빈 문자열) ", project.owner));
-    if (owner == null) {
-      System.out.println("프로젝트 변경을 취소합니다.");
-      return;
+    String owner = null;
+    while (true) {
+      owner = Prompt.inputString(String.format("만든이(%s)?(취소: 빈 문자열) ", project.owner));
+      if (owner.length() == 0) {
+        System.out.println("프로젝트 변경을 취소합니다.");
+        return;
+      } 
+      if (this.memberList.exist(owner)) {
+        break;
+      }
+      System.out.println("등록된 회원이 아닙니다.");
     }
 
-    String members = inputMembers(
-        String.format("팀원(%s)?(완료: 빈 문자열) ", project.members));
+    String members = "";
+    while (true) {
+      String name = Prompt.inputString(String.format("팀원(%s)?(완료: 빈 문자열) ", project.members));
+      if (name.length() == 0) {
+        break;
+      } else if (this.memberList.exist(name)) {
+        if (!members.isEmpty()) {
+          members += ",";
+        }
+        members += name;
+      } else {
+        System.out.println("등록된 회원이 아닙니다.");
+      }
+    }
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
 
@@ -161,34 +200,6 @@ public class ProjectHandler {
       return null;
     else 
       return this.projects[i];
-  }
-
-  String inputMember(String promptTitle) {
-    while (true) {
-      String name = Prompt.inputString(promptTitle);
-      if (name.length() == 0) {
-        return null;
-      } 
-      if (this.memberList.exist(name)) {
-        return name;
-      }
-      System.out.println("등록된 회원이 아닙니다.");
-    }
-  }
-
-  String inputMembers(String promptTitle) {
-    String members = "";
-    while (true) {
-      String name = inputMember(promptTitle);
-      if (name == null) {
-        return members;
-      } else {
-        if (!members.isEmpty()) {
-          members += ",";
-        }
-        members += name;
-      }
-    }
   }
 
 }
