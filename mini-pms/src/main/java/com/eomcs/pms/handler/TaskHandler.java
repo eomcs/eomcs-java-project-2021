@@ -22,6 +22,45 @@ public class TaskHandler {
     this.memberList = memberHandler;
   }
 
+  public void service() {
+    loop:
+      while (true) {
+        System.out.println("메인 / 작업 ---------------------------------");
+        System.out.println("1. 등록");
+        System.out.println("2. 목록");
+        System.out.println("3. 상세 보기");
+        System.out.println("4. 변경");
+        System.out.println("5. 삭제");
+        System.out.println("0. 이전 메뉴");
+
+        String command = com.eomcs.util.Prompt.inputString("작업> ");
+        System.out.println();
+
+        switch (command) {
+          case "1":
+            this.add();
+            break;
+          case "2":
+            this.list();
+            break;
+          case "3":
+            this.detail();
+            break;
+          case "4":
+            this.update();
+            break;
+          case "5":
+            this.delete();
+            break;
+          case "0":
+            break loop;
+          default:
+            System.out.println("메뉴 번호가 맞지 않습니다.");
+        }
+        System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
+      }
+  }
+
   public void add() {
     System.out.println("[작업 등록]");
 

@@ -4,7 +4,7 @@ import java.sql.Date;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
-public class BoardHandler_c {
+public class BoardHandler {
 
   // 공동으로 사용하는 값은 스태틱 필드로 선언한다.
   static final int LENGTH = 100;
@@ -12,6 +12,45 @@ public class BoardHandler_c {
   // 개별적으로 관리해야 하는 값은 인스턴스 필드로 선언한다.
   Board[] boards = new Board[LENGTH];   
   int size = 0;
+
+  public void service() {
+    loop:
+      while (true) {
+        System.out.println("메인 / 게시판 ---------------------------------");
+        System.out.println("1. 등록");
+        System.out.println("2. 목록");
+        System.out.println("3. 상세 보기");
+        System.out.println("4. 변경");
+        System.out.println("5. 삭제");
+        System.out.println("0. 이전 메뉴");
+
+        String command = com.eomcs.util.Prompt.inputString("게시판> ");
+        System.out.println();
+
+        switch (command) {
+          case "1":
+            this.add();
+            break;
+          case "2":
+            this.list();
+            break;
+          case "3":
+            this.detail();
+            break;
+          case "4":
+            this.update();
+            break;
+          case "5":
+            this.delete();
+            break;
+          case "0":
+            break loop;
+          default:
+            System.out.println("메뉴 번호가 맞지 않습니다.");
+        }
+        System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
+      }
+  }
 
   public void add() {
     System.out.println("[게시글 등록]");
@@ -109,7 +148,11 @@ public class BoardHandler_c {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      this.boards[i] = null;
+      for (int x = i + 1; x < this.size; x++) {
+        this.boards[x-1] = this.boards[x];
+      }
+      boards[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
+
       System.out.println("게시글을 삭제하였습니다.");
 
     } else {
@@ -122,7 +165,7 @@ public class BoardHandler_c {
   int indexOf(int boardNo) {
     for (int i = 0; i < this.size; i++) {
       Board board = this.boards[i];
-      if (board != null && board.no == boardNo) {
+      if (board.no == boardNo) {
         return i;
       }
     }
@@ -135,7 +178,7 @@ public class BoardHandler_c {
     if (i == -1) 
       return null;
     else 
-      return boards[i];
+      return this.boards[i];
   }
 }
 

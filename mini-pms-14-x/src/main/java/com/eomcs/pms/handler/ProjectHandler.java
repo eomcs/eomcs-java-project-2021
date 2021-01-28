@@ -4,7 +4,7 @@ import java.sql.Date;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.util.Prompt;
 
-public class ProjectHandler_a {
+public class ProjectHandler {
 
   static final int LENGTH = 100;
 
@@ -18,10 +18,48 @@ public class ProjectHandler_a {
   // 생성자 정의
   // - ProjectHandler가 의존하는 객체를 반드시 주입하도록 강요한다.
   // - 다른 패키지에서 생성자를 호출할 수 있도록 공개한다.
-  public ProjectHandler_a(MemberHandler memberHandler) {
+  public ProjectHandler(MemberHandler memberHandler) {
     this.memberList = memberHandler;
   }
 
+  public void service() {
+    loop:
+      while (true) {
+        System.out.println("메인 / 프로젝트 ---------------------------------");
+        System.out.println("1. 등록");
+        System.out.println("2. 목록");
+        System.out.println("3. 상세 보기");
+        System.out.println("4. 변경");
+        System.out.println("5. 삭제");
+        System.out.println("0. 이전 메뉴");
+
+        String command = com.eomcs.util.Prompt.inputString("프로젝트> ");
+        System.out.println();
+
+        switch (command) {
+          case "1":
+            this.add();
+            break;
+          case "2":
+            this.list();
+            break;
+          case "3":
+            this.detail();
+            break;
+          case "4":
+            this.update();
+            break;
+          case "5":
+            this.delete();
+            break;
+          case "0":
+            break loop;
+          default:
+            System.out.println("메뉴 번호가 맞지 않습니다.");
+        }
+        System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
+      }
+  }
 
   public void add() {
     System.out.println("[프로젝트 등록]");
@@ -33,33 +71,13 @@ public class ProjectHandler_a {
     p.startDate = Prompt.inputDate("시작일? ");
     p.endDate = Prompt.inputDate("종료일? ");
 
-    while (true) {
-      String name = Prompt.inputString("만든이?(취소: 빈 문자열) ");
-      if (name.length() == 0) {
-        System.out.println("프로젝트 등록을 취소합니다.");
-        return;
-      } 
-      if (this.memberList.exist(name)) {
-        p.owner = name;
-        break;
-      }
-      System.out.println("등록된 회원이 아닙니다.");
+    p.owner = inputMember("만든이?(취소: 빈 문자열) ");
+    if (p.owner == null) {
+      System.out.println("프로젝트 입력을 취소합니다.");
+      return;
     }
 
-    p.members = "";
-    while (true) {
-      String name = Prompt.inputString("팀원?(완료: 빈 문자열) ");
-      if (name.length() == 0) {
-        break;
-      } else if (this.memberList.exist(name)) {
-        if (!p.members.isEmpty()) {
-          p.members += ",";
-        }
-        p.members += name;
-      } else {
-        System.out.println("등록된 회원이 아닙니다.");
-      }
-    }
+    p.members = inputMembers("팀원?(완료: 빈 문자열) ");
 
     this.projects[this.size++] = p;
   }
@@ -110,33 +128,14 @@ public class ProjectHandler_a {
     Date startDate = Prompt.inputDate(String.format("시작일(%s)? ", project.startDate));
     Date endDate = Prompt.inputDate(String.format("종료일(%s)? ", project.endDate));
 
-    String owner = null;
-    while (true) {
-      owner = Prompt.inputString(String.format("만든이(%s)?(취소: 빈 문자열) ", project.owner));
-      if (owner.length() == 0) {
-        System.out.println("프로젝트 변경을 취소합니다.");
-        return;
-      } 
-      if (this.memberList.exist(owner)) {
-        break;
-      }
-      System.out.println("등록된 회원이 아닙니다.");
+    String owner = inputMember(String.format("만든이(%s)?(취소: 빈 문자열) ", project.owner));
+    if (owner == null) {
+      System.out.println("프로젝트 변경을 취소합니다.");
+      return;
     }
 
-    String members = "";
-    while (true) {
-      String name = Prompt.inputString(String.format("팀원(%s)?(완료: 빈 문자열) ", project.members));
-      if (name.length() == 0) {
-        break;
-      } else if (this.memberList.exist(name)) {
-        if (!members.isEmpty()) {
-          members += ",";
-        }
-        members += name;
-      } else {
-        System.out.println("등록된 회원이 아닙니다.");
-      }
-    }
+    String members = inputMembers(
+        String.format("팀원(%s)?(완료: 빈 문자열) ", project.members));
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
 
@@ -200,6 +199,34 @@ public class ProjectHandler_a {
       return null;
     else 
       return this.projects[i];
+  }
+
+  String inputMember(String promptTitle) {
+    while (true) {
+      String name = Prompt.inputString(promptTitle);
+      if (name.length() == 0) {
+        return null;
+      } 
+      if (this.memberList.exist(name)) {
+        return name;
+      }
+      System.out.println("등록된 회원이 아닙니다.");
+    }
+  }
+
+  String inputMembers(String promptTitle) {
+    String members = "";
+    while (true) {
+      String name = inputMember(promptTitle);
+      if (name == null) {
+        return members;
+      } else {
+        if (!members.isEmpty()) {
+          members += ",";
+        }
+        members += name;
+      }
+    }
   }
 
 }
