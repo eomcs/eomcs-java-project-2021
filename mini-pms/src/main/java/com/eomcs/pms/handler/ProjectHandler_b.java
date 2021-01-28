@@ -4,7 +4,7 @@ import java.sql.Date;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.util.Prompt;
 
-public class ProjectHandler {
+public class ProjectHandler_b {
 
   static final int LENGTH = 100;
 
@@ -18,7 +18,7 @@ public class ProjectHandler {
   // 생성자 정의
   // - ProjectHandler가 의존하는 객체를 반드시 주입하도록 강요한다.
   // - 다른 패키지에서 생성자를 호출할 수 있도록 공개한다.
-  public ProjectHandler(MemberHandler memberHandler) {
+  public ProjectHandler_b(MemberHandler memberHandler) {
     this.memberList = memberHandler;
   }
 
@@ -39,7 +39,18 @@ public class ProjectHandler {
       return;
     }
 
-    p.members = inputMembers("팀원?(완료: 빈 문자열) ");
+    p.members = "";
+    while (true) {
+      String name = inputMember("팀원?(완료: 빈 문자열) ");
+      if (name == null) {
+        break;
+      } else {
+        if (!p.members.isEmpty()) {
+          p.members += ",";
+        }
+        p.members += name;
+      }
+    }
 
     this.projects[this.size++] = p;
   }
@@ -96,8 +107,18 @@ public class ProjectHandler {
       return;
     }
 
-    String members = inputMembers(
-        String.format("팀원(%s)?(완료: 빈 문자열) ", project.members));
+    String members = "";
+    while (true) {
+      String name = inputMember(String.format("팀원(%s)?(완료: 빈 문자열) ", project.members));
+      if (name == null) {
+        break;
+      } else {
+        if (!members.isEmpty()) {
+          members += ",";
+        }
+        members += name;
+      }
+    }
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
 
@@ -173,21 +194,6 @@ public class ProjectHandler {
         return name;
       }
       System.out.println("등록된 회원이 아닙니다.");
-    }
-  }
-
-  String inputMembers(String promptTitle) {
-    String members = "";
-    while (true) {
-      String name = inputMember(promptTitle);
-      if (name == null) {
-        return members;
-      } else {
-        if (!members.isEmpty()) {
-          members += ",";
-        }
-        members += name;
-      }
     }
   }
 
