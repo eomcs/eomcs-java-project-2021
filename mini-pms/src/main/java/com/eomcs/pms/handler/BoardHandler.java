@@ -6,51 +6,10 @@ import com.eomcs.util.Prompt;
 
 public class BoardHandler {
 
-  // 공동으로 사용하는 값은 스태틱 필드로 선언한다.
-  static final int LENGTH = 100;
+  static final int LENGTH = 3;
 
-  // 개별적으로 관리해야 하는 값은 인스턴스 필드로 선언한다.
   Board[] boards = new Board[LENGTH];   
   int size = 0;
-
-  public void service() {
-    loop:
-      while (true) {
-        System.out.println("메인 / 게시판 ---------------------------------");
-        System.out.println("1. 등록");
-        System.out.println("2. 목록");
-        System.out.println("3. 상세 보기");
-        System.out.println("4. 변경");
-        System.out.println("5. 삭제");
-        System.out.println("0. 이전 메뉴");
-
-        String command = com.eomcs.util.Prompt.inputString("게시판> ");
-        System.out.println();
-
-        switch (command) {
-          case "1":
-            this.add();
-            break;
-          case "2":
-            this.list();
-            break;
-          case "3":
-            this.detail();
-            break;
-          case "4":
-            this.update();
-            break;
-          case "5":
-            this.delete();
-            break;
-          case "0":
-            break loop;
-          default:
-            System.out.println("메뉴 번호가 맞지 않습니다.");
-        }
-        System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
-      }
-  }
 
   public void add() {
     System.out.println("[게시글 등록]");
@@ -62,6 +21,19 @@ public class BoardHandler {
     b.content = Prompt.inputString("내용? ");
     b.writer = Prompt.inputString("작성자? ");
     b.registeredDate = new Date(System.currentTimeMillis());
+
+    if (this.size >= this.boards.length) {
+      // 배열의 꽉 찼으면, 배열을 늘린다.
+      // 1) 새 배열을 만든다. 크기는 기존 배열의 크기 보다 50% 증가시킨다.
+      Board[] arr = new Board[this.size + (this.size / 2)];
+      // 2) 기존 배열의 값을 새 배열로 복사한다.
+      for (int i = 0; i < this.size; i++) {
+        arr[i] = this.boards[i];
+      }
+      // 3) 배열 레퍼런스 boards에 새 배열의 주소를 저장한다.
+      boards = arr;
+      System.out.printf("배열 크기 증가(%d)\n", this.boards.length);
+    }
 
     this.boards[this.size++] = b;
 
