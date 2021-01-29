@@ -6,8 +6,6 @@ import com.eomcs.util.Prompt;
 
 public class BoardHandler {
 
-  static final int DEFAULT_CAPACITY = 3;
-
   Node first;
   Node last;
   int size = 0;  
