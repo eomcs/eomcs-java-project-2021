@@ -10,7 +10,7 @@ public class BoardHandler {
   static final int DEFAULT_CAPACITY = 3;
 
   Board[] boards = new Board[DEFAULT_CAPACITY];   
-  int size = 0;  
+  int size = 0;
 
   public void add() {
     System.out.println("[게시글 등록]");
@@ -144,12 +144,6 @@ public class BoardHandler {
     else 
       return this.boards[i];
   }
-
-  static class Box {
-    Board board;
-    Box next;
-  }
-
 }
 
 

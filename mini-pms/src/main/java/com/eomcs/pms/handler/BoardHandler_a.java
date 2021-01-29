@@ -1,16 +1,15 @@
 package com.eomcs.pms.handler;
 
 import java.sql.Date;
-import java.util.Arrays;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
-public class BoardHandler {
+public class BoardHandler_a {
 
   static final int DEFAULT_CAPACITY = 3;
 
   Board[] boards = new Board[DEFAULT_CAPACITY];   
-  int size = 0;  
+  int size = 0;
 
   public void add() {
     System.out.println("[게시글 등록]");
@@ -24,7 +23,16 @@ public class BoardHandler {
     b.registeredDate = new Date(System.currentTimeMillis());
 
     if (this.size >= this.boards.length) {
-      boards = Arrays.copyOf(this.boards, this.size + (this.size >> 1));
+      // 배열의 꽉 찼으면, 배열을 늘린다.
+      // 1) 새 배열을 만든다. 크기는 기존 배열의 크기 보다 50% 증가시킨다.
+      Board[] arr = new Board[this.size + (this.size >> 1)];
+      // 2) 기존 배열의 값을 새 배열로 복사한다.
+      for (int i = 0; i < this.size; i++) {
+        arr[i] = this.boards[i];
+      }
+      // 3) 배열 레퍼런스 boards에 새 배열의 주소를 저장한다.
+      boards = arr;
+      //System.out.printf("배열 크기 증가(%d)\n", this.boards.length);
     }
 
     this.boards[this.size++] = b;
@@ -144,12 +152,6 @@ public class BoardHandler {
     else 
       return this.boards[i];
   }
-
-  static class Box {
-    Board board;
-    Box next;
-  }
-
 }
 
 
