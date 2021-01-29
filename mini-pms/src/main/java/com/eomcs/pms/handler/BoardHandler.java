@@ -6,9 +6,9 @@ import com.eomcs.util.Prompt;
 
 public class BoardHandler {
 
-  static final int LENGTH = 3;
+  static final int DEFAULT_CAPACITY = 3;
 
-  Board[] boards = new Board[LENGTH];   
+  Board[] boards = new Board[DEFAULT_CAPACITY];   
   int size = 0;
 
   public void add() {
