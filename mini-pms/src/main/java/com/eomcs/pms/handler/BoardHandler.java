@@ -1,7 +1,6 @@
 package com.eomcs.pms.handler;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
@@ -22,7 +21,7 @@ public class BoardHandler {
     b.content = Prompt.inputString("내용? ");
     b.writer = Prompt.inputString("작성자? ");
     b.registeredDate = new Date(System.currentTimeMillis());
-    ArrayList a;
+
     if (this.size >= this.boards.length) {
       // 배열의 꽉 찼으면, 배열을 늘린다.
       // 1) 새 배열을 만든다. 크기는 기존 배열의 크기 보다 50% 증가시킨다.
