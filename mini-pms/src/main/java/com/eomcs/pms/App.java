@@ -27,7 +27,7 @@ public class App {
           case "/member/list":
             memberList.list();
             break;
-          case "/member/ detail":
+          case "/member/detail":
             memberList.detail();
             break;  
           case "/member/update":

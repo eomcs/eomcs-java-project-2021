@@ -98,7 +98,7 @@
 ### 14. CRUD(Create, Retrieve/Read, Update, Delete) 구현
 ### 14-x. CRUD(Create, Retrieve/Read, Update, Delete) 구현 - 메뉴 다루기와 역할 분담
 
-### 15-a. 자료구조 적용하기 : 배열 크기 변경하기
+### 15-a. 자료구조 적용하기 : 배열 크기 늘리기
 ### 15-b. 자료구조 적용하기 : 배열 대신 연결리스트 사용하기
 
 ### 16-a. 데이터 처리 코드를 캡슐화 하기
