@@ -160,7 +160,7 @@ public class ProjectHandler {
           if (cursor == last) {
             last = cursor.prev;
           }
-
+          this.size--;
           break;
         }
         cursor = cursor.next;

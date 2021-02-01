@@ -153,7 +153,7 @@ public class MemberHandler {
           if (cursor == last) {
             last = cursor.prev;
           }
-
+          this.size--;
           break;
         }
         cursor = cursor.next;

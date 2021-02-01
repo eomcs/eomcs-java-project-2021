@@ -6,12 +6,18 @@ import com.eomcs.util.Prompt;
 
 public class ProjectHandler {
 
+  static final int LENGTH = 100;
+
+  // 의존 객체(dependency)를 담을 인스턴스 필드
+  // - 메서드가 작업할 때 사용할 객체를 담는다.
   MemberHandler memberList;
 
-  Node first;
-  Node last;
-  int size = 0;  
+  Project[] projects = new Project[LENGTH];
+  int size = 0;
 
+  // 생성자 정의
+  // - ProjectHandler가 의존하는 객체를 반드시 주입하도록 강요한다.
+  // - 다른 패키지에서 생성자를 호출할 수 있도록 공개한다.
   public ProjectHandler(MemberHandler memberHandler) {
     this.memberList = memberHandler;
   }
@@ -35,33 +41,16 @@ public class ProjectHandler {
 
     p.members = inputMembers("팀원?(완료: 빈 문자열) ");
 
-    Node node = new Node(p);
-
-    if (last == null) {
-      last = node;
-      first = node;
-    } else { 
-      last.next = node; 
-      node.prev = last; 
-      last = node; 
-    }
-
-    this.size++;
-    System.out.println("프로젝트를 등록하였습니다.");
+    this.projects[this.size++] = p;
   }
 
   public void list() {
     System.out.println("[프로젝트 목록]");
 
-    Node cursor = first;
-
-    while (cursor != null) {
-      Project p = cursor.project;
-
+    for (int i = 0; i < size; i++) {
+      Project p = projects[i];
       System.out.printf("%d, %s, %s, %s, %s, [%s]\n",
           p.no, p.title, p.startDate, p.endDate, p.owner, p.members);
-
-      cursor = cursor.next;
     }
   }
 
@@ -132,8 +121,8 @@ public class ProjectHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Project project = findByNo(no);
-    if (project == null) {
+    int i = indexOf(no);
+    if (i == -1) {
       System.out.println("해당 번호의 프로젝트이 없습니다.");
       return;
     }
@@ -141,30 +130,10 @@ public class ProjectHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      Node cursor = first;
-      while (cursor != null) {
-        if (cursor.project == project) {
-          if (first == last) {
-            first = last = null;
-            break;
-          }
-          if (cursor == first) {
-            first = cursor.next;
-            cursor.prev = null;
-          } else {
-            cursor.prev.next = cursor.next;
-            if (cursor.next != null) {
-              cursor.next.prev = cursor.prev;
-            }
-          }
-          if (cursor == last) {
-            last = cursor.prev;
-          }
-
-          break;
-        }
-        cursor = cursor.next;
+      for (int x = i + 1; x < this.size; x++) {
+        this.projects[x-1] = this.projects[x];
       }
+      projects[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
 
       System.out.println("프로젝트을 삭제하였습니다.");
 
@@ -174,17 +143,24 @@ public class ProjectHandler {
 
   }
 
+  // 프로젝트 번호에 해당하는 인스턴스를 배열에서 찾아 그 인덱스를 리턴한다. 
+  int indexOf(int projectNo) {
+    for (int i = 0; i < this.size; i++) {
+      Project project = this.projects[i];
+      if (project.no == projectNo) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   // 프로젝트 번호에 해당하는 인스턴스를 찾아 리턴한다.
   Project findByNo(int projectNo) {
-    Node cursor = first;
-    while (cursor != null) {
-      Project p = cursor.project;
-      if (p.no == projectNo) {
-        return p;
-      }
-      cursor = cursor.next;
-    }
-    return null;
+    int i = indexOf(projectNo);
+    if (i == -1) 
+      return null;
+    else 
+      return this.projects[i];
   }
 
   String inputMember(String promptTitle) {
@@ -215,15 +191,6 @@ public class ProjectHandler {
     }
   }
 
-  static class Node {
-    Project project;
-    Node next;
-    Node prev;
-
-    Node(Project p) {
-      this.project = p;
-    }
-  }
 }
 
 
