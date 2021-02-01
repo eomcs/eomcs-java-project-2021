@@ -6,20 +6,12 @@ import com.eomcs.util.Prompt;
 
 public class TaskHandler {
 
-  static final int LENGTH = 100;
+  TaskList taskList = new TaskList();
 
-  // 의존 객체(dependency)를 담을 인스턴스 필드
-  // - 메서드가 작업할 때 사용할 객체를 담는다.
-  MemberHandler memberList;
+  MemberList memberList;
 
-  Task[] tasks = new Task[LENGTH];
-  int size = 0;
-
-  // 생성자
-  // - TaskHandler가 의존하는 객체를 반드시 주입하도록 강요한다.
-  // - 다른 패키지에서 생성자를 호출할 수 있도록 공개한다.
-  public TaskHandler(MemberHandler memberHandler) {
-    this.memberList = memberHandler;
+  public TaskHandler(MemberList memberList) {
+    this.memberList = memberList;
   }
 
   public void add() {
@@ -37,14 +29,15 @@ public class TaskHandler {
       return;
     }
 
-    this.tasks[this.size++] = t;
+    taskList.add(t);
+    System.out.println("작업을 등록했습니다.");
   }
 
   public void list() {
     System.out.println("[작업 목록]");
 
-    for (int i = 0; i < this.size; i++) {
-      Task t = this.tasks[i];
+    Task[] tasks = taskList.toArray();
+    for (Task t : tasks) {
       System.out.printf("%d, %s, %s, %s, %s\n", 
           t.no, t.content, t.deadline, getStatusLabel(t.status), t.owner);
     }
@@ -55,7 +48,7 @@ public class TaskHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Task task = findByNo(no);
+    Task task = taskList.get(no);
     if (task == null) {
       System.out.println("해당 번호의 작업이 없습니다.");
       return;
@@ -75,7 +68,7 @@ public class TaskHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Task task = findByNo(no);
+    Task task = taskList.get(no);
     if (task == null) {
       System.out.println("해당 번호의 작업이 없습니다.");
       return;
@@ -110,8 +103,8 @@ public class TaskHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    int i = indexOf(no);
-    if (i == -1) {
+    Task task = taskList.get(no);
+    if (task == null) {
       System.out.println("해당 번호의 작업이 없습니다.");
       return;
     }
@@ -119,37 +112,13 @@ public class TaskHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      for (int x = i + 1; x < this.size; x++) {
-        this.tasks[x-1] = this.tasks[x];
-      }
-      tasks[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
-
+      taskList.delete(no);
       System.out.println("작업을 삭제하였습니다.");
 
     } else {
       System.out.println("작업 삭제를 취소하였습니다.");
     }
 
-  }
-
-  // 작업 번호에 해당하는 인스턴스를 배열에서 찾아 그 인덱스를 리턴한다. 
-  int indexOf(int taskNo) {
-    for (int i = 0; i < this.size; i++) {
-      Task task = this.tasks[i];
-      if (task.no == taskNo) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  // 작업 번호에 해당하는 인스턴스를 찾아 리턴한다.
-  Task findByNo(int taskNo) {
-    int i = indexOf(taskNo);
-    if (i == -1) 
-      return null;
-    else 
-      return this.tasks[i];
   }
 
   String inputMember(String promptTitle) {

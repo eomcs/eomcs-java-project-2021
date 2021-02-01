@@ -5,7 +5,7 @@ import com.eomcs.util.Prompt;
 
 public class MemberHandler {
 
-  MemberList memberList = new MemberList();
+  public MemberList memberList = new MemberList();
 
   public void add() {
     System.out.println("[회원 등록]");
@@ -34,16 +34,6 @@ public class MemberHandler {
       System.out.printf("%d, %s, %s, %s, %s\n", // 출력 형식 지정
           m.no, m.name, m.email, m.tel, m.registeredDate);
     }
-  }
-
-  public boolean exist(String name) {
-    Member[] members = memberList.toArray();
-    for (Member m : members) {
-      if (name.equals(m.name)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   public void detail() {

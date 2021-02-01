@@ -40,6 +40,15 @@ public class MemberList {
     this.members[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
   }
 
+  public boolean exist(String name) {
+    for (int i = 0; i < this.size; i++) {
+      if (name.equals(this.members[i].name)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   int indexOf(int memberNo) {
     for (int i = 0; i < this.size; i++) {
       Member member = this.members[i];

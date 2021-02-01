@@ -6,22 +6,13 @@ import com.eomcs.util.Prompt;
 
 public class ProjectHandler {
 
-  static final int LENGTH = 100;
+  ProjectList projectList = new ProjectList();
 
-  // 의존 객체(dependency)를 담을 인스턴스 필드
-  // - 메서드가 작업할 때 사용할 객체를 담는다.
-  MemberHandler memberList;
+  MemberList memberList;
 
-  Project[] projects = new Project[LENGTH];
-  int size = 0;
-
-  // 생성자 정의
-  // - ProjectHandler가 의존하는 객체를 반드시 주입하도록 강요한다.
-  // - 다른 패키지에서 생성자를 호출할 수 있도록 공개한다.
-  public ProjectHandler(MemberHandler memberHandler) {
-    this.memberList = memberHandler;
+  public ProjectHandler(MemberList memberList) {
+    this.memberList = memberList;
   }
-
 
   public void add() {
     System.out.println("[프로젝트 등록]");
@@ -41,14 +32,16 @@ public class ProjectHandler {
 
     p.members = inputMembers("팀원?(완료: 빈 문자열) ");
 
-    this.projects[this.size++] = p;
+    projectList.add(p);
+
+    System.out.println("프로젝트를 등록했습니다.");
   }
 
   public void list() {
     System.out.println("[프로젝트 목록]");
 
-    for (int i = 0; i < size; i++) {
-      Project p = projects[i];
+    Project[] projects = projectList.toArray();
+    for (Project p : projects) {
       System.out.printf("%d, %s, %s, %s, %s, [%s]\n",
           p.no, p.title, p.startDate, p.endDate, p.owner, p.members);
     }
@@ -59,7 +52,7 @@ public class ProjectHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Project project = findByNo(no);
+    Project project = projectList.get(no);
     if (project == null) {
       System.out.println("해당 번호의 프로젝트가 없습니다.");
       return;
@@ -79,7 +72,7 @@ public class ProjectHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Project project = findByNo(no);
+    Project project = projectList.get(no);
     if (project == null) {
       System.out.println("해당 번호의 프로젝트가 없습니다.");
       return;
@@ -121,8 +114,8 @@ public class ProjectHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    int i = indexOf(no);
-    if (i == -1) {
+    Project project = projectList.get(no);
+    if (project == null) {
       System.out.println("해당 번호의 프로젝트이 없습니다.");
       return;
     }
@@ -130,37 +123,13 @@ public class ProjectHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      for (int x = i + 1; x < this.size; x++) {
-        this.projects[x-1] = this.projects[x];
-      }
-      projects[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
-
+      projectList.delete(no);
       System.out.println("프로젝트을 삭제하였습니다.");
 
     } else {
       System.out.println("프로젝트 삭제를 취소하였습니다.");
     }
 
-  }
-
-  // 프로젝트 번호에 해당하는 인스턴스를 배열에서 찾아 그 인덱스를 리턴한다. 
-  int indexOf(int projectNo) {
-    for (int i = 0; i < this.size; i++) {
-      Project project = this.projects[i];
-      if (project.no == projectNo) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  // 프로젝트 번호에 해당하는 인스턴스를 찾아 리턴한다.
-  Project findByNo(int projectNo) {
-    int i = indexOf(projectNo);
-    if (i == -1) 
-      return null;
-    else 
-      return this.projects[i];
   }
 
   String inputMember(String promptTitle) {
