@@ -59,6 +59,7 @@ public class BoardList {
     Node cursor = first;
     while (cursor != null) {
       if (cursor.board == board) {
+        this.size--;
         if (first == last) {
           first = last = null;
           break;
@@ -75,7 +76,6 @@ public class BoardList {
         if (cursor == last) {
           last = cursor.prev;
         }
-        this.size--;
         break;
       }
       cursor = cursor.next;

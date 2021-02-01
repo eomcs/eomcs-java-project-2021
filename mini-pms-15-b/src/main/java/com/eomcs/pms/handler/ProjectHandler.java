@@ -144,6 +144,7 @@ public class ProjectHandler {
       Node cursor = first;
       while (cursor != null) {
         if (cursor.project == project) {
+          this.size--;
           if (first == last) {
             first = last = null;
             break;
@@ -160,7 +161,7 @@ public class ProjectHandler {
           if (cursor == last) {
             last = cursor.prev;
           }
-          this.size--;
+          
           break;
         }
         cursor = cursor.next;

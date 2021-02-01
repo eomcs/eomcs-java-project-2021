@@ -134,6 +134,7 @@ public class TaskHandler {
       Node cursor = first;
       while (cursor != null) {
         if (cursor.task == task) {
+          this.size--;
           if (first == last) {
             first = last = null;
             break;
@@ -150,7 +151,7 @@ public class TaskHandler {
           if (cursor == last) {
             last = cursor.prev;
           }
-          this.size--;
+          
           break;
         }
         cursor = cursor.next;

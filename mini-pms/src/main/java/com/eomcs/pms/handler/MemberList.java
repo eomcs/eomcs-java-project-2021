@@ -1,65 +1,107 @@
 package com.eomcs.pms.handler;
 
-import java.util.Arrays;
 import com.eomcs.pms.domain.Member;
 
 public class MemberList {
-  static final int DEFAULT_CAPACITY = 100;
 
-  Member[] members = new Member[DEFAULT_CAPACITY];  // 레퍼런스 배열 준비  
-  int size = 0;
+  Node first;
+  Node last;
+  int size = 0;  
 
   void add(Member m) {
-    if (this.size == this.members.length) {
-      members = Arrays.copyOf(this.members, this.size + (this.size >> 1));
+    Node node = new Node(m);
+
+    if (last == null) { // 연결 리스트의 첫 항목이라면,
+      last = node;
+      first = node;
+    } else { // 연결리스트에 이미 항목이 있다면, 
+      last.next = node; // 현재 마지막 상자의 다음 상자가 새 상자를 가리키게 한다.
+      node.prev = last; // 새 상자에서 이전 상자로서 현재 마지막 상자를 가리키게 한다. 
+      last = node; // 새 상자가 마지막 상자가 되게 한다.
     }
-    this.members[this.size++] = m;
+
+    size++;
   }
 
   Member[] toArray() {
-    Member[] arr = new Member[this.size];
-    for (int i = 0; i < this.size; i++) {
-      arr[i] = this.members[i];
+    Member[] arr = new Member[size];
+
+    Node cursor = this.first;
+    int i = 0;
+
+    while (cursor != null) {
+      arr[i++] = cursor.member;
+      cursor = cursor.next;
     }
     return arr;
   }
 
   Member get(int memberNo) {
-    int i = indexOf(memberNo);
-    if (i == -1)
-      return null;
-    return members[i];
+    Node cursor = first;
+    while (cursor != null) {
+      Member m = cursor.member;
+      if (m.no == memberNo) {
+        return m;
+      }
+      cursor = cursor.next;
+    }
+    return null;
   }
 
   void delete(int memberNo) {
-    int index = indexOf(memberNo);
 
-    if (index == -1)
+    Member member = get(memberNo);
+
+    if (member == null) {
       return;
-
-    // 배열에서 뒷 번호의 항목을 앞으로 한 칸씩 당긴다. 
-    for (int x = index + 1; x < this.size; x++) {
-      this.members[x-1] = this.members[x];
     }
-    this.members[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
+
+    Node cursor = first;
+    while (cursor != null) {
+      if (cursor.member == member) {
+        this.size--;
+        if (first == last) {
+          first = last = null;
+          break;
+        }
+        if (cursor == first) {
+          first = cursor.next;
+          cursor.prev = null;
+        } else {
+          cursor.prev.next = cursor.next;
+          if (cursor.next != null) {
+            cursor.next.prev = cursor.prev;
+          }
+        }
+        if (cursor == last) {
+          last = cursor.prev;
+        }
+
+        break;
+      }
+      cursor = cursor.next;
+    }
   }
 
   public boolean exist(String name) {
-    for (int i = 0; i < this.size; i++) {
-      if (name.equals(this.members[i].name)) {
+    Node cursor = first;
+    while (cursor != null) {
+      Member m = cursor.member;
+      if (m.name.equals(name)) {
         return true;
       }
+      cursor = cursor.next;
     }
     return false;
   }
 
-  int indexOf(int memberNo) {
-    for (int i = 0; i < this.size; i++) {
-      Member member = this.members[i];
-      if (member.no == memberNo) {
-        return i;
-      }
+  static class Node {
+    Member member;
+    Node next;
+    Node prev;
+
+    Node(Member m) {
+      this.member = m;
     }
-    return -1;
   }
 }

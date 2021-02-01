@@ -1,54 +1,95 @@
 package com.eomcs.pms.handler;
 
-import java.util.Arrays;
 import com.eomcs.pms.domain.Project;
 
 public class ProjectList {
-  static final int DEFAULT_CAPACITY = 100;
-  Project[] projects = new Project[DEFAULT_CAPACITY];
-  int size = 0;
+
+  Node first;
+  Node last;
+  int size = 0;  
 
   void add(Project p) {
-    if (this.size == this.projects.length) {
-      projects = Arrays.copyOf(this.projects, this.size + (this.size >> 1));
+    Node node = new Node(p);
+
+    if (last == null) { // 연결 리스트의 첫 항목이라면,
+      last = node;
+      first = node;
+    } else { // 연결리스트에 이미 항목이 있다면, 
+      last.next = node; // 현재 마지막 상자의 다음 상자가 새 상자를 가리키게 한다.
+      node.prev = last; // 새 상자에서 이전 상자로서 현재 마지막 상자를 가리키게 한다. 
+      last = node; // 새 상자가 마지막 상자가 되게 한다.
     }
-    this.projects[this.size++] = p;
+
+    size++;
   }
 
   Project[] toArray() {
-    Project[] arr = new Project[this.size];
-    for (int i = 0; i < this.size; i++) {
-      arr[i] = this.projects[i];
+    Project[] arr = new Project[size];
+
+    Node cursor = this.first;
+    int i = 0;
+
+    while (cursor != null) {
+      arr[i++] = cursor.project;
+      cursor = cursor.next;
     }
     return arr;
   }
 
   Project get(int projectNo) {
-    int i = indexOf(projectNo);
-    if (i == -1)
-      return null;
-    return projects[i];
+    Node cursor = first;
+    while (cursor != null) {
+      Project p = cursor.project;
+      if (p.no == projectNo) {
+        return p;
+      }
+      cursor = cursor.next;
+    }
+    return null;
   }
 
   void delete(int projectNo) {
-    int index = indexOf(projectNo);
 
-    if (index == -1)
+    Project project = get(projectNo);
+
+    if (project == null) {
       return;
-
-    for (int x = index + 1; x < this.size; x++) {
-      this.projects[x-1] = this.projects[x];
     }
-    this.projects[--this.size] = null; 
+
+    Node cursor = first;
+    while (cursor != null) {
+      if (cursor.project == project) {
+        this.size--;
+        if (first == last) {
+          first = last = null;
+          break;
+        }
+        if (cursor == first) {
+          first = cursor.next;
+          cursor.prev = null;
+        } else {
+          cursor.prev.next = cursor.next;
+          if (cursor.next != null) {
+            cursor.next.prev = cursor.prev;
+          }
+        }
+        if (cursor == last) {
+          last = cursor.prev;
+        }
+
+        break;
+      }
+      cursor = cursor.next;
+    }
   }
 
-  int indexOf(int projectNo) {
-    for (int i = 0; i < this.size; i++) {
-      Project project = this.projects[i];
-      if (project.no == projectNo) {
-        return i;
-      }
+  static class Node {
+    Project project;
+    Node next;
+    Node prev;
+
+    Node(Project p) {
+      this.project = p;
     }
-    return -1;
   }
 }

@@ -1,57 +1,95 @@
 package com.eomcs.pms.handler;
 
-import java.util.Arrays;
 import com.eomcs.pms.domain.Task;
 
 public class TaskList {
-  static final int LENGTH = 100;
-  Task[] tasks = new Task[LENGTH];
-  int size = 0;
+
+  Node first;
+  Node last;
+  int size = 0;  
 
   void add(Task t) {
-    if (this.size == this.tasks.length) {
-      tasks = Arrays.copyOf(this.tasks, this.size + (this.size >> 1));
+    Node node = new Node(t);
+
+    if (last == null) { // 연결 리스트의 첫 항목이라면,
+      last = node;
+      first = node;
+    } else { // 연결리스트에 이미 항목이 있다면, 
+      last.next = node; // 현재 마지막 상자의 다음 상자가 새 상자를 가리키게 한다.
+      node.prev = last; // 새 상자에서 이전 상자로서 현재 마지막 상자를 가리키게 한다. 
+      last = node; // 새 상자가 마지막 상자가 되게 한다.
     }
-    this.tasks[this.size++] = t;
+
+    size++;
   }
 
   Task[] toArray() {
-    Task[] arr = new Task[this.size];
-    for (int i = 0; i < this.size; i++) {
-      arr[i] = this.tasks[i];
+    Task[] arr = new Task[size];
+
+    Node cursor = this.first;
+    int i = 0;
+
+    while (cursor != null) {
+      arr[i++] = cursor.task;
+      cursor = cursor.next;
     }
     return arr;
   }
 
   Task get(int taskNo) {
-    int index = indexOf(taskNo);
-
-    if (index == -1) 
-      return null;
-
-    return this.tasks[index];
+    Node cursor = first;
+    while (cursor != null) {
+      Task t = cursor.task;
+      if (t.no == taskNo) {
+        return t;
+      }
+      cursor = cursor.next;
+    }
+    return null;
   }
 
   void delete(int taskNo) {
-    int index = indexOf(taskNo);
 
-    if (index == -1)
+    Task task = get(taskNo);
+
+    if (task == null) {
       return;
-
-    // 배열에서 뒷 번호의 게시글을 한 칸씩 앞으로 당긴다. 
-    for (int x = index + 1; x < this.size; x++) {
-      this.tasks[x-1] = this.tasks[x];
     }
-    this.tasks[--this.size] = null;
+
+    Node cursor = first;
+    while (cursor != null) {
+      if (cursor.task == task) {
+        this.size--;
+        if (first == last) {
+          first = last = null;
+          break;
+        }
+        if (cursor == first) {
+          first = cursor.next;
+          cursor.prev = null;
+        } else {
+          cursor.prev.next = cursor.next;
+          if (cursor.next != null) {
+            cursor.next.prev = cursor.prev;
+          }
+        }
+        if (cursor == last) {
+          last = cursor.prev;
+        }
+
+        break;
+      }
+      cursor = cursor.next;
+    }
   }
 
-  int indexOf(int taskNo) {
-    for (int i = 0; i < this.size; i++) {
-      Task task = this.tasks[i];
-      if (task.no == taskNo) {
-        return i;
-      }
+  static class Node {
+    Task task;
+    Node next;
+    Node prev;
+
+    Node(Task t) {
+      this.task = t;
     }
-    return -1;
   }
 }

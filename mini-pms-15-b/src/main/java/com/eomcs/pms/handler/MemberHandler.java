@@ -95,12 +95,6 @@ public class MemberHandler {
       return;
     }
 
-    System.out.printf("이름: %s\n", member.name);
-    System.out.printf("이메일: %s\n", member.email);
-    System.out.printf("사진: %s\n", member.photo);
-    System.out.printf("전화: %s\n", member.tel);
-    System.out.printf("가입일: %s\n", member.registeredDate);
-
     String name = Prompt.inputString(String.format("이름(%s)? ", member.name));
     String email = Prompt.inputString(String.format("이메일(%s)? ", member.email));
     String photo = Prompt.inputString(String.format("사진(%s)? ", member.photo));
@@ -137,6 +131,7 @@ public class MemberHandler {
       Node cursor = first;
       while (cursor != null) {
         if (cursor.member == member) {
+          this.size--;
           if (first == last) {
             first = last = null;
             break;
@@ -153,7 +148,7 @@ public class MemberHandler {
           if (cursor == last) {
             last = cursor.prev;
           }
-          this.size--;
+          
           break;
         }
         cursor = cursor.next;
