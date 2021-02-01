@@ -49,16 +49,9 @@ public class ProjectList {
   }
 
   void delete(int projectNo) {
-
-    Project project = get(projectNo);
-
-    if (project == null) {
-      return;
-    }
-
     Node cursor = first;
     while (cursor != null) {
-      if (cursor.project == project) {
+      if (cursor.project.no == projectNo) {
         this.size--;
         if (first == last) {
           first = last = null;

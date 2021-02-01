@@ -49,16 +49,9 @@ public class TaskList {
   }
 
   void delete(int taskNo) {
-
-    Task task = get(taskNo);
-
-    if (task == null) {
-      return;
-    }
-
     Node cursor = first;
     while (cursor != null) {
-      if (cursor.task == task) {
+      if (cursor.task.no == taskNo) {
         this.size--;
         if (first == last) {
           first = last = null;

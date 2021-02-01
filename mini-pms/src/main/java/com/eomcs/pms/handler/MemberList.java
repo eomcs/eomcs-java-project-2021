@@ -49,16 +49,9 @@ public class MemberList {
   }
 
   void delete(int memberNo) {
-
-    Member member = get(memberNo);
-
-    if (member == null) {
-      return;
-    }
-
     Node cursor = first;
     while (cursor != null) {
-      if (cursor.member == member) {
+      if (cursor.member.no == memberNo) {
         this.size--;
         if (first == last) {
           first = last = null;
