@@ -40,7 +40,7 @@
 
 #### 작업 파일
 
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
+- com.eomcs.pms.handler.BoardList 클래스 변경
 
 
 ### 2단계 - `MemberList`, `ProjectList`, `TaskList`의 배열도 가변 크기를 갖는 배열로 변경한다.
