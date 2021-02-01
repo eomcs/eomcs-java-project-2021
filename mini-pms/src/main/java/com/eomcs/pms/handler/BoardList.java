@@ -16,7 +16,7 @@ public class BoardList {
     // 현재까지 저장된 게시글 목록을 리턴하기 위해 새 배열을 준비 한다.
     Board[] arr = new Board[this.size];
     for (int i = 0; i < this.size; i++) {
-      arr[i] = boards[i];
+      arr[i] = this.boards[i];
     }
     return arr;
   }
@@ -25,7 +25,7 @@ public class BoardList {
     // 해당 번호의 게시글을 찾는다. 
     int index = indexOf(boardNo);
     if (index != -1) {
-      return boards[index];
+      return this.boards[index];
     } 
     return null;
   }
@@ -41,7 +41,7 @@ public class BoardList {
     for (int x = index + 1; x < this.size; x++) {
       this.boards[x-1] = this.boards[x];
     }
-    boards[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
+    this.boards[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
   }
 
   int indexOf(int boardNo) {

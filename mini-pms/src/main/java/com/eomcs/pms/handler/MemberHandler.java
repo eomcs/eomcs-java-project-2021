@@ -5,10 +5,7 @@ import com.eomcs.util.Prompt;
 
 public class MemberHandler {
 
-  static final int LENGTH = 100;
-
-  Member[] members = new Member[LENGTH];  // 레퍼런스 배열 준비  
-  int size = 0;
+  MemberList memberList = new MemberList();
 
   public void add() {
     System.out.println("[회원 등록]");
@@ -23,14 +20,16 @@ public class MemberHandler {
     m.tel = Prompt.inputString("전화? ");
     m.registeredDate = new java.sql.Date(System.currentTimeMillis());
 
-    this.members[this.size++] = m;
+    memberList.add(m);
+
+    System.out.println("회원을 등록하였습니다.");
   }
 
   public void list() {
     System.out.println("[회원 목록]");
 
-    for (int i = 0; i < this.size; i++) {
-      Member m = this.members[i];
+    Member[] members = memberList.toArray();
+    for (Member m : members) {
       // 번호, 이름, 이메일, 전화, 가입일
       System.out.printf("%d, %s, %s, %s, %s\n", // 출력 형식 지정
           m.no, m.name, m.email, m.tel, m.registeredDate);
@@ -38,8 +37,9 @@ public class MemberHandler {
   }
 
   public boolean exist(String name) {
-    for (int i = 0; i < this.size; i++) {
-      if (name.equals(this.members[i].name)) {
+    Member[] members = memberList.toArray();
+    for (Member m : members) {
+      if (name.equals(m.name)) {
         return true;
       }
     }
@@ -51,7 +51,7 @@ public class MemberHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Member member = findByNo(no);
+    Member member = memberList.get(no);
     if (member == null) {
       System.out.println("해당 번호의 회원이 없습니다.");
       return;
@@ -70,7 +70,7 @@ public class MemberHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Member member = findByNo(no);
+    Member member = memberList.get(no);
     if (member == null) {
       System.out.println("해당 번호의 회원이 없습니다.");
       return;
@@ -106,8 +106,8 @@ public class MemberHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    int i = indexOf(no);
-    if (i == -1) {
+    Member member = memberList.get(no);
+    if (member == null) {
       System.out.println("해당 번호의 회원이 없습니다.");
       return;
     }
@@ -115,37 +115,13 @@ public class MemberHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      for (int x = i + 1; x < this.size; x++) {
-        this.members[x-1] = this.members[x];
-      }
-      members[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
-
+      memberList.delete(no);
       System.out.println("회원을 삭제하였습니다.");
 
     } else {
       System.out.println("회원 삭제를 취소하였습니다.");
     }
 
-  }
-
-  // 회원 번호에 해당하는 인스턴스를 배열에서 찾아 그 인덱스를 리턴한다. 
-  int indexOf(int memberNo) {
-    for (int i = 0; i < this.size; i++) {
-      Member member = this.members[i];
-      if (member.no == memberNo) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  // 회원 번호에 해당하는 인스턴스를 찾아 리턴한다.
-  Member findByNo(int memberNo) {
-    int i = indexOf(memberNo);
-    if (i == -1) 
-      return null;
-    else 
-      return this.members[i];
   }
 }
 

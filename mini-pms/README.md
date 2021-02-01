@@ -164,9 +164,12 @@ class BoardService {}
 
 #### 작업 파일
 
-- com.eomcs.pms.handler.BoardList 클래스 추가
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-
+- com.eomcs.pms.handler.MemberList 클래스 추가
+- com.eomcs.pms.handler.MemberHandler 클래스 변경
+- com.eomcs.pms.handler.ProjectList 클래스 추가
+- com.eomcs.pms.handler.ProjectHandler 클래스 변경
+- com.eomcs.pms.handler.TaskList 클래스 추가
+- com.eomcs.pms.handler.TaskHandler 클래스 변경
 
 
 
