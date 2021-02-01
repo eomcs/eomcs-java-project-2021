@@ -40,7 +40,7 @@
 
 #### 작업 파일
 
-- com.eomcs.handler.BoardHandler 클래스 변경
+- com.eomcs.pms.handler.BoardHandler 클래스 변경
 
 
 ### 2단계 - `MemberHandler`, `ProjectHandler`, `TaskHandler`의 배열도 가변 크기를 갖는 배열로 변경한다.
@@ -50,9 +50,9 @@
 
 #### 작업 파일
 
-- com.eomcs.handler.MemberHandler 클래스 변경
-- com.eomcs.handler.ProjectHandler 클래스 변경
-- com.eomcs.handler.TaskHandler 클래스 변경
+- com.eomcs.pms.handler.MemberHandler 클래스 변경
+- com.eomcs.pms.handler.ProjectHandler 클래스 변경
+- com.eomcs.pms.handler.TaskHandler 클래스 변경
 
 ## 실습 결과
 

@@ -39,7 +39,7 @@
   
 #### 작업 파일
 
-- com.eomcs.handler.BoardHandler 클래스 변경
+- com.eomcs.pms.handler.BoardHandler 클래스 변경
 
 
 ### 2단계 - `MemberHandler`, `ProjectHandler`, `TaskHandler` 또한 배열 대신 연결 리스트 방식을 사용하여 데이터 목록을 다룬다.
@@ -48,9 +48,9 @@
 
 #### 작업 파일
 
-- com.eomcs.handler.MemberHandler 클래스 변경
-- com.eomcs.handler.ProjectHandler 클래스 변경
-- com.eomcs.handler.TaskHandler 클래스 변경
+- com.eomcs.pms.handler.MemberHandler 클래스 변경
+- com.eomcs.pms.handler.ProjectHandler 클래스 변경
+- com.eomcs.pms.handler.TaskHandler 클래스 변경
 
 ## 실습 결과
 

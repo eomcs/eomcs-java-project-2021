@@ -1,19 +1,14 @@
 package com.eomcs.pms.handler;
 
-import java.util.Arrays;
 import com.eomcs.pms.domain.Board;
 
 public class BoardList {
-  static final int DEFAULT_CAPACITY = 3;
+  static final int DEFAULT_CAPACITY = 100;
 
   Board[] boards = new Board[DEFAULT_CAPACITY];   
   int size = 0;
 
   void add(Board b) {
-    if (this.size == this.boards.length) {
-      boards = Arrays.copyOf(this.boards, this.size + (this.size >> 1));
-      System.out.printf("배열 크기 늘림: %d\n", this.boards.length);
-    }
     this.boards[this.size++] = b;
   }
 

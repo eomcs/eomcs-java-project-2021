@@ -1,6 +1,5 @@
 package com.eomcs.pms.handler;
 
-import java.util.Arrays;
 import com.eomcs.pms.domain.Project;
 
 public class ProjectList {
@@ -9,9 +8,6 @@ public class ProjectList {
   int size = 0;
 
   void add(Project p) {
-    if (this.size == this.projects.length) {
-      projects = Arrays.copyOf(this.projects, this.size + (this.size >> 1));
-    }
     this.projects[this.size++] = p;
   }
 
