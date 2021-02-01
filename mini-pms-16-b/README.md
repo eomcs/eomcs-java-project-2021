@@ -1,4 +1,4 @@
-# 15-b. 데이터 처리 코드를 캡슐화 하기 전 : 배열 대신 연결리스트 사용하기
+# 16-b. 데이터 처리 코드를 캡슐화 하기 : 배열 크기 늘리기
 
 이번 훈련에서는 **자료 구조** 를 활용하여 데이터 목록을 다루는 방법을 연습할 것이다.
 
@@ -30,31 +30,35 @@
 
 - `java.util.LinkedList` 를 모방하여 `LinkedList` 를 구현한다. 
 - 기존의 XxxHandler 클래스에서 사용하는 `ArrayList` 를 `LinkeList` 로 교체한다.
-  
+
 ## 실습
 
-### 1단계 - `BoardHandler`에서 데이터 목록을 다룰 때 배열 대신 연결 리스트 방식을 사용한다.
+### 1단계 - `BoardList`의 배열을 가변 크기를 갖는 배열로 변경한다.
 
-- 연결 리스트를 구현한다.
-  
+- 게시글을 추가할 때 배열의 크기가 작으면 새 배열을 만들어 크기를 늘린다.
+  - add() 메서드 변경
+
 #### 작업 파일
 
 - com.eomcs.pms.handler.BoardHandler 클래스 변경
 
 
-### 2단계 - `MemberHandler`, `ProjectHandler`, `TaskHandler` 또한 배열 대신 연결 리스트 방식을 사용하여 데이터 목록을 다룬다.
+### 2단계 - `MemberList`, `ProjectList`, `TaskList`의 배열도 가변 크기를 갖는 배열로 변경한다.
 
-- 연결 리스트를 구현한다.
+- 값을 추가할 때 배열의 크기가 작으면 새 배열을 만들어 크기를 늘린다.
+  - add() 메서드 변경
 
 #### 작업 파일
 
-- com.eomcs.pms.handler.MemberHandler 클래스 변경
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-- com.eomcs.pms.handler.TaskHandler 클래스 변경
+- com.eomcs.pms.handler.MemberList 클래스 변경
+- com.eomcs.pms.handler.ProjectList 클래스 변경
+- com.eomcs.pms.handler.TaskList 클래스 변경
+
+
 
 ## 실습 결과
 
-- src/main/java/com/eomcs/pms/handler/BoardHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/MemberHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/TaskHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/BoardList.java 변경
+- src/main/java/com/eomcs/pms/handler/MemberList.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectList.java 변경
+- src/main/java/com/eomcs/pms/handler/TaskList.java 변경
