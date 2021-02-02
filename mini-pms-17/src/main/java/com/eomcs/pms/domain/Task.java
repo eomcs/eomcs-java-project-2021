@@ -6,8 +6,8 @@ public class Task {
   private int no;
   private String content;
   private Date deadline;
-  private int status;
   private String owner;
+  private int status;
 
   public int getNo() {
     return no;
@@ -27,17 +27,17 @@ public class Task {
   public void setDeadline(Date deadline) {
     this.deadline = deadline;
   }
-  public int getStatus() {
-    return status;
-  }
-  public void setStatus(int status) {
-    this.status = status;
-  }
   public String getOwner() {
     return owner;
   }
   public void setOwner(String owner) {
     this.owner = owner;
+  }
+  public int getStatus() {
+    return status;
+  }
+  public void setStatus(int status) {
+    this.status = status;
   }
 
 

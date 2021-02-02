@@ -52,7 +52,7 @@ public class Project {
   }
   public void setMembers(String members) {
     this.members = members;
-  }
+  }  
 
 
 }

@@ -9,6 +9,7 @@ public class Board {
   private String writer;
   private Date registeredDate;
   private int viewCount;
+  private int like;
 
   public int getNo() {
     return no;
@@ -45,6 +46,12 @@ public class Board {
   }
   public void setViewCount(int viewCount) {
     this.viewCount = viewCount;
+  }
+  public int getLike() {
+    return like;
+  }
+  public void setLike(int like) {
+    this.like = like;
   }
 
 
