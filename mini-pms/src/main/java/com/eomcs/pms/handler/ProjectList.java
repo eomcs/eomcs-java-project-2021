@@ -4,11 +4,11 @@ import com.eomcs.pms.domain.Project;
 
 public class ProjectList {
 
-  Node first;
-  Node last;
-  int size = 0;  
+  private Node first;
+  private Node last;
+  private int size = 0;  
 
-  void add(Project p) {
+  public void add(Project p) {
     Node node = new Node(p);
 
     if (last == null) { // 연결 리스트의 첫 항목이라면,
@@ -23,7 +23,7 @@ public class ProjectList {
     size++;
   }
 
-  Project[] toArray() {
+  public Project[] toArray() {
     Project[] arr = new Project[size];
 
     Node cursor = this.first;
@@ -36,11 +36,11 @@ public class ProjectList {
     return arr;
   }
 
-  Project get(int projectNo) {
+  public Project get(int projectNo) {
     Node cursor = first;
     while (cursor != null) {
       Project p = cursor.project;
-      if (p.no == projectNo) {
+      if (p.getNo() == projectNo) {
         return p;
       }
       cursor = cursor.next;
@@ -48,10 +48,10 @@ public class ProjectList {
     return null;
   }
 
-  void delete(int projectNo) {
+  public void delete(int projectNo) {
     Node cursor = first;
     while (cursor != null) {
-      if (cursor.project.no == projectNo) {
+      if (cursor.project.getNo() == projectNo) {
         this.size--;
         if (first == last) {
           first = last = null;

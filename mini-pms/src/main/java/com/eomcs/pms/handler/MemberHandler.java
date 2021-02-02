@@ -5,20 +5,24 @@ import com.eomcs.util.Prompt;
 
 public class MemberHandler {
 
-  public MemberList memberList = new MemberList();
+  private MemberList memberList = new MemberList();
+
+  public MemberList getMemberList() {
+    return this.memberList;
+  }
 
   public void add() {
     System.out.println("[회원 등록]");
 
     Member m = new Member();
 
-    m.no = Prompt.inputInt("번호? ");
-    m.name = Prompt.inputString("이름? ");
-    m.email = Prompt.inputString("이메일? ");
-    m.password = Prompt.inputString("암호? ");
-    m.photo = Prompt.inputString("사진? ");
-    m.tel = Prompt.inputString("전화? ");
-    m.registeredDate = new java.sql.Date(System.currentTimeMillis());
+    m.setNo(Prompt.inputInt("번호? "));
+    m.setName(Prompt.inputString("이름? "));
+    m.setEmail(Prompt.inputString("이메일? "));
+    m.setPassword(Prompt.inputString("암호? "));
+    m.setPhoto(Prompt.inputString("사진? "));
+    m.setTel(Prompt.inputString("전화? "));
+    m.setRegisteredDate(new java.sql.Date(System.currentTimeMillis()));
 
     memberList.add(m);
 
@@ -32,7 +36,7 @@ public class MemberHandler {
     for (Member m : members) {
       // 번호, 이름, 이메일, 전화, 가입일
       System.out.printf("%d, %s, %s, %s, %s\n", // 출력 형식 지정
-          m.no, m.name, m.email, m.tel, m.registeredDate);
+          m.getNo(), m.getName(), m.getEmail(), m.getTel(), m.getRegisteredDate());
     }
   }
 
@@ -47,11 +51,11 @@ public class MemberHandler {
       return;
     }
 
-    System.out.printf("이름: %s\n", member.name);
-    System.out.printf("이메일: %s\n", member.email);
-    System.out.printf("사진: %s\n", member.photo);
-    System.out.printf("전화: %s\n", member.tel);
-    System.out.printf("가입일: %s\n", member.registeredDate);
+    System.out.printf("이름: %s\n", member.getName());
+    System.out.printf("이메일: %s\n", member.getEmail());
+    System.out.printf("사진: %s\n", member.getPhoto());
+    System.out.printf("전화: %s\n", member.getTel());
+    System.out.printf("가입일: %s\n", member.getRegisteredDate());
 
   }
 
@@ -66,18 +70,18 @@ public class MemberHandler {
       return;
     }
 
-    String name = Prompt.inputString(String.format("이름(%s)? ", member.name));
-    String email = Prompt.inputString(String.format("이메일(%s)? ", member.email));
-    String photo = Prompt.inputString(String.format("사진(%s)? ", member.photo));
-    String tel = Prompt.inputString(String.format("전화(%s)? ", member.tel));
+    String name = Prompt.inputString(String.format("이름(%s)? ", member.getName()));
+    String email = Prompt.inputString(String.format("이메일(%s)? ", member.getEmail()));
+    String photo = Prompt.inputString(String.format("사진(%s)? ", member.getPhoto()));
+    String tel = Prompt.inputString(String.format("전화(%s)? ", member.getTel()));
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      member.name = name;
-      member.email = email;
-      member.photo = photo;
-      member.tel = tel;
+      member.setName(name);
+      member.setEmail(email);
+      member.setPhoto(photo);
+      member.setTel(tel);
       System.out.println("회원을 변경하였습니다.");
 
     } else {
@@ -107,6 +111,36 @@ public class MemberHandler {
     }
 
   }
+
+  public String inputMember(String promptTitle) {
+    while (true) {
+      String name = Prompt.inputString(promptTitle);
+      if (name.length() == 0) {
+        return null;
+      } 
+      if (this.memberList.exist(name)) {
+        return name;
+      }
+      System.out.println("등록된 회원이 아닙니다.");
+    }
+  }
+
+  public String inputMembers(String promptTitle) {
+    String members = "";
+    while (true) {
+      String name = inputMember(promptTitle);
+      if (name == null) {
+        return members;
+      } else {
+        if (!members.isEmpty()) {
+          members += ",";
+        }
+        members += name;
+      }
+    }
+  }
+
+
 }
 
 

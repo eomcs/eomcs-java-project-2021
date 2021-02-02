@@ -4,11 +4,11 @@ import com.eomcs.pms.domain.Board;
 
 public class BoardList {
 
-  Node first;
-  Node last;
-  int size = 0;  
+  private Node first;
+  private Node last;
+  private int size = 0;  
 
-  void add(Board b) {
+  public void add(Board b) {
     Node node = new Node(b);
 
     if (last == null) { // 연결 리스트의 첫 항목이라면,
@@ -23,7 +23,7 @@ public class BoardList {
     size++;
   }
 
-  Board[] toArray() {
+  public Board[] toArray() {
     Board[] arr = new Board[size];
 
     Node cursor = this.first;
@@ -36,11 +36,11 @@ public class BoardList {
     return arr;
   }
 
-  Board get(int boardNo) {
+  public Board get(int boardNo) {
     Node cursor = first;
     while (cursor != null) {
       Board b = cursor.board;
-      if (b.no == boardNo) {
+      if (b.getNo() == boardNo) {
         return b;
       }
       cursor = cursor.next;
@@ -48,10 +48,10 @@ public class BoardList {
     return null;
   }
 
-  void delete(int boardNo) {
+  public void delete(int boardNo) {
     Node cursor = first;
     while (cursor != null) {
-      if (cursor.board.no == boardNo) {
+      if (cursor.board.getNo() == boardNo) {
         this.size--;
         if (first == last) {
           first = last = null;
