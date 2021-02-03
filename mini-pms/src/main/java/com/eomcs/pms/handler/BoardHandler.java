@@ -2,11 +2,12 @@ package com.eomcs.pms.handler;
 
 import java.sql.Date;
 import com.eomcs.pms.domain.Board;
+import com.eomcs.util.List;
 import com.eomcs.util.Prompt;
 
 public class BoardHandler {
 
-  private BoardList boardList = new BoardList();
+  private List boardList = new List();
 
   public void add() {
     System.out.println("[게시글 등록]");
@@ -27,9 +28,10 @@ public class BoardHandler {
   public void list() {
     System.out.println("[게시글 목록]");
 
-    Board[] boards = boardList.toArray();
+    Object[] list = boardList.toArray();
 
-    for (Board b : boards) {
+    for (Object obj : list) {
+      Board b = (Board) obj;
       // 번호, 제목, 등록일, 작성자, 조회수, 좋아요
       System.out.printf("%d, %s, %s, %s, %d, %d\n", 
           b.getNo(), 
@@ -46,7 +48,7 @@ public class BoardHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Board board = boardList.get(no);
+    Board board = findByNo(no);
     if (board == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
@@ -67,7 +69,7 @@ public class BoardHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Board board = boardList.get(no);
+    Board board = findByNo(no);
     if (board == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
@@ -93,8 +95,8 @@ public class BoardHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Board board = boardList.get(no);
-    if (board == null) {
+    int index = indexOf(no);
+    if (index == -1) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
@@ -102,7 +104,7 @@ public class BoardHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      boardList.delete(no);
+      boardList.delete(index);
 
       System.out.println("게시글을 삭제하였습니다.");
 
@@ -111,6 +113,29 @@ public class BoardHandler {
     }
 
   }
+
+  private int indexOf(int boardNo) {
+    Object[] list = boardList.toArray();
+    for (int i = 0; i < list.length; i++) {
+      Board b = (Board) list[i];
+      if (b.getNo() == boardNo) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  private Board findByNo(int boardNo) {
+    Object[] list = boardList.toArray();
+    for (Object obj : list) {
+      Board b = (Board) obj;
+      if (b.getNo() == boardNo) {
+        return b;
+      }
+    }
+    return null;
+  }
+
 }
 
 

@@ -39,12 +39,12 @@
 
 
 
-### 2단계 - XxxHandler 에서 사용하던 XxxList 클래스를 `ArrayList` 로 교체한다.
+### 2단계 - XxxHandler 에서 사용하던 XxxList 클래스를 `List` 로 교체한다.
 
-- `BoardHandler` 에서 `Board` 인스턴스 목록을 다루기 위해 사용하던 `BoardList` 클래스를 `ArrayList` 클래스로 변경한다. 
-- `MemberHandler` 에서 `Member` 인스턴스 목록을 다루기 위해 사용하던 `MemberList` 클래스를 `ArrayList` 클래스로 변경한다. 
-- `ProjectHandler` 에서 `Project` 인스턴스 목록을 다루기 위해 사용하던 `ProjectList` 클래스를 `ArrayList` 클래스로 변경한다. 
-- `TaskHandler` 에서 `Task` 인스턴스 목록을 다루기 위해 사용하던 `TaskList` 클래스를 `ArrayList` 클래스로 변경한다. 
+- `BoardHandler` 에서 `Board` 인스턴스 목록을 다루기 위해 사용하던 `BoardList` 클래스를 `List` 클래스로 변경한다. 
+- `MemberHandler` 에서 `Member` 인스턴스 목록을 다루기 위해 사용하던 `MemberList` 클래스를 `List` 클래스로 변경한다. 
+- `ProjectHandler` 에서 `Project` 인스턴스 목록을 다루기 위해 사용하던 `ProjectList` 클래스를 `List` 클래스로 변경한다. 
+- `TaskHandler` 에서 `Task` 인스턴스 목록을 다루기 위해 사용하던 `TaskList` 클래스를 `List` 클래스로 변경한다. 
   
 #### 작업 파일
 

@@ -1,7 +1,5 @@
 package com.eomcs.util;
 
-import com.eomcs.pms.domain.Board;
-
 public class List {
 
   private Node first;
@@ -36,22 +34,31 @@ public class List {
     return arr;
   }
 
-  public Board get(int boardNo) {
+  public Object get(int index) {
+    if (index < 0 || index >= this.size) {
+      return null;
+    }
+
+    int count = 0;
     Node cursor = first;
     while (cursor != null) {
-      Board b = cursor.board;
-      if (b.getNo() == boardNo) {
-        return b;
+      if (index == count++) {
+        return cursor.obj;
       }
       cursor = cursor.next;
     }
     return null;
   }
 
-  public void delete(int boardNo) {
+  public void delete(int index) {
+    if (index < 0 || index >= this.size) {
+      return;
+    }
+
+    int count = 0;
     Node cursor = first;
     while (cursor != null) {
-      if (cursor.board.getNo() == boardNo) {
+      if (index == count++) {
         this.size--;
         if (first == last) {
           first = last = null;
