@@ -1,13 +1,14 @@
 package com.eomcs.pms.handler;
 
 import com.eomcs.pms.domain.Member;
+import com.eomcs.util.List;
 import com.eomcs.util.Prompt;
 
 public class MemberHandler {
 
-  private MemberList memberList = new MemberList();
+  private List memberList = new List();
 
-  public MemberList getMemberList() {
+  public List getMemberList() {
     return this.memberList;
   }
 
@@ -32,8 +33,9 @@ public class MemberHandler {
   public void list() {
     System.out.println("[회원 목록]");
 
-    Member[] members = memberList.toArray();
-    for (Member m : members) {
+    Object[] list = memberList.toArray();
+    for (Object obj : list) {
+      Member m = (Member) obj;
       // 번호, 이름, 이메일, 전화, 가입일
       System.out.printf("%d, %s, %s, %s, %s\n", // 출력 형식 지정
           m.getNo(), m.getName(), m.getEmail(), m.getTel(), m.getRegisteredDate());
@@ -45,7 +47,7 @@ public class MemberHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Member member = memberList.get(no);
+    Member member = findByNo(no);
     if (member == null) {
       System.out.println("해당 번호의 회원이 없습니다.");
       return;
@@ -64,7 +66,7 @@ public class MemberHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Member member = memberList.get(no);
+    Member member = findByNo(no);
     if (member == null) {
       System.out.println("해당 번호의 회원이 없습니다.");
       return;
@@ -94,8 +96,8 @@ public class MemberHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    Member member = memberList.get(no);
-    if (member == null) {
+    int index = indexOf(no);
+    if (index == -1) {
       System.out.println("해당 번호의 회원이 없습니다.");
       return;
     }
@@ -103,7 +105,7 @@ public class MemberHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      memberList.delete(no);
+      memberList.delete(index);
       System.out.println("회원을 삭제하였습니다.");
 
     } else {
@@ -118,7 +120,7 @@ public class MemberHandler {
       if (name.length() == 0) {
         return null;
       } 
-      if (this.memberList.exist(name)) {
+      if (findByName(name) != null) {
         return name;
       }
       System.out.println("등록된 회원이 아닙니다.");
@@ -140,7 +142,38 @@ public class MemberHandler {
     }
   }
 
+  private int indexOf(int memberNo) {
+    Object[] list = memberList.toArray();
+    for (int i = 0; i < list.length; i++) {
+      Member m = (Member) list[i];
+      if (m.getNo() == memberNo) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
+  private Member findByNo(int boardNo) {
+    Object[] list = memberList.toArray();
+    for (Object obj : list) {
+      Member m = (Member) obj;
+      if (m.getNo() == boardNo) {
+        return m;
+      }
+    }
+    return null;
+  }
+
+  private Member findByName(String name) {
+    Object[] list = memberList.toArray();
+    for (Object obj : list) {
+      Member m = (Member) obj;
+      if (m.getName().equals(name)) {
+        return m;
+      }
+    }
+    return null;
+  }
 }
 
 
