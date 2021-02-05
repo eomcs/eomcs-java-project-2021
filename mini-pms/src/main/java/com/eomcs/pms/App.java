@@ -5,8 +5,13 @@ import com.eomcs.pms.handler.MemberHandler;
 import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
 import com.eomcs.util.Prompt;
+import com.eomcs.util.Stack;
 
 public class App {
+
+  // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
+  static Stack commandStack = new Stack();
+
 
   public static void main(String[] args) {
 
@@ -18,6 +23,9 @@ public class App {
     loop:
       while (true) {
         String command = com.eomcs.util.Prompt.inputString("명령> ");
+
+        // 사용자가 입력한 명령을 보관해둔다.
+        commandStack.push(command);
 
         switch (command) {
           case "/member/add":
@@ -80,6 +88,9 @@ public class App {
           case "/board/delete":
             boardHandler.delete();
             break;
+          case "history":   // <== history 명령 추가
+            printCommandHistory();
+            break;
           case "quit":
           case "exit":
             System.out.println("안녕!");
@@ -91,5 +102,18 @@ public class App {
       }
 
     Prompt.close();
+  }
+
+  static void printCommandHistory() {
+    int count = 0;
+    while (commandStack.size() > 0) {
+      System.out.println(commandStack.pop());
+      if ((++count % 5) == 0) {
+        String input = Prompt.inputString(": ");
+        if (input.equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    }
   }
 }

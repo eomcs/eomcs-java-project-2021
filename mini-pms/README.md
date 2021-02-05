@@ -1,76 +1,96 @@
-# 18-b. 다형성 활용 : 오버라이딩과 오버로딩 
+# 19-a. 스택 자료구조 구현과 활용
 
-이번 훈련에서는 **다형성(polymorphism)** 의 특징을 이용하는 사례를 다룰 것이다.
+이번 훈련에서는 **스택(stack)** 방식으로 데이터를 저장하는 자료 구조를 만들어보자.
 
-**다형성** 이란?
-- 한 방식, 한 이름으로 다양한 타입의 데이터나 메서드를 다루는 기법이다.
-- 같은 이름의 변수를 사용하여 여러 타입의 데이터를 다루는 것 : 다형적 변수(polymorphic variable) 
-- 같은 이름의 메서드를 사용하여 여러 종류의 파라미터를 다루는 것 : 오버로딩(overloading)
-  - 메서드를 호출할 때 전달하는 아규먼트에 따라 호출될 메서드가 결정된다.
-- 부모 메서드와 같은 이름의 시그너처를 갖는 메서드를 정의하는 것 : 오버라이딩(overriding)
-  - 메서드를 호출하는 객체의 타입에 따라 호출될 메서드가 결정된다.
+**스택(stack)** 은 
+- LIFO(Last In First Out) 방식으로 데이터를 넣고 꺼낸다.
+- 데이터를 넣는 것을 `push`라고 하고, 데이터를 꺼내는 것을 `pop`이라 한다.
+- 보통 입력한 역순으로 데이터를 꺼내야 하는 상황에서 이 자료구조를 사용한다.
+- 예)
+  - JVM 스택 메모리 영역에서 메서드 호출을 관리할 때 
+  - 웹 브라우저에서 이전 페이지로 따라 올라 갈 때
+  - 자바스크립트에서 이벤트를 처리할 때 버블링 단계를 수행(부모 엘리먼트를 따라 올라가면서 처리하는 것)
 
-다형성 문법을 잘 이용하면, 
-- 한 개의 변수로 다양한 종류의 값을 다룰 수 있어 편리하다.
-- 같은 기능을 하는 메서드에 대해 같은 이름을 사용할 수 있어 프로그래밍의 일관성을 유지할 수 있다.
-- 상속 받은 메서드를 서브 클래스의 역할에 맞게 재정의 할 수 있어, 또한 프로그래밍의 일관성을 제공한다.
 
 ## 훈련 목표
 
-- 다형적 변수(polymorphic variables)를 활용하여 다양한 타입의 객체를 다루는 방법을 배운다.
-- 형변환을 연습한다.
+- 스택(stack) 자료구조를 구현하고 구동 원리를 이해한다.
+- Object.clone() 메서드의 용도와 인스턴스를 복제하는 방법을 배운다.
+- 얕은 복제(shallow copy)와 깊은 복제(deep copy)의 차이점을 이해한다.
 
 ## 훈련 내용
 
-- 다형적 변수를 이용하여 Board, Member, Project, Task 타입의 객체를 모두 다룰 수 있는 ArrayList 클래스를 정의한다. 
-- Board, Member, Project, Task 타입에 따라 개별적으로 만든 XxxList 클래스를 ArrayList로 교체한다.
-- 원래 타입의 객체를 다룰 때는 형변환을 이용한다. 
-
-
+- `java.util.Stack` 을 모방하여 `Stack` 클래스를 구현한다. 
+- 스택을 이용하여 사용자가 입력한 명령을 보관한다.
+- 사용자가 입력한 명령을 최신순으로 출력하는 `history` 명령을 추가한다.
+  
 ## 실습
 
-### 1단계 - 도메인 객체의 내용물이 같은지 비교하는 메서드를 재정의한다.
+### 1단계 - `java.util.Stack` 를 모방하여 `Stack` 클래스를 구현한다. 
 
-- `Board`, `Member`, `Project`, `Task` 클래스에서 `Object` 클래스로부터 상속 받은 equals(), hashCode() 메서드를 오버라이딩 한다.
+**스택(stack)** 자료 구조를 직접 구현해본다.
 
-#### 작업 파일
-
-- com.eomcs.pms.domain.Board 클래스 변경
-- com.eomcs.pms.domain.Member 클래스 변경
-- com.eomcs.pms.domain.Project 클래스 변경
-- com.eomcs.pms.domain.Task 클래스 변경
-
-### 2단계 - `List` 에 객체 주소 삭제하는 delete()을 추가한다.
-
-- `List` 클래스에 delete(Object) 메서드를 오버로딩 한다.
-  
-#### 작업 파일
-
-- com.eomcs.util.List 클래스 변경
-
-### 3단계 - XxxHandler 에서 항목을 삭제할 때 인덱스 대신 객체 주소를 이용한다.
-
-- XxxHandler 클래스를 변경한다.
-  - delete() 메서드 변경
-- `List' 클래스에 indexOf(Object) 메서드를 정의한다.
+- `Stack` 클래스를 작성한다.
+  - 상속 문법을 이용하여 기존 코드를 확장한다.
+    - `com.eomcs.util.List` 클래스를 상속 받아 정의한다.
+    - push(), pop() 메서드를 정의한다.
+- `List` 클래스를 변경한다.
+  - 다른 클래스에서 목록의 개수를 조회할 수 있도록 size() 메서드를 추가한다.
+  - 프로그래밍 편이를 위해 서브 클래스에서 수퍼 클래스 필드를 바로 사용할 수 있도록 size 필드의 접근 권한을 변경한다. private ==> protected
 
 #### 작업 파일
 
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-- com.eomcs.pms.handler.MemberHandler 클래스 변경
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-- com.eomcs.pms.handler.TaskHandler 클래스 변경
-- com.eomcs.util.List 클래스 변경
+- com.eomcs.util.Stack 클래스 생성
+  - 백업: Stack_01.java
 
+### 2단계 - 사용자가 입력한 명령을 스택에 보관한다. 
+
+- `Stack` 객체를 준비하여 사용자가 명령어를 입력할 때 마다 저장한다.
+
+#### 작업 파일
+
+- com.eomcs.pms.App 클래스 변경
+
+
+### 3단계 - 사용자가 입력한 명령을 최신순으로 출력하는 `history` 명령을 추가한다. 
+
+- 사용자가 입력한 명령을 최신순으로 출력하는 `printCommandHistory()` 메서드를 정의한다.
+- `history` 명령을 처리하는 분기문을 추가한다.
+
+```
+명령> history
+history
+/board/detail
+/member/list
+/lesson/add
+/lesson/list
+:  <== 키보드에서 ‘q’가 아닌 다른 문자키를 누른다.
+/board/add
+/member/list
+/member/list
+/board/add
+/board/add
+:q  <== 키보드에서 ‘q’ 키를 누른다.
+명령>
+
+```
+
+#### 작업 파일
+
+- com.eomcs.pms.App 클래스 변경
+
+### 4단계 - `Stack` 클래스에 복제 기능을 재정의한다.
+
+- 기존 스택은 한 번 pop()을 호출하면 목록에서 제거하기 때문에 
+  `history` 명령을 또 실행해봐야 소용없다.
+  - 원본 스택은 그대로 두고 복사본을 사용하여 `history` 명령을 처리한다.
+
+#### 작업 파일
+
+- com.eomcs.util.Stack 클래스 변경
+  - 백업: Stack_02.java
 
 ## 실습 결과
 
-- src/main/java/com/eomcs/pms/domain/Board.java 변경
-- src/main/java/com/eomcs/pms/domain/Member.java 변경
-- src/main/java/com/eomcs/pms/domain/Project.java 변경
-- src/main/java/com/eomcs/pms/domain/Task.java 변경
-- src/main/java/com/eomcs/util/List.java 변경
-- src/main/java/com/eomcs/pms/handler/BoardHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/MemberHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/TaskHandler.java 변경
+- src/main/java/com/eomcs/util/Stack.java 추가
+- src/main/java/com/eomcs/pms/App.java 변경
