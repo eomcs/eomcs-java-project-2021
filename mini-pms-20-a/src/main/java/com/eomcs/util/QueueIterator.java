@@ -1,6 +1,6 @@
 package com.eomcs.util;
 
-public class QueueIterator extends AbstractIterator {
+public class QueueIterator {
 
   // 큐에서 데이터를 꺼내려면 큐 객체를 알아야 한다.
   Queue queue;
@@ -10,12 +10,10 @@ public class QueueIterator extends AbstractIterator {
     this.queue = queue.clone();
   }
 
-  @Override
   public boolean hasNext() {
     return this.queue.size() > 0;
   }
 
-  @Override
   public Object next() {
     return this.queue.poll();
   }

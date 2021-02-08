@@ -1,4 +1,4 @@
-# 20-a. `Iterator` 디자인 패턴 : 데이터 조회 기능을 캡슐화
+# 20-b. `Iterator` 디자인 패턴 : XxxIterator 에 대해 Generalization 수행 
 
 **반복자(Iterator) 패턴** 은 
 
@@ -24,55 +24,47 @@
 
 ## 실습
 
-### 1단계 - 스택을 조회하는 기능을 캡슐화 한다.
+### 1단계 - `StackIterator`, `QueueIterator`, `ListIterator`의 공통점을 추출하여 수퍼 클래스로 정의한다.
 
-- `StackIterator` 클래스 생성
-  - `java.util.Iterator` 인터페이스를 모방하여 메서드를 정의한다.
+- `AbstractIterator` 클래스 생성
+  - 이터레이터들에 대해 generalization 을 수행하여 수퍼 클래스를 정의한다.
+  - 기존의 이터레이터들은 이 수퍼 클래스를 상속 받도록 변경한다.
+  - 추상 클래스로 선언
+    - 서브 클래스의 공통 분모를 정의하는 목적이기 때문에 직접 인스턴스를 생성하지 못하도록 만든다.
+  - 추상 메서드 선언
+    - 자료 구조에 따라 조회 방법이 다를 것이기 때문에 수퍼 클래스에서 메서드를 정의할 필요가 없다.
+    - hasNext(), next() 메서드를 추상 메서드로 선언한다.
 
 #### 작업 파일
 
-- com.eomcs.util.StackIterator 클래스 생성
+- com.eomcs.util.AbstractIterator 클래스 생성
 
 
-### 2단계 - `history` 명령을 처리할 때 `StackIterator` 객체를 사용한다.
+### 2단계 - `StackIterator`, `QueueIterator`, `ListIterator`가 `AbstractIterator`를 상속 받는다.
+
+- `XxxIterator` 클래스 변경
+  - `AbstractIterator` 클래스를 상속 받는다.
+
+#### 작업 파일
+
+- com.eomcs.util.ListIterator 클래스 변경
+- com.eomcs.util.StackIterator 클래스 변경 
+- com.eomcs.util.QueueIterator 클래스 변경
+
+
+### 3단계 - `StackIterator`와 `QueueIterator`를 한 타입으로 다룬다.
 
 - `App` 클래스 변경
-  - `printCommandHistory()` 변경한다.
+  - `printCommandHistory()` 메서드에서 `history`와 `history2` 명령을 모두 처리한다.
 
 #### 작업 파일
 
 - com.eomcs.pms.App 클래스 변경
 
 
-### 3단계 - 큐를 조회하는 기능을 캡슐화 한다.
-
-- `QueueIterator` 클래스 생성
-  - `java.util.Iterator` 인터페이스를 모방하여 메서드를 정의한다.
-- `App` 클래스 변경
-  - `history2` 명령을 처리할 때 `QueueIterator` 객체를 사용한다.
-  - `printCommandHistory2()` 변경한다.
-
-#### 작업 파일
-
-- com.eomcs.util.QueueIterator 클래스 생성
-- com.eomcs.pms.App 클래스 변경
 
 
-### 4단계 - 리스트를 조회하는 기능을 캡슐화 한다.
 
-- `ListIterator` 클래스 생성
-  - `java.util.Iterator` 인터페이스를 모방하여 메서드를 정의한다.
-- `XxxHandler` 클래스 변경
-  - `list()` 메서드에서 `ListIterator`를 사용하도록 변경한다.
-
-#### 작업 파일
-
-- com.eomcs.util.ListIterator 클래스 생성
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-- com.eomcs.pms.handler.MemberHandler 클래스 변경
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-- com.eomcs.pms.handler.TaskHandler 클래스 변경
-- com.eomcs.pms.App 클래스 변경
 
 
 
@@ -134,7 +126,6 @@
 #### 작업 파일
 
 - com.eomcs.pms.util.StackIterator 클래스 생성
-- com.eomcs.pms.util.Stack 클래스 변경
 
 ### 7단계 - `history` 명령을 처리할 때 `Iterator` 를 사용하여 명령을 조회하고 출력한다.
 

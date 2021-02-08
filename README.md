@@ -114,7 +114,9 @@
 ### 19-b. 자료구조 구현과 활용 : 큐 구현과 사용
 
 ### 20-a. `Iterator` 디자인 패턴 : 데이터 조회 기능을 캡슐화
-
+### 20-b. `Iterator` 디자인 패턴 : XxxIterator 에 대해 Generalization 수행 
+### 20-c. `Iterator` 디자인 패턴 : GRASP 패턴에서 Creator 패턴 적용
+### 20-d. `Iterator` 디자인 패턴 : Iterator 규칙 정의
 
 
 ### 20. 제네릭이 필요한 이유와 사용법
