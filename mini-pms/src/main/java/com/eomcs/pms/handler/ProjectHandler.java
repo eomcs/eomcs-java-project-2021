@@ -3,6 +3,7 @@ package com.eomcs.pms.handler;
 import java.sql.Date;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.util.List;
+import com.eomcs.util.ListIterator;
 import com.eomcs.util.Prompt;
 
 public class ProjectHandler {
@@ -41,9 +42,10 @@ public class ProjectHandler {
   public void list() {
     System.out.println("[프로젝트 목록]");
 
-    Object[] list = projectList.toArray();
-    for (Object obj : list) {
-      Project p = (Project) obj;
+    ListIterator iterator = new ListIterator(this.projectList);
+
+    while (iterator.hasNext()) {
+      Project p = (Project) iterator.next();
       System.out.printf("%d, %s, %s, %s, %s, [%s]\n",
           p.getNo(), p.getTitle(), p.getStartDate(), p.getEndDate(), p.getOwner(), p.getMembers());
     }

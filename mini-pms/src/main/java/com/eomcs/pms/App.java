@@ -6,7 +6,9 @@ import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
 import com.eomcs.util.Prompt;
 import com.eomcs.util.Queue;
+import com.eomcs.util.QueueIterator;
 import com.eomcs.util.Stack;
+import com.eomcs.util.StackIterator;
 
 public class App {
 
@@ -115,12 +117,12 @@ public class App {
 
   static void printCommandHistory() throws CloneNotSupportedException {
 
-    // 명령어가 들어 있는 스택을 복제한다.
-    Stack stack = commandStack.clone();
+    // 스택에서 데이터를 꺼내 줄 전문가를 모신다.
+    StackIterator iterator = new StackIterator(commandStack);
 
     int count = 0;
-    while (stack.size() > 0) {
-      System.out.println(stack.pop());
+    while (iterator.hasNext()) {
+      System.out.println(iterator.next());
       if ((++count % 5) == 0) {
         String input = Prompt.inputString(": ");
         if (input.equalsIgnoreCase("q")) {
@@ -132,12 +134,12 @@ public class App {
 
   static void printCommandHistory2() throws CloneNotSupportedException {
 
-    // 명령어가 들어 있는 큐를 복제한다.
-    Queue queue = commandQueue.clone();
+    // 큐에서 데이터를 꺼내 줄 전문가를 모신다.
+    QueueIterator iterator = new QueueIterator(commandQueue);
 
     int count = 0;
-    while (queue.size() > 0) {
-      System.out.println(queue.poll());
+    while (iterator.hasNext()) {
+      System.out.println(iterator.next());
       if ((++count % 5) == 0) {
         String input = Prompt.inputString(": ");
         if (input.equalsIgnoreCase("q")) {

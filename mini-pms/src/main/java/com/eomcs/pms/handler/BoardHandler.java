@@ -3,6 +3,7 @@ package com.eomcs.pms.handler;
 import java.sql.Date;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.List;
+import com.eomcs.util.ListIterator;
 import com.eomcs.util.Prompt;
 
 public class BoardHandler {
@@ -28,10 +29,10 @@ public class BoardHandler {
   public void list() {
     System.out.println("[게시글 목록]");
 
-    Object[] list = boardList.toArray();
+    ListIterator iterator = new ListIterator(this.boardList);
 
-    for (Object obj : list) {
-      Board b = (Board) obj;
+    while (iterator.hasNext()) {
+      Board b = (Board) iterator.next();
       // 번호, 제목, 등록일, 작성자, 조회수, 좋아요
       System.out.printf("%d, %s, %s, %s, %d, %d\n", 
           b.getNo(), 
