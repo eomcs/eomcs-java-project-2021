@@ -115,8 +115,12 @@
 
 ### 20-a. `Iterator` 디자인 패턴 : 데이터 조회 기능을 캡슐화
 ### 20-b. `Iterator` 디자인 패턴 : XxxIterator 에 대해 Generalization 수행 
-### 20-c. `Iterator` 디자인 패턴 : GRASP 패턴에서 Creator 패턴 적용
-### 20-d. `Iterator` 디자인 패턴 : Iterator 규칙 정의
+### 20-c. `Iterator` 디자인 패턴 : Iterator 패턴에 인터페이스 문법 적용
+### 20-d. `Iterator` 디자인 패턴 : GRASP의 Creator 패턴 적용
+### 20-e. `Iterator` 디자인 패턴 : 스태틱 중첩 클래스(static nested class) 활용
+### 20-f. `Iterator` 디자인 패턴 : 논스태틱 중첩 클래스(inner class) 활용
+### 20-g. `Iterator` 디자인 패턴 : 로컬 클래스(local class) 활용
+### 20-h. `Iterator` 디자인 패턴 : 익명 클래스(anonymous class) 활용
 
 
 ### 20. 제네릭이 필요한 이유와 사용법
