@@ -98,10 +98,10 @@ public class App {
             boardHandler.delete();
             break;
           case "history":
-            printCommandHistory(new StackIterator(commandStack.clone()));
+            printCommandHistory(new StackIterator(commandStack));
             break;
           case "history2": 
-            printCommandHistory(new QueueIterator(commandQueue.clone()));
+            printCommandHistory(new QueueIterator(commandQueue));
             break;
           case "quit":
           case "exit":

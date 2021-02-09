@@ -31,6 +31,6 @@ public class Stack extends List implements Cloneable {
 
   @Override
   public Iterator iterator() throws CloneNotSupportedException {
-    return new StackIterator(this.clone());
+    return new StackIterator(this);
   }
 }

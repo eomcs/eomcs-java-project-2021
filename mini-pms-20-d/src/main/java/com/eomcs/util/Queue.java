@@ -23,6 +23,6 @@ public class Queue extends List implements Cloneable {
 
   @Override
   public Iterator iterator() throws CloneNotSupportedException {
-    return new QueueIterator(this.clone());
+    return new QueueIterator(this);
   }
 }
