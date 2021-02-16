@@ -4,12 +4,12 @@ import java.lang.reflect.Array;
 
 public class List<E> {
 
-  private Node first;
-  private Node last;
+  private Node<E> first;
+  private Node<E> last;
   protected int size = 0;  
 
   public void add(E obj) {
-    Node node = new Node(obj);
+    Node<E> node = new Node<>(obj);
 
     if (last == null) { // 연결 리스트의 첫 항목이라면,
       last = node;
@@ -26,7 +26,7 @@ public class List<E> {
   public Object[] toArray() {
     Object[] arr = new Object[size];
 
-    Node cursor = this.first;
+    Node<E> cursor = this.first;
     int i = 0;
 
     while (cursor != null) {
@@ -50,25 +50,24 @@ public class List<E> {
       arr = (E[]) Array.newInstance(arr.getClass().getComponentType(), size);
     }
 
-    Node cursor = this.first;
+    Node<E> cursor = this.first;
     for (int i = 0; i < size; i++) {
-      arr[i] = (E) cursor.obj;
+      arr[i] = cursor.obj;
       cursor = cursor.next;
     }
     return arr;
   }
 
-  @SuppressWarnings("unchecked")
   public E get(int index) {
     if (index < 0 || index >= this.size) {
       return null;
     }
 
     int count = 0;
-    Node cursor = first;
+    Node<E> cursor = first;
     while (cursor != null) {
       if (index == count++) {
-        return (E) cursor.obj;
+        return cursor.obj;
       }
       cursor = cursor.next;
     }
@@ -76,7 +75,7 @@ public class List<E> {
   }
 
   public boolean delete(E obj) {
-    Node cursor = first;
+    Node<E> cursor = first;
     while (cursor != null) {
       if (cursor.obj.equals(obj)) {
         this.size--;
@@ -103,15 +102,14 @@ public class List<E> {
     return false;
   }
 
-  @SuppressWarnings("unchecked")
   public E delete(int index) {
     if (index < 0 || index >= this.size) {
       return null;
     }
 
-    Object deleted = null;
+    E deleted = null;
     int count = 0;
-    Node cursor = first;
+    Node<E> cursor = first;
     while (cursor != null) {
       if (index == count++) {
         deleted = cursor.obj; // 삭제될 항목을 보관해 둔다.
@@ -136,15 +134,19 @@ public class List<E> {
       }
       cursor = cursor.next;
     }
-    return (E) deleted;
+    return deleted;
   }
 
   public int indexOf(E obj) {
-    Object[] list = this.toArray();
-    for (int i = 0; i < list.length; i++) {
-      if (list[i].equals(obj)) {
-        return i;
+    int index = 0;
+    Node<E> cursor = first;
+
+    while (cursor != null) {
+      if (cursor.obj == obj) {
+        return index;
       }
+      cursor = cursor.next;
+      index++;
     }
     return -1;
   }
@@ -153,22 +155,18 @@ public class List<E> {
     return this.size;
   }
 
-  private static class Node {
-    Object obj;
-    Node next;
-    Node prev;
+  private static class Node<T> {
+    T obj;
+    Node<T> next;
+    Node<T> prev;
 
-    Node(Object obj) {
+    Node(T obj) {
       this.obj = obj;
     }
   }
 
-  interface X {
-    void m();
-  }
-
-  public Iterator iterator() throws CloneNotSupportedException {
-    return new Iterator() {
+  public Iterator<E> iterator() throws CloneNotSupportedException {
+    return new Iterator<E>() {
       int cursor = 0;
 
       @Override
@@ -177,7 +175,7 @@ public class List<E> {
       }
 
       @Override
-      public Object next() {
+      public E next() {
         return List.this.get(cursor++);
       }
     };

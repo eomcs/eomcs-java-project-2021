@@ -2,6 +2,7 @@ package com.eomcs.pms.handler;
 
 import java.sql.Date;
 import com.eomcs.pms.domain.Board;
+import com.eomcs.util.Iterator;
 import com.eomcs.util.List;
 import com.eomcs.util.Prompt;
 
@@ -28,24 +29,28 @@ public class BoardHandler {
   public void list() throws CloneNotSupportedException {
     System.out.println("[게시글 목록]");
 
-    Board[] arr = boardList.toArray(new Board[boardList.size()]);
+    // 방법1) 
+    //    Board[] arr = new Board[boardList.size()];
+    //    boardList.toArray(arr);
 
-    for (Board b : arr) {
-      System.out.printf("%d, %s, %s, %s, %d, %d\n", 
-          b.getNo(), 
-          b.getTitle(), 
-          b.getRegisteredDate(), 
-          b.getWriter(), 
-          b.getViewCount(),
-          b.getLike());
-    }
+    // 방법2)
+    //    Board[] arr = boardList.toArray(new Board[boardList.size()]);
+    //
+    //    for (Board b : arr) {
+    //      System.out.printf("%d, %s, %s, %s, %d, %d\n", 
+    //          b.getNo(), 
+    //          b.getTitle(), 
+    //          b.getRegisteredDate(), 
+    //          b.getWriter(), 
+    //          b.getViewCount(),
+    //          b.getLike());
+    //    }
 
-    /*
-    Iterator iterator = boardList.iterator();
+    // Iterator 사용하여 데이터 조회하기
+    Iterator<Board> iterator = boardList.iterator();
 
     while (iterator.hasNext()) {
-      Board b = (Board) iterator.next();
-      // 번호, 제목, 등록일, 작성자, 조회수, 좋아요
+      Board b = iterator.next();
       System.out.printf("%d, %s, %s, %s, %d, %d\n", 
           b.getNo(), 
           b.getTitle(), 
@@ -54,7 +59,6 @@ public class BoardHandler {
           b.getViewCount(),
           b.getLike());
     }
-     */
   }
 
   public void detail() {
@@ -129,9 +133,8 @@ public class BoardHandler {
   }
 
   private Board findByNo(int boardNo) {
-    Object[] list = boardList.toArray();
-    for (Object obj : list) {
-      Board b = (Board) obj;
+    Board[] arr = boardList.toArray(new Board[0]);
+    for (Board b : arr) {
       if (b.getNo() == boardNo) {
         return b;
       }
