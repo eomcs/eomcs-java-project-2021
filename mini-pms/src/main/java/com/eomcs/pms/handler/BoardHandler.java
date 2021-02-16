@@ -133,8 +133,8 @@ public class BoardHandler {
   }
 
   private Board findByNo(int boardNo) {
-    Board[] arr = boardList.toArray(new Board[0]);
-    for (Board b : arr) {
+    Board[] list = boardList.toArray(new Board[0]);
+    for (Board b : list) {
       if (b.getNo() == boardNo) {
         return b;
       }
