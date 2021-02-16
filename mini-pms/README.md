@@ -61,11 +61,27 @@
 - com.eomcs.pms.handler.ProjectHandler 클래스 변경
 - com.eomcs.pms.handler.TaskHandler 클래스 변경
 
+### 3단계 - `Stack`, `Queue` 에 제네릭(generic) 문법을 적용한다.
+
+- `Stack` 클래스 변경 
+- `Queue` 클래스 변경
+- 스택과 큐를 사용하는 `App` 클래스 변경
+
+#### 작업 파일
+
+- com.eomcs.util.Stack 클래스 변경
+- com.eomcs.util.Queue 클래스 변경
+- com.eomcs.pms.App 클래스 변경
+
 
 ## 실습 결과
 
-- src/main/java/com/eomcs/util/ArrayList.java 변경
+- src/main/java/com/eomcs/util/List.java 변경
+- src/main/java/com/eomcs/util/Iterator.java 변경
+- src/main/java/com/eomcs/util/Stack.java 변경
+- src/main/java/com/eomcs/util/Queue.java 변경
 - src/main/java/com/eomcs/pms/handler/BoardHandler.java 변경
 - src/main/java/com/eomcs/pms/handler/MemberHandler.java 변경
 - src/main/java/com/eomcs/pms/handler/ProjectHandler.java 변경
 - src/main/java/com/eomcs/pms/handler/TaskHandler.java 변경
+- src/main/java/com/eomcs/pms/App.java 변경

@@ -2,7 +2,7 @@ package com.eomcs.util;
 
 public class Stack<E> extends List<E> implements Cloneable {
 
-  public Object push(E item) {
+  public E push(E item) {
     // 수퍼 클래스 List의 메서드를 사용하여 항목을 추가한다.
     this.add(item);
     return item;
