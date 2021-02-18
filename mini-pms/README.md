@@ -35,9 +35,54 @@
 
 `mini-pms-23` 소스를 기반으로 작업한다. 
 
-### 1단계 - 명령을 처리하는 XxxHandler 의 각 메서드를 별도의 클래스로 분리한다.
+### 1단계 - 게시판 명령을 처리하는 BoardHandler 의 각 메서드를 별도의 클래스로 분리한다.
 
-- 각 명령어를 처리하는 메서드를 별도의 XxxCommand 클래스를 만들어 분리한다.
+- 각 명령어를 처리하는 메서드를 별도의 BoardXxxHandler 클래스를 만들어 분리한다.
+  - BoardAddHandler, BoardListHandler, BoardDetailHandler,BoardUpdateHandler, BoardDeleteHandler
+- 게시판 데이터를 공유하기 위해 생성자를 통해 `List` 객체를 주입 받는다.
+
+### 작업 파일
+
+- com.eomcs.pms.handler.BoardAddHandler 생성
+- com.eomcs.pms.handler.BoardListHandler 생성
+- com.eomcs.pms.handler.BoardDetailHandler 생성
+- com.eomcs.pms.handler.BoardUpdateHandler 생성
+- com.eomcs.pms.handler.BoardDeleteHandler 생성
+- com.eomcs.pms.handler.BoardHandler 삭제
+- com.eomcs.pms.App 변경
+
+### 2단계 - 여러 클래스에 공통으로 등장하는 필드와 메서드를 별도의 클래스로 분리한다.
+
+- `BoardHandler` 클래스를 정의한다.
+  - BoardXxxHandler 클래스에 있던 공통 멤버인 `boardList`와 `findByNo()` 메서드를 이 클래스로 가져온다.
+  - BoardXxxHandler에서 이 클래스를 상속 받도록 한다.
+
+### 작업 파일
+
+- com.eomcs.pms.handler.BoardAddHandler 변경
+- com.eomcs.pms.handler.BoardListHandler 변경
+- com.eomcs.pms.handler.BoardDetailHandler 변경
+- com.eomcs.pms.handler.BoardUpdateHandler 변경
+- com.eomcs.pms.handler.BoardDeleteHandler 변경
+- com.eomcs.pms.handler.BoardHandler 다시 생성
+
+
+### 3단계 - generalization을 통해 만든 수퍼 클래스를 추상 클래스로 변경한다.
+
+- `BoardHandler` 클래스를 추상 클래스로 변경한다.
+  - 클래스를 추상클래스로 만들어 상속 받는 용도로만 사용하게 한다.
+  - 클래스의 이름을 `AbstractBoardHandler` 로 변경한다.
+
+### 작업 파일
+
+- com.eomcs.pms.handler.AbstractBoardHandler 이름 변경
+
+
+### 4단계 - 나머지 `MemberHandler`, `ProjectHandler`, `TaskHandler` 도 Command 패턴을 적용한다.
+
+
+
+
 
 #### 작업 파일
  

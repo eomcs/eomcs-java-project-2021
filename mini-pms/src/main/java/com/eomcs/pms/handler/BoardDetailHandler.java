@@ -1,12 +1,14 @@
 package com.eomcs.pms.handler;
 
-import java.util.ArrayList;
+import java.util.List;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
-public class BoardDetailHandler {
+public class BoardDetailHandler extends AbstractBoardHandler {
 
-  private ArrayList<Board> boardList = new ArrayList<>();
+  public BoardDetailHandler(List<Board> boardList) {
+    super(boardList);
+  }
 
   public void detail() {
     System.out.println("[게시글 상세보기]");
@@ -28,17 +30,6 @@ public class BoardDetailHandler {
     System.out.printf("조회수: %d\n", board.getViewCount());
 
   }
-
-  private Board findByNo(int boardNo) {
-    Board[] list = boardList.toArray(new Board[0]);
-    for (Board b : list) {
-      if (b.getNo() == boardNo) {
-        return b;
-      }
-    }
-    return null;
-  }
-
 }
 
 

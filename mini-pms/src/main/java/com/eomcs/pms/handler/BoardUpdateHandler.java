@@ -1,12 +1,14 @@
 package com.eomcs.pms.handler;
 
-import java.util.ArrayList;
+import java.util.List;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
-public class BoardUpdateHandler {
+public class BoardUpdateHandler extends AbstractBoardHandler {
 
-  private ArrayList<Board> boardList = new ArrayList<>();
+  public BoardUpdateHandler(List<Board> boardList) {
+    super(boardList);
+  }
 
   public void update() {
     System.out.println("[게시글 변경]");
@@ -33,17 +35,6 @@ public class BoardUpdateHandler {
       System.out.println("게시글 변경을 취소하였습니다.");
     }
   }
-
-  private Board findByNo(int boardNo) {
-    Board[] list = boardList.toArray(new Board[0]);
-    for (Board b : list) {
-      if (b.getNo() == boardNo) {
-        return b;
-      }
-    }
-    return null;
-  }
-
 }
 
 

@@ -1,12 +1,14 @@
 package com.eomcs.pms.handler;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import com.eomcs.pms.domain.Board;
 
-public class BoardListHandler {
+public class BoardListHandler extends AbstractBoardHandler {
 
-  private ArrayList<Board> boardList = new ArrayList<>();
+  public BoardListHandler(List<Board> boardList) {
+    super(boardList);
+  }
 
   public void list() throws CloneNotSupportedException {
     System.out.println("[게시글 목록]");
