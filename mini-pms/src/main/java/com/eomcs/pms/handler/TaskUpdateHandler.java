@@ -7,11 +7,11 @@ import com.eomcs.util.Prompt;
 
 public class TaskUpdateHandler extends AbstractTaskHandler {
 
-  private AbstractMemberHandler memberHandler;
+  private MemberValidatorHandler memberValidatorHandler;
 
-  public TaskUpdateHandler(List<Task> taskList, AbstractMemberHandler memberHandler) {
+  public TaskUpdateHandler(List<Task> taskList, MemberValidatorHandler memberValidatorHandler) {
     super(taskList);
-    this.memberHandler = memberHandler;
+    this.memberValidatorHandler = memberValidatorHandler;
   }
 
   public void update() {
@@ -29,7 +29,7 @@ public class TaskUpdateHandler extends AbstractTaskHandler {
     Date deadline = Prompt.inputDate(String.format("마감일(%s)? ", task.getDeadline()));
     int status = Prompt.inputInt(String.format(
         "상태(%s)?\n0: 신규\n1: 진행중\n2: 완료\n> ", getStatusLabel(task.getStatus())));
-    String owner = memberHandler.inputMember(String.format("담당자(%s)?(취소: 빈 문자열) ", task.getOwner()));
+    String owner = memberValidatorHandler.inputMember(String.format("담당자(%s)?(취소: 빈 문자열) ", task.getOwner()));
     if(owner == null) {
       System.out.println("작업 변경을 취소합니다.");
       return;

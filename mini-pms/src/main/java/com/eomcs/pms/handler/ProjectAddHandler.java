@@ -6,11 +6,11 @@ import com.eomcs.util.Prompt;
 
 public class ProjectAddHandler extends AbstractProjectHandler {
 
-  private AbstractMemberHandler memberHandler;
+  private MemberValidatorHandler memberValidatorHandler;
 
-  public ProjectAddHandler(List<Project> projectList, AbstractMemberHandler memberHandler) {
+  public ProjectAddHandler(List<Project> projectList, MemberValidatorHandler memberValidatorHandler) {
     super(projectList);
-    this.memberHandler = memberHandler;
+    this.memberValidatorHandler = memberValidatorHandler;
   }
 
   public void add() {
@@ -23,13 +23,13 @@ public class ProjectAddHandler extends AbstractProjectHandler {
     p.setStartDate(Prompt.inputDate("시작일? "));
     p.setEndDate(Prompt.inputDate("종료일? "));
 
-    p.setOwner(memberHandler.inputMember("만든이?(취소: 빈 문자열) "));
+    p.setOwner(memberValidatorHandler.inputMember("만든이?(취소: 빈 문자열) "));
     if (p.getOwner() == null) {
       System.out.println("프로젝트 입력을 취소합니다.");
       return;
     }
 
-    p.setMembers(memberHandler.inputMembers("팀원?(완료: 빈 문자열) "));
+    p.setMembers(memberValidatorHandler.inputMembers("팀원?(완료: 빈 문자열) "));
 
     projectList.add(p);
 

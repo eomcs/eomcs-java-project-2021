@@ -18,6 +18,7 @@ import com.eomcs.pms.handler.MemberDeleteHandler;
 import com.eomcs.pms.handler.MemberDetailHandler;
 import com.eomcs.pms.handler.MemberListHandler;
 import com.eomcs.pms.handler.MemberUpdateHandler;
+import com.eomcs.pms.handler.MemberValidatorHandler;
 import com.eomcs.pms.handler.ProjectAddHandler;
 import com.eomcs.pms.handler.ProjectDeleteHandler;
 import com.eomcs.pms.handler.ProjectDetailHandler;
@@ -52,19 +53,20 @@ public class App {
     MemberDetailHandler memberDetailHandler = new MemberDetailHandler(memberList);
     MemberUpdateHandler memberUpdateHandler = new MemberUpdateHandler(memberList);
     MemberDeleteHandler memberDeleteHandler = new MemberDeleteHandler(memberList);
+    MemberValidatorHandler memberValidatorHandler = new MemberValidatorHandler(memberList);
 
     LinkedList<Project> projectList = new LinkedList<>();
-    ProjectAddHandler projectAddHandler = new ProjectAddHandler(projectList, memberListHandler);
+    ProjectAddHandler projectAddHandler = new ProjectAddHandler(projectList, memberValidatorHandler);
     ProjectListHandler projecListHandler = new ProjectListHandler(projectList);
     ProjectDetailHandler projectDetailHandler = new ProjectDetailHandler(projectList);
-    ProjectUpdateHandler projectUpdateHandler = new ProjectUpdateHandler(projectList, memberListHandler);
+    ProjectUpdateHandler projectUpdateHandler = new ProjectUpdateHandler(projectList, memberValidatorHandler);
     ProjectDeleteHandler projectDeleteHandler = new ProjectDeleteHandler(projectList);
 
     LinkedList<Task> taskList = new LinkedList<>();
-    TaskAddHandler taskAddHandler = new TaskAddHandler(taskList, memberListHandler);
+    TaskAddHandler taskAddHandler = new TaskAddHandler(taskList, memberValidatorHandler);
     TaskListHandler taskListHandler = new TaskListHandler(taskList);
     TaskDetailHandler taskDetailHandler = new TaskDetailHandler(taskList);
-    TaskUpdateHandler taskUpdateHandler = new TaskUpdateHandler(taskList, memberListHandler);
+    TaskUpdateHandler taskUpdateHandler = new TaskUpdateHandler(taskList, memberValidatorHandler);
     TaskDeleteHandler taskDeleteHandler = new TaskDeleteHandler(taskList);
 
     loop:

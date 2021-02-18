@@ -81,35 +81,49 @@
 ### 4단계 - 나머지 `MemberHandler`, `ProjectHandler`, `TaskHandler` 도 Command 패턴을 적용한다.
 
 
-
-
-
 #### 작업 파일
  
-- com.eomcs.pms.handler.BoardAddCommand 생성
-- com.eomcs.pms.handler.BoardListCommand 생성
-- com.eomcs.pms.handler.BoardDetailCommand 생성
-- com.eomcs.pms.handler.BoardUpdateCommand 생성
-- com.eomcs.pms.handler.BoardDeleteCommand 생성
-- com.eomcs.pms.handler.BoardHandler 삭제
 - com.eomcs.pms.handler.MemberAddCommand 생성
 - com.eomcs.pms.handler.MemberListCommand 생성
 - com.eomcs.pms.handler.MemberDetailCommand 생성
 - com.eomcs.pms.handler.MemberUpdateCommand 생성
 - com.eomcs.pms.handler.MemberDeleteCommand 생성
+- com.eomcs.pms.handler.AbstractMemberHandler 생성
 - com.eomcs.pms.handler.MemberHandler 삭제
 - com.eomcs.pms.handler.ProjectAddCommand 생성
 - com.eomcs.pms.handler.ProjectListCommand 생성
 - com.eomcs.pms.handler.ProjectDetailCommand 생성
 - com.eomcs.pms.handler.ProjectUpdateCommand 생성
 - com.eomcs.pms.handler.ProjectDeleteCommand 생성
+- com.eomcs.pms.handler.AbstractProjectHandler 생성
 - com.eomcs.pms.handler.ProjectHandler 삭제
 - com.eomcs.pms.handler.TaskAddCommand 생성
 - com.eomcs.pms.handler.TaskListCommand 생성
 - com.eomcs.pms.handler.TaskDetailCommand 생성
 - com.eomcs.pms.handler.TaskUpdateCommand 생성
 - com.eomcs.pms.handler.TaskDeleteCommand 생성
+- com.eomcs.pms.handler.AbstractTaskHandler 생성
 - com.eomcs.pms.handler.TaskHandler 삭제
+- com.eomcs.pms.App 변경
+
+### 5단계 - [리팩토링] `AbstractMemberHandler`에서 회원 유효성 검사를 하는 메서드를 별도의 클래스로 분리한다.
+
+- `MemberValidatorHandler` 클래스 추가 
+  - `AbstractMemberHandler`에 있는 `inputMember()`와 `inputMembers()`를 이 클래스로 옮긴다.
+- `ProjectAddHandler`, `ProjectUpdateHandler`, `TaskAddHandler`, `TaskUpdateHandler` 클래스의 의존 객체를 `MemberValidatorHandler`로 교체한다.
+
+
+#### 작업 파일
+ 
+- com.eomcs.pms.handler.MemberValidatorHandler 생성
+- com.eomcs.pms.handler.ProjectAddCommand 변경
+- com.eomcs.pms.handler.ProjectUpdateCommand 변경
+- com.eomcs.pms.handler.TaskAddCommand 변경
+- com.eomcs.pms.handler.TaskUpdateCommand 변경
+- com.eomcs.pms.App 변경
+
+
+
 
 
 ### 3단계 - 사용자가 명령어를 입력했을 때 `Command` 구현체를 실행하도록 변경한다.
