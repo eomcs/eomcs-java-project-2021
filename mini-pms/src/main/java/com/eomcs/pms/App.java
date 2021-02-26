@@ -1,5 +1,6 @@
 package com.eomcs.pms;
 
+import java.io.FileOutputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class App {
   static LinkedList<String> commandQueue = new LinkedList<>();
 
 
-  public static void main(String[] args) throws CloneNotSupportedException {
+  public static void main(String[] args) {
 
     ArrayList<Board> boardList = new ArrayList<>();
     ArrayList<Member> memberList = new ArrayList<>();
@@ -123,6 +124,67 @@ public class App {
         }
         System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
       }
+
+    // 게시글 데이터를 파일로 출력한다.
+
+    try (FileOutputStream out = new FileOutputStream("boards.data")) {
+
+      // boards.data 파일 포맷
+      // - 2바이트: 저장된 게시글 개수
+      // - 게시글 데이터 목록
+      //   - 4바이트: 게시글 번호
+      //   - 게시글 제목
+      //     - 2바이트: 게시글 제목의 바이트 배열 개수
+      //     - x바이트: 게시글 제목의 바이트 배열
+      //   - 게시글 내용
+      //     - 2바이트: 게시글 내용의 바이트 배열 개수
+      //     - x바이트: 게시글 내용의 바이트 배열
+      //   - 작성자
+      //     - 2바이트: 작성자의 바이트 배열 개수
+      //     - x바이트: 작성자의 바이트 배열
+      //   - 등록일
+      //     - 2바이트: 등록일의 바이트 배열 개수
+      //     - x바이트: 등록일의 바이트 배열
+      int size = boardList.size();
+      out.write(size >> 8);
+      out.write(size);
+
+      for (Board b : boardList) {
+        // 게시글 번호
+        out.write(b.getNo() >> 24);
+        out.write(b.getNo() >> 16);
+        out.write(b.getNo() >> 8);
+        out.write(b.getNo());
+
+        // 게시글 제목
+        byte[] buf = b.getTitle().getBytes("UTF-8");
+        // - 게시글 제목의 바이트 개수
+        out.write(buf.length >> 8);
+        out.write(buf.length);
+        // - 게시글 제목의 바이트 배열
+        out.write(buf);
+
+        // 게시글 내용
+        buf = b.getContent().getBytes("UTF-8");
+        out.write(buf.length >> 8);
+        out.write(buf.length);
+        out.write(buf);
+
+        // 작성자
+        buf = b.getWriter().getBytes("UTF-8");
+        out.write(buf.length >> 8);
+        out.write(buf.length);
+        out.write(buf);
+
+        // 등록일
+        buf = b.getRegisteredDate().toString().getBytes("UTF-8");
+        out.write(buf.length >> 8);
+        out.write(buf.length);
+        out.write(buf);
+      }
+    } catch (Exception e) {
+      System.out.println("게시글 데이터를 파일로 저장하는 중에 오류 발생!");
+    }
 
     Prompt.close();
   }
