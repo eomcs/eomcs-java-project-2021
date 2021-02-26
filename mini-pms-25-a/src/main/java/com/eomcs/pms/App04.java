@@ -42,8 +42,7 @@ import com.eomcs.util.Prompt;
 //2) 게시글 데이터 로딩 및 저장 (메서드로 분리)
 //3) 회원 데이터 로딩 및 저장
 //4) 프로젝트 데이터 로딩 및 저장
-//5) 작업 데이터 로딩 및 저장
-public class App {
+public class App04 {
 
   // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
   static ArrayDeque<String> commandStack = new ArrayDeque<>();
@@ -53,16 +52,15 @@ public class App {
   static ArrayList<Board> boardList = new ArrayList<>();
   static ArrayList<Member> memberList = new ArrayList<>();
   static LinkedList<Project> projectList = new LinkedList<>();
-  static LinkedList<Task> taskList = new LinkedList<>();
 
   public static void main(String[] args) {
 
+    LinkedList<Task> taskList = new LinkedList<>();
 
     // 파일에서 데이터를 읽어온다.(데이터 로딩)
     loadBoards();
     loadMembers();
     loadProjects();
-    loadTasks();
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
@@ -143,7 +141,6 @@ public class App {
     saveBoards();
     saveMembers();
     saveProjects();
-    saveTasks();
 
     Prompt.close();
   }
@@ -534,105 +531,7 @@ public class App {
     }
   }
 
-  static void loadTasks() {
 
-    try (FileInputStream in = new FileInputStream("tasks.data")) {
 
-      // 데이터의 개수를 먼저 읽는다. (2바이트)
-      int size = in.read() << 8 | in.read();
 
-      for (int i = 0; i < size; i++) {
-        // 데이터를 담을 객체 준비
-        Task task = new Task();
-
-        // 출력 형식에 맞춰서 파일에서 데이터를 읽는다.
-        // => 작업 번호 읽기
-        int value = in.read() << 24;
-        value += in.read() << 16;
-        value += in.read() << 8;
-        value += in.read();
-        task.setNo(value);
-
-        // 문자열을 읽을 바이트 배열을 준비한다.
-        byte[] bytes = new byte[30000];
-
-        // => 작업 내용 읽기
-        int len = in.read() << 8 | in.read();
-        in.read(bytes, 0, len);
-        task.setContent(new String(bytes, 0, len, "UTF-8"));
-
-        // => 작업 종료일 읽기
-        len = in.read() << 8 | in.read();
-        in.read(bytes, 0, len);
-        task.setDeadline(Date.valueOf(new String(bytes, 0, 10, "UTF-8")));
-
-        // => 작업 상태 읽기
-        value = in.read() << 24;
-        value += in.read() << 16;
-        value += in.read() << 8;
-        value += in.read();
-        task.setStatus(value);
-
-        // => 작업 소유주 읽기
-        len = in.read() << 8 | in.read();
-        in.read(bytes, 0, len);
-        task.setOwner(new String(bytes, 0, len, "UTF-8"));
-
-        taskList.add(task);
-      }
-      System.out.println("작업 데이터 로딩!");
-
-    } catch (Exception e) {
-      System.out.println("작업 데이터 로딩 중 오류 발생!");
-    }
-  }
-
-  static void saveTasks() {
-
-    try (FileOutputStream out = new FileOutputStream("tasks.data")) {
-
-      // 데이터의 개수를 먼저 출력한다.(2바이트)
-      out.write(taskList.size() >> 8);
-      out.write(taskList.size());
-
-      for (Task task : taskList) {
-        // 작업 목록에서 작업 데이터를 꺼내 바이너리 형식으로 출력한다.
-        // => 작업 번호 출력 (4바이트)
-        out.write(task.getNo() >> 24);
-        out.write(task.getNo() >> 16);
-        out.write(task.getNo() >> 8);
-        out.write(task.getNo());
-
-        // => 작업 내용 
-        //    문자열의 바이트 길이(2바이트) + 문자열의 바이트 배열
-        byte[] bytes = task.getContent().getBytes("UTF-8");
-        out.write(bytes.length >> 8);
-        out.write(bytes.length);
-        out.write(bytes);
-
-        // => 작업 종료일(10바이트)
-        bytes = task.getDeadline().toString().getBytes("UTF-8");
-        out.write(bytes.length >> 8);
-        out.write(bytes.length);
-        out.write(bytes);
-
-        // => 작업 상태 출력 (4바이트)
-        out.write(task.getStatus() >> 24);
-        out.write(task.getStatus() >> 16);
-        out.write(task.getStatus() >> 8);
-        out.write(task.getStatus());
-
-        // => 작업 소유주
-        //    문자열의 바이트 길이(2바이트) + 문자열의 바이트 배열
-        bytes = task.getOwner().getBytes("UTF-8");
-        out.write(bytes.length >> 8);
-        out.write(bytes.length);
-        out.write(bytes);
-      }
-      System.out.println("작업 데이터 저장!");
-
-    } catch (Exception e) {
-      System.out.println("작업 데이터를 파일로 저장하는 중에 오류 발생!");
-    }
-  }
 }
