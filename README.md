@@ -138,7 +138,7 @@
 ### 25-b. 파일 입출력 API : 데코레이터 객체 활용하기(DataInputStream/DataOutputStream)
 ### 25-c. 파일 입출력 API : 버퍼 사용하기(BufferedInputStream/BufferedOutputStream)
 ### 25-d. 파일 입출력 API : 객체 읽고 쓰기(ObjectInputStream/ObjectOutputStream)
-### 30-e. 파일 입출력 API : 리팩터링 I
+### 25-e. 파일 입출력 API : 리팩터링 I
 
 ### 31-a. 파일 입출력 API : 텍스트 형식(CSV 파일 포맷)으로 데이터를 읽고 쓰기(FileReader/FileWriter)
 ### 31-b. 파일 입출력 API : 버퍼 사용하기(BufferedReader/BufferedWriter)

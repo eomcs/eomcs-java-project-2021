@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +45,7 @@ import com.eomcs.util.Prompt;
 
 // 1) 파일 명을 파일 객체로 변경하고 스태틱 필드로 만들어 공유한다.
 // 2) List 저장 메서드를 saveObjects() 메서드로 통합한다.
-// 3) List 로딩 메서드를 loadObjects() 메서드로 통합한다.
-public class App {
+public class App02 {
 
   // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
   static ArrayDeque<String> commandStack = new ArrayDeque<>();
@@ -67,11 +65,12 @@ public class App {
 
   public static void main(String[] args) {
 
+
     // 파일에서 데이터를 읽어온다.(데이터 로딩)
-    boardList = loadObjects(boardFile, Board.class);
-    memberList = loadObjects(memberFile, Member.class);
-    projectList = loadObjects(projectFile, Project.class);
-    taskList = loadObjects(taskFile, Task.class);
+    loadBoards();
+    loadMembers();
+    loadProjects();
+    loadTasks();
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
@@ -171,21 +170,21 @@ public class App {
   }
 
   @SuppressWarnings("unchecked")
-  static <T extends Serializable> List<T> loadObjects(File file, Class<T> dataType) {
+  static void loadBoards() {
     try (ObjectInputStream in = new ObjectInputStream(
         new BufferedInputStream(
-            new FileInputStream(file)))) {
+            new FileInputStream(boardFile)))) {
 
-      System.out.printf("파일 %s 로딩!\n", file.getName());
-      return (List<T>) in.readObject();
+      boardList = (List<Board>) in.readObject();
+      System.out.println("게시글 데이터 로딩!");
 
     } catch (Exception e) {
-      System.out.printf("파일 %s 로딩 중 오류 발생!\n", file.getName());
-      return new ArrayList<T>();
+      System.out.println("게시글 데이터 로딩 중 오류 발생!");
+      boardList = new ArrayList<>();
     }
   }
 
-  static <T extends Serializable> void saveObjects(File file, List<T> dataList) {
+  static void saveObjects(File file, List<?> dataList) {
     try (ObjectOutputStream out = new ObjectOutputStream(
         new BufferedOutputStream(
             new FileOutputStream(file)))) {
@@ -198,4 +197,51 @@ public class App {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  static void loadMembers() {
+
+    try (ObjectInputStream in = new ObjectInputStream(
+        new BufferedInputStream(
+            new FileInputStream(memberFile)))) {
+
+      memberList = (List<Member>) in.readObject();
+      System.out.println("회원 데이터 로딩!");
+
+    } catch (Exception e) {
+      System.out.println("회원 데이터 로딩 중 오류 발생!");
+      memberList = new ArrayList<>();
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  static void loadProjects() {
+
+    try (ObjectInputStream in = new ObjectInputStream(
+        new BufferedInputStream(
+            new FileInputStream(projectFile)))) {
+
+      projectList = (List<Project>) in.readObject();
+      System.out.println("프로젝트 데이터 로딩!");
+
+    } catch (Exception e) {
+      System.out.println("프로젝트 데이터 로딩 중 오류 발생!");
+      projectList = new LinkedList<>();
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  static void loadTasks() {
+
+    try (ObjectInputStream in = new ObjectInputStream(
+        new BufferedInputStream(
+            new FileInputStream(taskFile)))) {
+
+      taskList = (List<Task>) in.readObject();
+      System.out.println("작업 데이터 로딩!");
+
+    } catch (Exception e) {
+      System.out.println("작업 데이터 로딩 중 오류 발생!");
+      taskList = new LinkedList<>();
+    }
+  }
 }
