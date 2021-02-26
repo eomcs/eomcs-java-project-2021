@@ -38,9 +38,8 @@ import com.eomcs.pms.handler.TaskListHandler;
 import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.util.Prompt;
 
-//1) 게시글 데이터 로딩 및 저장 (메서드로 분리하기 전)
-//2) 게시글 데이터 로딩 및 저장 (메서드로 분리)
-public class App {
+// 1) 게시글 데이터 로딩 및 저장 (메서드로 분리하기 전)
+public class App01 {
 
   // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
   static ArrayDeque<String> commandStack = new ArrayDeque<>();
@@ -55,7 +54,55 @@ public class App {
     LinkedList<Task> taskList = new LinkedList<>();
 
     // 파일에서 데이터를 읽어온다.(데이터 로딩)
-    loadBoards();
+    try (FileInputStream in = new FileInputStream("boards.data")) {
+      // boards.data 파일 포맷에 따라 데이터를 읽는다.
+      // 1) 게시글 개수
+      int size = in.read() << 8 | in.read();
+
+      // 2) 게시글 개수 만큼 게시글을 읽는다.
+      for (int i = 0; i < size; i++) {
+        // 게시글 데이터를 저장할 객체 준비
+        Board b = new Board();
+
+        // 게시글 데이터를 읽어서 객체에 저장
+        // - 게시글 번호를 읽어서 객체에 저장
+        b.setNo(in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read());
+
+        // - 게시글 제목을 읽어서 객체에 저장
+        int len = in.read() << 8 | in.read();
+        byte[] buf = new byte[len];
+        in.read(buf);
+        b.setTitle(new String(buf, "UTF-8"));
+
+        // - 게시글 내용을 읽어서 객체에 저장
+        len = in.read() << 8 | in.read();
+        buf = new byte[len];
+        in.read(buf);
+        b.setContent(new String(buf, "UTF-8"));
+
+        // - 게시글 작성자 읽어서 객체에 저장
+        len = in.read() << 8 | in.read();
+        buf = new byte[len];
+        in.read(buf);
+        b.setWriter(new String(buf, "UTF-8"));
+
+        // - 게시글 등록일을 읽어서 객체에 저장
+        len = in.read() << 8 | in.read();
+        buf = new byte[len];
+        in.read(buf);
+        b.setRegisteredDate(Date.valueOf(new String(buf, "UTF-8")));
+
+        // - 게시글 조회수를 읽어서 객체에 저장
+        b.setViewCount(in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read());
+
+        // 게시글 객체를 컬렉션에 저장
+        boardList.add(b);
+      }
+      System.out.println("게시글 데이터 로딩!");
+
+    } catch (Exception e) {
+      System.out.println("게시글 데이터 로딩 중 오류 발생!");
+    }
 
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
@@ -218,61 +265,4 @@ public class App {
       }
     }
   }
-
-  static void loadBoards() {
-    try (FileInputStream in = new FileInputStream("boards.data")) {
-      // boards.data 파일 포맷에 따라 데이터를 읽는다.
-      // 1) 게시글 개수
-      int size = in.read() << 8 | in.read();
-
-      // 2) 게시글 개수 만큼 게시글을 읽는다.
-      for (int i = 0; i < size; i++) {
-        // 게시글 데이터를 저장할 객체 준비
-        Board b = new Board();
-
-        // 게시글 데이터를 읽어서 객체에 저장
-        // - 게시글 번호를 읽어서 객체에 저장
-        b.setNo(in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read());
-
-        // - 게시글 제목을 읽어서 객체에 저장
-        int len = in.read() << 8 | in.read();
-        byte[] buf = new byte[len];
-        in.read(buf);
-        b.setTitle(new String(buf, "UTF-8"));
-
-        // - 게시글 내용을 읽어서 객체에 저장
-        len = in.read() << 8 | in.read();
-        buf = new byte[len];
-        in.read(buf);
-        b.setContent(new String(buf, "UTF-8"));
-
-        // - 게시글 작성자 읽어서 객체에 저장
-        len = in.read() << 8 | in.read();
-        buf = new byte[len];
-        in.read(buf);
-        b.setWriter(new String(buf, "UTF-8"));
-
-        // - 게시글 등록일을 읽어서 객체에 저장
-        len = in.read() << 8 | in.read();
-        buf = new byte[len];
-        in.read(buf);
-        b.setRegisteredDate(Date.valueOf(new String(buf, "UTF-8")));
-
-        // - 게시글 조회수를 읽어서 객체에 저장
-        b.setViewCount(in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read());
-
-        // 게시글 객체를 컬렉션에 저장
-        boardList.add(b);
-      }
-      System.out.println("게시글 데이터 로딩!");
-
-    } catch (Exception e) {
-      System.out.println("게시글 데이터 로딩 중 오류 발생!");
-    }
-  }
-
-  static void saveBoards() {
-
-  }
-
 }
