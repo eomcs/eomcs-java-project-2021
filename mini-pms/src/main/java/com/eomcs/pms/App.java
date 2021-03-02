@@ -40,7 +40,6 @@ import com.eomcs.pms.handler.TaskListHandler;
 import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.util.Prompt;
 
-//1) 게시글 데이터 로딩 및 저장
 public class App {
 
   // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
