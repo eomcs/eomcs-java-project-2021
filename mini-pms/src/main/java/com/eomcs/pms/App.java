@@ -2,6 +2,7 @@ package com.eomcs.pms;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.sql.Date;
 import java.util.ArrayDeque;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
@@ -159,49 +162,22 @@ public class App {
   }
 
   static void loadBoards() {
-    try (FileInputStream in = new FileInputStream("boards.data")) {
-      // boards.data 파일 포맷에 따라 데이터를 읽는다.
-      // 1) 게시글 개수
-      int size = in.read() << 8 | in.read();
-
-      // 2) 게시글 개수 만큼 게시글을 읽는다.
-      for (int i = 0; i < size; i++) {
-        // 게시글 데이터를 저장할 객체 준비
-        Board b = new Board();
-
-        // 게시글 데이터를 읽어서 객체에 저장
-        // - 게시글 번호를 읽어서 객체에 저장
-        b.setNo(in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read());
-
-        // - 게시글 제목을 읽어서 객체에 저장
-        int len = in.read() << 8 | in.read();
-        byte[] buf = new byte[len];
-        in.read(buf);
-        b.setTitle(new String(buf, "UTF-8"));
-
-        // - 게시글 내용을 읽어서 객체에 저장
-        len = in.read() << 8 | in.read();
-        buf = new byte[len];
-        in.read(buf);
-        b.setContent(new String(buf, "UTF-8"));
-
-        // - 게시글 작성자 읽어서 객체에 저장
-        len = in.read() << 8 | in.read();
-        buf = new byte[len];
-        in.read(buf);
-        b.setWriter(new String(buf, "UTF-8"));
-
-        // - 게시글 등록일을 읽어서 객체에 저장
-        len = in.read() << 8 | in.read();
-        buf = new byte[len];
-        in.read(buf);
-        b.setRegisteredDate(Date.valueOf(new String(buf, "UTF-8")));
-
-        // - 게시글 조회수를 읽어서 객체에 저장
-        b.setViewCount(in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read());
-
-        // 게시글 객체를 컬렉션에 저장
-        boardList.add(b);
+    try (Scanner in = new Scanner(new FileReader("boards.csv"))) {
+      while (true) {
+        try {
+          String record = in.nextLine();
+          String[] fields = record.split(","); // 번호,제목,내용,작성자,등록일,조회수
+          Board b = new Board();
+          b.setNo(Integer.parseInt(fields[0]));
+          b.setTitle(fields[1]);
+          b.setContent(fields[2]);
+          b.setWriter(fields[3]);
+          b.setRegisteredDate(Date.valueOf(fields[4]));
+          b.setViewCount(Integer.parseInt(fields[5]));
+          boardList.add(b);
+        } catch (NoSuchElementException e) {
+          break;
+        } 
       }
       System.out.println("게시글 데이터 로딩!");
 
