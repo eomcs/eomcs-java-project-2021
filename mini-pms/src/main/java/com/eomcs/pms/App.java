@@ -160,18 +160,9 @@ public class App {
 
   static void loadBoards() {
     try (BufferedReader in = new BufferedReader(new FileReader("boards.csv"))) {
-      String record = null;
-      while ((record = in.readLine()) != null) {
-        String[] fields = record.split(","); // 번호,제목,내용,작성자,등록일,조회수
-        Board b = new Board();
-        b.setNo(Integer.parseInt(fields[0]));
-        b.setTitle(fields[1]);
-        b.setContent(fields[2]);
-        b.setWriter(fields[3]);
-        b.setRegisteredDate(Date.valueOf(fields[4]));
-        b.setViewCount(Integer.parseInt(fields[5]));
-
-        boardList.add(b);
+      String csvStr = null;
+      while ((csvStr = in.readLine()) != null) {
+        boardList.add(Board.valueOfCsv(csvStr));
       }
       System.out.println("게시글 데이터 로딩!");
 
@@ -185,13 +176,7 @@ public class App {
       // boards.csv 파일 포맷
       // - 번호,제목,내용,작성자,등록일,조회수(CRLF)
       for (Board b : boardList) {
-        out.write(String.format("%d,%s,%s,%s,%s,%d\n", 
-            b.getNo(),
-            b.getTitle(),
-            b.getContent(),
-            b.getWriter(),
-            b.getRegisteredDate().toString(),
-            b.getViewCount()));
+        out.write(b.toCsvString() + "\n");
       }
       System.out.println("게시글 데이터 저장!");
 
