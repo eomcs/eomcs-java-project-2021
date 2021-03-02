@@ -42,6 +42,7 @@ import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.util.CsvObject;
 import com.eomcs.util.ObjectFactory;
 import com.eomcs.util.Prompt;
+import com.google.gson.Gson;
 
 public class App {
 
@@ -56,10 +57,10 @@ public class App {
   static LinkedList<Task> taskList = new LinkedList<>();
 
   // 데이터 파일 정보
-  static File boardFile = new File("boards.csv");
-  static File memberFile = new File("members.csv");
-  static File projectFile = new File("projects.csv");
-  static File taskFile = new File("tasks.csv");
+  static File boardFile = new File("boards.json");
+  static File memberFile = new File("members.json");
+  static File projectFile = new File("projects.json");
+  static File taskFile = new File("tasks.json");
 
   public static void main(String[] args) {
 
@@ -182,9 +183,7 @@ public class App {
 
   static <T extends CsvObject> void saveObjects(File file, List<T> list) {
     try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
-      for (CsvObject csvObj : list) {
-        out.write(csvObj.toCsvString() + "\n");
-      }
+      out.write(new Gson().toJson(list));
       System.out.printf("파일 %s 데이터 저장!\n", file.getName());
 
     } catch (Exception e) {
