@@ -1,7 +1,5 @@
 package com.eomcs.pms;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.sql.Date;
@@ -161,19 +159,22 @@ public class App {
   }
 
   static void loadBoards() {
-    try (BufferedReader in = new BufferedReader(new FileReader("boards.csv"))) {
-      String record = null;
-      while ((record = in.readLine()) != null) {
-        String[] fields = record.split(","); // 번호,제목,내용,작성자,등록일,조회수
-        Board b = new Board();
-        b.setNo(Integer.parseInt(fields[0]));
-        b.setTitle(fields[1]);
-        b.setContent(fields[2]);
-        b.setWriter(fields[3]);
-        b.setRegisteredDate(Date.valueOf(fields[4]));
-        b.setViewCount(Integer.parseInt(fields[5]));
-
-        boardList.add(b);
+    try (Scanner in = new Scanner(new FileReader("boards.csv"))) {
+      while (true) {
+        try {
+          String record = in.nextLine();
+          String[] fields = record.split(","); // 번호,제목,내용,작성자,등록일,조회수
+          Board b = new Board();
+          b.setNo(Integer.parseInt(fields[0]));
+          b.setTitle(fields[1]);
+          b.setContent(fields[2]);
+          b.setWriter(fields[3]);
+          b.setRegisteredDate(Date.valueOf(fields[4]));
+          b.setViewCount(Integer.parseInt(fields[5]));
+          boardList.add(b);
+        } catch (NoSuchElementException e) {
+          break;
+        } 
       }
       System.out.println("게시글 데이터 로딩!");
 
@@ -183,7 +184,7 @@ public class App {
   }
 
   static void saveBoards() {
-    try (BufferedWriter out = new BufferedWriter(new FileWriter("boards.csv"))) {
+    try (FileWriter out = new FileWriter("boards.csv")) {
 
       // boards.csv 파일 포맷
       // - 번호,제목,내용,작성자,등록일,조회수(CRLF)
