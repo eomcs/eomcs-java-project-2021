@@ -140,10 +140,10 @@
 ### 25-d. 파일 입출력 API : 객체 읽고 쓰기(ObjectInputStream/ObjectOutputStream)
 ### 25-e. 파일 입출력 API : 리팩터링 I
 
-### 31-a. 파일 입출력 API : 텍스트 형식(CSV 파일 포맷)으로 데이터를 읽고 쓰기(FileReader/FileWriter)
-### 31-b. 파일 입출력 API : 버퍼 사용하기(BufferedReader/BufferedWriter)
-### 31-c. 파일 입출력 API : 리팩터링 I
-### 31-d. 파일 입출력 API : 리팩터링 II
+### 26-a. 파일 입출력 API : 텍스트 형식(CSV 파일 포맷)으로 데이터를 읽고 쓰기(FileReader/FileWriter)
+### 26-b. 파일 입출력 API : 버퍼 사용하기(BufferedReader/BufferedWriter)
+### 26-c. 파일 입출력 API : 리팩터링 I
+### 26-d. 파일 입출력 API : 리팩터링 II
 
 ### 32. JSON 형식으로 객체를 읽고 쓰기 : Gson 라이브러리 활용
 
