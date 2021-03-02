@@ -2,6 +2,7 @@ package com.eomcs.pms;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.sql.Date;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -210,67 +211,18 @@ public class App {
   }
 
   static void saveBoards() {
-    try (FileOutputStream out = new FileOutputStream("boards.data")) {
+    try (FileWriter out = new FileWriter("boards.csv")) {
 
-      // boards.data 파일 포맷
-      // - 2바이트: 저장된 게시글 개수
-      // - 게시글 데이터 목록
-      //   - 4바이트: 게시글 번호
-      //   - 게시글 제목
-      //     - 2바이트: 게시글 제목의 바이트 배열 개수
-      //     - x바이트: 게시글 제목의 바이트 배열
-      //   - 게시글 내용
-      //     - 2바이트: 게시글 내용의 바이트 배열 개수
-      //     - x바이트: 게시글 내용의 바이트 배열
-      //   - 작성자
-      //     - 2바이트: 작성자의 바이트 배열 개수
-      //     - x바이트: 작성자의 바이트 배열
-      //   - 등록일
-      //     - 2바이트: 등록일의 바이트 배열 개수
-      //     - x바이트: 등록일의 바이트 배열
-      //   - 4바이트: 조회수
-      int size = boardList.size();
-      out.write(size >> 8);
-      out.write(size);
-
+      // boards.csv 파일 포맷
+      // - 번호,제목,내용,작성자,등록일,조회수(CRLF)
       for (Board b : boardList) {
-        // 게시글 번호
-        out.write(b.getNo() >> 24);
-        out.write(b.getNo() >> 16);
-        out.write(b.getNo() >> 8);
-        out.write(b.getNo());
-
-        // 게시글 제목
-        byte[] buf = b.getTitle().getBytes("UTF-8");
-        // - 게시글 제목의 바이트 개수
-        out.write(buf.length >> 8);
-        out.write(buf.length);
-        // - 게시글 제목의 바이트 배열
-        out.write(buf);
-
-        // 게시글 내용
-        buf = b.getContent().getBytes("UTF-8");
-        out.write(buf.length >> 8);
-        out.write(buf.length);
-        out.write(buf);
-
-        // 작성자
-        buf = b.getWriter().getBytes("UTF-8");
-        out.write(buf.length >> 8);
-        out.write(buf.length);
-        out.write(buf);
-
-        // 등록일
-        buf = b.getRegisteredDate().toString().getBytes("UTF-8");
-        out.write(buf.length >> 8);
-        out.write(buf.length);
-        out.write(buf);
-
-        // 조회수
-        out.write(b.getViewCount() >> 24);
-        out.write(b.getViewCount() >> 16);
-        out.write(b.getViewCount() >> 8);
-        out.write(b.getViewCount());
+        out.write(String.format("%d,%s,%s,%s,%s,%d\n", 
+            b.getNo(),
+            b.getTitle(),
+            b.getContent(),
+            b.getWriter(),
+            b.getRegisteredDate().toString(),
+            b.getViewCount()));
       }
       System.out.println("게시글 데이터 저장!");
 
