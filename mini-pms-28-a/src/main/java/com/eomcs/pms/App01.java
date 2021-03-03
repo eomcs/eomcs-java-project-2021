@@ -1,13 +1,22 @@
 package com.eomcs.pms;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import com.eomcs.context.ApplicationContextListener;
+import com.eomcs.pms.domain.Board;
+import com.eomcs.pms.domain.Member;
+import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.handler.BoardAddHandler;
 import com.eomcs.pms.handler.BoardDeleteHandler;
 import com.eomcs.pms.handler.BoardDetailHandler;
@@ -32,42 +41,42 @@ import com.eomcs.pms.handler.TaskDeleteHandler;
 import com.eomcs.pms.handler.TaskDetailHandler;
 import com.eomcs.pms.handler.TaskListHandler;
 import com.eomcs.pms.handler.TaskUpdateHandler;
-import com.eomcs.pms.listener.AppListener;
-import com.eomcs.pms.listener.FileListener;
+import com.eomcs.util.CsvObject;
 import com.eomcs.util.Prompt;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-public class App {
-
-  // 옵저버 객체(ApplicationContextListener 구현체) 목록을 저장할 컬렉션 준비
-  List<ApplicationContextListener> listeners = new ArrayList<>();
+// 1) 스태틱 멤버를 인스턴스 멤버로 전환한다.
+public class App01 {
 
   // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
   ArrayDeque<String> commandStack = new ArrayDeque<>();
   LinkedList<String> commandQueue = new LinkedList<>();
 
-  // 옵저버와 값을 공유하기 위해 사용할 공통 저장소 객체를 준비
-  Map<String,Object> appContext = new HashMap<>();
+  // VO 를 저장할 컬렉션 객체
+  ArrayList<Board> boardList = new ArrayList<>();
+  ArrayList<Member> memberList = new ArrayList<>();
+  LinkedList<Project> projectList = new LinkedList<>();
+  LinkedList<Task> taskList = new LinkedList<>();
+
+  // 데이터 파일 정보
+  File boardFile = new File("boards.json");
+  File memberFile = new File("members.json");
+  File projectFile = new File("projects.json");
+  File taskFile = new File("tasks.json");
 
   public static void main(String[] args) {
-    App app = new App();
-
-    app.addApplicationContextListener(new AppListener());
-    app.addApplicationContextListener(new FileListener());
-
+    App01 app = new App01();
     app.service();
-  }
-
-  public void addApplicationContextListener(ApplicationContextListener listener) {
-    listeners.add(listener);
-  }
-
-  public void removeApplicationContextListener(ApplicationContextListener listener) {
-    listeners.remove(listener);
   }
 
   public void service() {
 
-    notifyOnServiceStarted();
+    // 파일에서 데이터를 읽어온다.(데이터 로딩)
+    loadObjects(boardFile, boardList, Board.class);
+    loadObjects(memberFile, memberList, Member.class);
+    loadObjects(projectFile, projectList, Project.class);
+    loadObjects(taskFile, taskList, Task.class);
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
@@ -144,31 +153,13 @@ public class App {
         System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
       }
 
+    // 게시글 데이터를 파일로 출력한다.
+    saveObjects(boardFile, boardList);
+    saveObjects(memberFile, memberList);
+    saveObjects(projectFile, projectList);
+    saveObjects(taskFile, taskList);
+
     Prompt.close();
-
-    notifyOnServiceStopped();
-  }
-
-  private void notifyOnServiceStarted() {
-    for (ApplicationContextListener listener : listeners) {
-      // 옵저버의 메서드를 호출할 때 옵저버에게 전달하고 싶은 값이 있다면,
-      // 맵 객체에 담아서 전달하면 된다.
-      // 옵저버 또한 작업한 결과를 App에게 리턴해주고 싶다면,
-      // 맵 객체에 담으면 된다.
-      // 이를 위해 옵저버 메서드를 호출할 때 파라미터 값으로 맵 객체를 넘긴다.
-      listener.contextInitialized(appContext);
-    }
-  }
-
-  private void notifyOnServiceStopped() {
-    for (ApplicationContextListener listener : listeners) {
-      // 옵저버의 메서드를 호출할 때 옵저버에게 전달하고 싶은 값이 있다면,
-      // 맵 객체에 담아서 전달하면 된다.
-      // 옵저버 또한 작업한 결과를 App에게 리턴해주고 싶다면,
-      // 맵 객체에 담으면 된다.
-      // 이를 위해 옵저버 메서드를 호출할 때 파라미터 값으로 맵 객체를 넘긴다.
-      listener.contextDestroyed(appContext);
-    }
   }
 
   private void printCommandHistory(Iterator<String> iterator) {
@@ -184,5 +175,36 @@ public class App {
     }
   }
 
+  private <T> void loadObjects(File file, List<T> list, Class<T> elementType) {
+
+    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+
+      StringBuilder strBuilder = new StringBuilder();
+      String str = null;
+      while ((str = in.readLine()) != null) {
+        strBuilder.append(str);
+      }
+
+      Type collectionType = TypeToken.getParameterized(Collection.class, elementType).getType();
+      Collection<T> collection = new Gson().fromJson(strBuilder.toString(), collectionType);
+
+      list.addAll(collection);
+
+      System.out.printf("%s 파일 데이터 로딩!\n", file.getName());
+
+    } catch (Exception e) {
+      System.out.printf("%s 파일 데이터 로딩 중 오류 발생!\n", file.getName());
+    }
+  }
+
+  private <T extends CsvObject> void saveObjects(File file, List<T> list) {
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+      out.write(new Gson().toJson(list));
+      System.out.printf("파일 %s 데이터 저장!\n", file.getName());
+
+    } catch (Exception e) {
+      System.out.printf("파일 %s에 데이터를 저장하는 중에 오류 발생!\n", file.getName());
+    }
+  }
 
 }

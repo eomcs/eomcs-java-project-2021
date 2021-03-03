@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'eclipse'
+}
+
+// 자바 소스를 컴파일 할 때 적용할 옵션
+tasks.withType(JavaCompile) {
+    // $javac -encoding UTF-8 ...
+    options.encoding = 'UTF-8';
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.guava:guava:28.1-jre'
+    testImplementation 'junit:junit:4.12'
+}
+
+application {
+    mainClassName = 'com.eomcs.pms.App'
+}
