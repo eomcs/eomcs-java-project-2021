@@ -61,20 +61,9 @@
 
 - App 클래스 변경
   - CSV 형식 대신에 JSON 형식으로 출력하도록 saveObjects() 메서드를 변경한다.
-- 도메인 클래스 변경
-  - 도메인 클래스는 더이상 CsvObject 인터페이스를 구현할 필요가 없다.
-  - toCsvString() 메서드를 제거한다.
-  - 또한 CSV 문자열로 객체를 생성하는 valueOfCsv() 메서드도 제거한다.
-  - CSV 문자열을 파라미터로 받아 인스턴스 필드를 초기화시키는 생성자도 제거한다.
-- CsvObject 인터페이스 삭제
-  - 객체를 JSON 문자열로 변환하여 저장하기 때문에 이 인터페이스를 삭제한다.
+
 
 #### 작업 파일
-- com.eomcs.util.CsvObject 삭제
-- com.eomcs.pms.domain.Board 변경
-- com.eomcs.pms.domain.Member 변경
-- com.eomcs.pms.domain.Project 변경
-- com.eomcs.pms.domain.Task 변경
 - com.eomcs.pms.App 변경
 
 
@@ -83,18 +72,9 @@
 - App 변경
   - CSV 형식 대신에 JSON 형식으로 파일에 저장된 데이터를 읽어서 객체로 변환한 다음
     `List` 객체에 저장하도록 loadObjects() 메서드를 변경한다.
-- 도메인 클래스 변경
-  - CSV 문자열로 객체를 생성하는 valueOfCsv() 메서드를 제거한다.
-  - CSV 문자열을 파라미터로 받아 인스턴스 필드를 초기화시키는 생성자도 제거한다.
-- ObjectFactory 삭제
-  - Gson 객체를 이용하여 JSON 문자열을 객체로 벼환할 것이기 때문에 더이상 이 인터페이스는 필요 없다. 
 
 #### 작업 파일
-- com.eomcs.pms.domain.Board 변경
-- com.eomcs.pms.domain.Member 변경
-- com.eomcs.pms.domain.Project 변경
-- com.eomcs.pms.domain.Task 변경
-- com.eomcs.util.ObjectFactory 삭제
+- com.eomcs.pms.App 변경
 
 
 ### 4단계 - `Arrays.asList()` 를 사용하여 배열을 데이터 목록에 바로 추가한다.
@@ -120,10 +100,4 @@
 
 ## 실습 결과
 - build.gradle 변경
-- src/main/java/com/eomcs/pms/domain/Board.java 변경
-- src/main/java/com/eomcs/pms/domain/Member.java 변경
-- src/main/java/com/eomcs/pms/domain/Project.java 변경
-- src/main/java/com/eomcs/pms/domain/Task.java 변경
 - src/main/java/com/eomcs/pms/App.java 변경
-- src/main/java/com/eomcs/util/CsvObject.java 삭제
-- src/main/java/com/eomcs/util/ObjectFactory.java 삭제
