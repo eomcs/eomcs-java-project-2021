@@ -40,7 +40,6 @@ import com.eomcs.pms.handler.TaskDetailHandler;
 import com.eomcs.pms.handler.TaskListHandler;
 import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.util.CsvObject;
-import com.eomcs.util.ObjectFactory;
 import com.eomcs.util.Prompt;
 import com.google.gson.Gson;
 
@@ -66,10 +65,10 @@ public class App {
 
 
     // 파일에서 데이터를 읽어온다.(데이터 로딩)
-    loadObjects(boardFile, boardList, Board::new);
-    loadObjects(memberFile, memberList, Member::new);
-    loadObjects(projectFile, projectList, Project::new);
-    loadObjects(taskFile, taskList, Task::new);
+    loadObjects(boardFile, boardList, Board[].class);
+    loadObjects(memberFile, memberList, Member[].class);
+    loadObjects(projectFile, projectList, Project[].class);
+    loadObjects(taskFile, taskList, Task[].class);
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
@@ -168,12 +167,30 @@ public class App {
     }
   }
 
-  static <T> void loadObjects(File file, List<T> list, ObjectFactory<T> objFactory) {
+  static <T> void loadObjects(File file, List<T> list, Class<T[]> arrType) {
+
     try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-      String csvStr = null;
-      while ((csvStr = in.readLine()) != null) {
-        list.add(objFactory.create(csvStr));
+
+      // 1) 파일의 모든 데이터를 읽어서 StringBuilder 객체에 보관한다.
+      StringBuilder strBuilder = new StringBuilder();
+      String str = null;
+      while ((str = in.readLine()) != null) {
+        strBuilder.append(str);
       }
+      // 파일에서 읽은 JSON 문자열
+      //      System.out.println(strBuilder.toString());
+
+      // 2) StringBuilder 객체에 보관된 값을 꺼내 자바 객체로 만든다.
+      Gson gson = new Gson();
+
+      // JSON 문자열을 배열 객체로 변환
+      T[] arr = gson.fromJson(strBuilder.toString(), arrType);
+
+      // 배열에 보관된 객체 주소를 컬렉션에 옮긴다.
+      for (T obj : arr) {
+        list.add(obj);
+      }
+
       System.out.printf("%s 파일 데이터 로딩!\n", file.getName());
 
     } catch (Exception e) {

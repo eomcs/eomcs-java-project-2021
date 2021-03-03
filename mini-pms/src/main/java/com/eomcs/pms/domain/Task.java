@@ -22,6 +22,12 @@ public class Task implements CsvObject {
   }
 
   @Override
+  public String toString() {
+    return "Task [no=" + no + ", content=" + content + ", deadline=" + deadline + ", owner=" + owner
+        + ", status=" + status + "]";
+  }
+
+  @Override
   public String toCsvString() {
     return String.format("%d,%s,%s,%d,%s", 
         this.getNo(),

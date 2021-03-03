@@ -26,6 +26,12 @@ public class Project implements CsvObject {
   }
 
   @Override
+  public String toString() {
+    return "Project [no=" + no + ", title=" + title + ", content=" + content + ", startDate="
+        + startDate + ", endDate=" + endDate + ", owner=" + owner + ", members=" + members + "]";
+  }
+
+  @Override
   public String toCsvString() {
     return String.format("%d,%s,%s,%s,%s,%s,%s", 
         this.getNo(),

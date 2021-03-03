@@ -95,6 +95,7 @@
 - com.eomcs.pms.domain.Project 변경
 - com.eomcs.pms.domain.Task 변경
 - com.eomcs.pms.App 변경
+  - 백업: App01.java
 - com.eomcs.util.ObjectFactory 삭제
 
 
