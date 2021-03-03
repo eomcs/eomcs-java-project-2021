@@ -94,8 +94,6 @@
 - com.eomcs.pms.domain.Member 변경
 - com.eomcs.pms.domain.Project 변경
 - com.eomcs.pms.domain.Task 변경
-- com.eomcs.pms.App 변경
-  - 백업: App01.java
 - com.eomcs.util.ObjectFactory 삭제
 
 
@@ -106,6 +104,15 @@
   - `Arrays.asList()` 를 사용하면 배열을 `List` 구현체로 만들 수 있다.
   - `List.addAll()` 을 이용하면 `List` 객체를 통째로 추가할 수 있다.
   - 반복문을 사용하는 것 보다 간결하다.
+
+#### 작업 파일
+- com.eomcs.pms.App 변경
+  - 백업: App01.java
+
+### 5단계 - `Gson.fromJson()` 에서 바로 List 객체로 변환하기
+
+- App 변경
+  - loadObjects() 메서드를 변경한다.
 
 #### 작업 파일
 - com.eomcs.pms.App 변경
