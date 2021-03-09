@@ -5,11 +5,16 @@ import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+import com.eomcs.pms.table.BoardTable;
+import com.eomcs.pms.table.DataTable;
 
 // 데이터를 파일에 보관하고 꺼내는 일을 할 애플리케이션
 public class ServerApp {
 
   int port;
+  HashMap<String,DataTable> tableMap = new HashMap<>();
 
   public static void main(String[] args) {
     ServerApp app = new ServerApp(8888);
@@ -21,6 +26,9 @@ public class ServerApp {
   }
 
   public void service() {
+
+    // 요청을 처리할 테이블 객체를 준비한다.
+    tableMap.put("board/", new BoardTable());
 
     // 클라이언트 연결을 기다는 서버 소켓 생성
     try (ServerSocket serverSocket = new ServerSocket(this.port)) {
@@ -55,6 +63,7 @@ public class ServerApp {
           }
         }
 
+
         System.out.println("-------------------------------");
         System.out.printf("명령: %s\n", request);
         System.out.printf("데이터 개수: %d\n", length);
@@ -65,20 +74,32 @@ public class ServerApp {
           }
         }
 
-        // 1) 클라이언트에게 요청에 대한 작업 결과를 보낸다. 
-        out.writeUTF("success");
-
-        // 2) 클라이언트에게 보낼 데이터의 개수를 보낸다.
-        out.writeInt(1);
-
-        // 3) 클라이언트에게 데이터를 보낸다.
-        out.writeUTF("test...ok!");
-
-        out.flush();
-
         if (request.equals("quit")) {
+          out.writeUTF("success");
+          out.writeInt(0);
+          out.flush();
           break;
         }
+
+        DataTable dataTable = null;
+
+        Set<String> keySet = tableMap.keySet();
+        for (String key : keySet) {
+          if (request.startsWith(key)) {
+            dataTable = tableMap.get(key);
+            break;
+          }
+        }
+
+        if (dataTable != null) {
+          dataTable.service(request, data, out);
+        } else {
+          out.writeUTF("error");
+          out.writeInt(1);
+          out.writeUTF("해당 요청을 처리할 수 없습니다!");
+        }
+
+        out.flush();
       }
 
     } catch (Exception e) {

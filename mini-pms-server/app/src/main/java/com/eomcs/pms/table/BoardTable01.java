@@ -1,21 +1,10 @@
 package com.eomcs.pms.table;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.util.List;
-import com.eomcs.pms.domain.Board;
 
 // 1) 간단한 동작 테스트를 위해 임의의 값을 리턴한다.
-// 2) JSON 포맷의 파일을 로딩한다.
-public class BoardTable extends AbstractJsonDataTable<Board> {
-
-  public BoardTable() {
-    super(new File("boards.json"), Board.class);
-
-    // 수퍼 클래스에서 설정한 대로 해당 JSON 파일을 읽어 도메인 객체를 만든 후 컬렉션에 보관한다.
-    this.loadJsonData();
-  }
-
+public class BoardTable01 implements DataTable {
   @Override
   public void service(String command, List<String> data, DataOutputStream out) throws Exception {
     switch (command) {

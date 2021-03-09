@@ -92,8 +92,17 @@ success (UTF-8 문자열)
 
 - `com.eomcs.pms.table.DataTable` 인터페이스 정의
 
+### 2단계 - JSON 데이터를 다룰 메서드가 추가된 DataTable 구현체를 정의한다.
+
+- `google-gson` 자바 라이브러리를 프로젝트에 추가한다.
+    - build.gradle 에 의존 라이브러리 정보를 추가한 후 이클립스 설정 파일을 갱신한다.
+- `com.eomcs.pms.table.AbstractJsonDataTable` 클래스 정의 
+    - 하위 클래스에게 JSON 포맷의 파일을 로딩하고 저장하는 메서드를 상속해주는 역할을 한다.
+
 ### 2단계 - 게시글 데이터를 다룰 BoardTable 클래스를 정의한다.
 
+- `com.eomcs.pms.domain.Board` 클래스 추가
+    - `mini-pms` 프로젝트에서 해당 파일을 가져온다.
 - `com.eomcs.pms.table.BoardTable` 클래스 정의
 
 
