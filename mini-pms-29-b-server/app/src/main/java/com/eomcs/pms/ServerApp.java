@@ -38,17 +38,11 @@ public class ServerApp {
     try (DataOutputStream out = new DataOutputStream(socket.getOutputStream());
         DataInputStream in = new DataInputStream(socket.getInputStream())) {
 
-      while (true) {
-        String request = in.readUTF();
-        System.out.println(request);
+      String request = in.readUTF();
+      System.out.println(request);
 
-        out.writeUTF("success");
-        out.flush();
-
-        if (request.equals("quit")) {
-          break;
-        }
-      }
+      out.writeUTF("success");
+      out.flush();
 
     } catch (Exception e) {
       System.out.println("클라이언트의 요청을 처리하는 중에 오류 발생!");
