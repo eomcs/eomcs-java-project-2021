@@ -1,4 +1,4 @@
-# 29-a. 파일 관리를 별도의 애플리케이션으로 분리하기 : 클라이언트/서버 프로젝트 준비
+# 29-a. 파일 관리를 별도의 애플리케이션으로 분리하기 : 간단한 메시지 송수신
 
 이번 훈련에서는,
 - **네트워크 API** 를 이용하여 데스크톱 애플리케이션을 클라이언트/서버 구조로 변경한다.
@@ -13,62 +13,21 @@
 - 클라이언트는 서버에게 서비스나 자원을 요청하는 일을 한다.
 - 서버는 클라이언트에게 자원이나 서비스를 제공하는 일을 한다.
 
-
 ## 훈련 목표
-- Gradle 빌드 도구를 이용하여 클라이언트 애플리케이션 프로젝트를 만드는 것을 연습한다.
-- Gradle 빌드 도구를 이용하여 프로젝트를 *Eclipse IDE* 용으로 바꾸는 것을 연습한다.
+- 네트워크 API를 사용하는 것을 연습한다.
+- 클라이언트 입장에서 서버에 접속하여 간단한 메시지를 주고 받는 것을 연습한다.
 
 ## 훈련 내용
-- 클라이언트 프로젝트를 수행할 작업 폴더를 만들고 Gradle 빌드 도구로 초기화시킨다.
-- Gradle에서 제공하는 *Eclipse 플러그인* 을 사용하여 *Eclipse IDE* 용 설정 파일을 생성한다.
-- 프로젝트를 *Eclipse IDE* 로 가져와서 프로그래밍 작업을 준비한다.
+- Socket 클래스를 이용하여 서버에 접속한다.
+- 소켓의 입출력 스트림을 이용하여 서버와 데이터를 주고 받는다.
+
 
 ## 실습
 
-### 1단계 - 클라이언트 프로젝트 폴더를 생성한다.
+### 1단계 - 서버와 연결한 후 메시지를 주고 받는다.
 
-사용자 홈 폴더(예: /Users/eomjinyoung)에 클라이언트 프로젝트로 사용할 폴더를 생성한다.
-- 예) 'mini-pms-client' 디렉토리를 생성한다.
-
-```console
-[~]$ mkdir mini-pms-client
-[~]$ cd mini-pms-client
-[~/mini-pms-client]$
-```
-
-
-### 2단계 - 클라이언트 프로젝트 폴더를 Maven 기본 자바 디렉토리 구조로 초기화한다.
-
-- `[~/mini-pms-client]$ gradle init` 실행
-
-
-### 3단계 - 이클립스 IDE로 임포트 한다.
-
-- `build.gradle` 변경
-  - `eclipse` gradle 플러그인을 추가한다.
-  - `javaCompile` 을 설정한다.
-- gradle을 실행하여 이클립스 설정 파일을 생성한다.
-  - `[~/mini-pms-client]$ gradle eclipse` 실행
-- 이클립스 프로젝트 이름을 `app` 에서 `mini-pms-client` 로 변경한다.
-  - build.gradle 파일에 이클립스의 프로젝트 이름을 변경하는 코드를 추가한다.
-```
-eclipse {
-    project {
-        name = "mini-pms-client"
-    }
-}
-```
-- 이클립스에서 프로젝트 폴더를 임포트한다.
-
-
-### 4단계 - 애플리케이션 메인 클래스를 변경한다.
-
-- `App.java` 변경
-  - 기존의 `App.java` 의 클래스 이름을 `ClientApp.java` 로 변경한다.
-- `src/test/java/com/eomcs/pms/AppTest.java` 삭제
-  - JUnit 관련해서 자동 생성된 클래스 파일은 일단 삭제한다.
-- `ClientApp.java` 를 실행하여 결과를 확인한다.    
-
+- com.eomcs.pms.ClientApp 변경
+  - 서버와 연결된 Socket 객체를 통해 입출력 스트림을 준비하여 메시지를 주고 받는다.
 
 ## 실습 결과
-- src/main/java/com/eomcs/pms/ClientApp.java 이름 변경
+- src/main/java/com/eomcs/pms/ClientApp.java 변경
