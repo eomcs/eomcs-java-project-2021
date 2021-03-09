@@ -38,7 +38,7 @@ board/select (UTF-8 문자열)
 100 (UTF-8 문자열)
 
 예) 게시글 등록
-board/add (UTF-8 문자열)
+board/insert (UTF-8 문자열)
 1 (int)
 제목,내용,작성자 (UTF-8 문자열)
 

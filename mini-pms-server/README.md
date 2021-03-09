@@ -1,4 +1,5 @@
-# 29-d. 파일 관리를 별도의 애플리케이션으로 분리하기 : 프로토콜 정의 및 적용
+
+# 29-e. 파일 관리를 별도의 애플리케이션으로 분리하기 : 게시글 관리 기능 구현
 
 이번 훈련에서는,
 - **네트워크 API** 를 이용하여 데스크톱 애플리케이션을 클라이언트/서버 구조로 변경한다.
@@ -38,7 +39,7 @@ board/select (UTF-8 문자열)
 100 (UTF-8 문자열)
 
 예) 게시글 등록
-board/add (UTF-8 문자열)
+board/insert (UTF-8 문자열)
 1 (int)
 제목,내용,작성자 (UTF-8 문자열)
 
@@ -73,7 +74,7 @@ success (UTF-8 문자열)
 1 (int)
 101,제목,내용,작성자,작성일,조회수 (UTF-8 문자열)
 
-예) board/add 요청에 대한 응답
+예) board/insert 요청에 대한 응답
 success (UTF-8 문자열)
 0 (int)
 
@@ -88,9 +89,22 @@ success (UTF-8 문자열)
 
 ## 실습
 
-### 1단계 - 요청/응답 프로토콜에 맞춰 클라이트 요청을 처리한다.
+### 1단계 - 클라이언트가 요청한 데이터를 처리할 객체의 규칙을 정의한다.
 
-- `com.eomcs.pms.ServerApp` 변경
+- `com.eomcs.pms.table.DataTable` 인터페이스 정의
+
+### 2단계 - JSON 데이터를 다룰 JsonFileHandler 클래스를 정의한다.
+
+- `google-gson` 자바 라이브러리를 프로젝트에 추가한다.
+    - build.gradle 에 의존 라이브러리 정보를 추가한 후 이클립스 설정 파일을 갱신한다.
+- `com.eomcs.util.JsonFileHandler` 클래스 정의 
+    - `loadObjects()`, `saveObjects()` 스태틱 메서드를 정의한다. 
+
+### 2단계 - 게시글 데이터를 다룰 BoardTable 클래스를 정의한다.
+
+- `com.eomcs.pms.domain.Board` 클래스 추가
+    - `mini-pms` 프로젝트에서 해당 파일을 가져온다.
+- `com.eomcs.pms.table.BoardTable` 클래스 정의
 
 
 ## 실습 결과
