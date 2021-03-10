@@ -113,6 +113,7 @@ success (UTF-8 문자열)
     - `mini-pms` 프로젝트에서 해당 파일을 가져온다.
 - `com.eomcs.pms.table.BoardTable` 클래스 정의
     - 클라이언트가 요청한 명령에 데이터를 처리하고 응답 데이터를 준비한다.
+    - insert/update/delete 명령을 처리한 후에 즉시 파일을 저장한다.
 
 ### 5단계 - 요청/응답 프로토콜에 따라 클라이언트 요청을 처리한다.
 

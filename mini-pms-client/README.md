@@ -88,9 +88,26 @@ success (UTF-8 문자열)
 
 ## 실습
 
-### 1단계 - 요청/응답 프로토콜에 맞춰 서버에 요청하고 응답을 처리한다.
+기존의 **mini-pms-28-b** 프로젝트에서 게시글 관련 코드를 가져와 클라이언트에 적용한다.
+
+### 1단계 - domain 클래스 준비
+
+- `com.eomcs.pms.domain.Board` 클래스 복사 및 편집
+
+### 2단계 - 핸들러 클래스 준비
+
+- `com.eomcs.pms.handler.Command` 인터페이스 복사 및 변경
+    - 서버와 통신을 할 입출력 스트림을 파라미터로 받는다.
+- `com.eomcs.pms.handler.BoardXxxHandler` 클래스 복사 및 변경
+    - 직접 Command 인터페이스를 구현한다.
+    - 서버와 통신하여 데이터를 다루도록 변경한다.
+
+
+### 3단계 - 데이터를 다룰 때는 서버에 위임한다.
 
 - `com.eomcs.pms.ClientApp` 변경
+    - `mini-pms-28-b` 프로젝트의 App 클래스에서 사용자 명령을 입력 받아서 처리하는 부분을 복사해 온다.
 
+    
 ## 실습 결과
 - src/main/java/com/eomcs/pms/ClientApp.java 변경
