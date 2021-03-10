@@ -74,7 +74,7 @@ public class ServerApp {
             sendResponse(
                 out, 
                 "error", 
-                e.getMessage());
+                e.getMessage() != null ? e.getMessage() : e.getClass().getName());
           }
 
         } else {
