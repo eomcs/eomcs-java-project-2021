@@ -1,31 +1,41 @@
 package com.eomcs.pms.handler;
 
-import java.sql.Date;
-import java.util.List;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
-public class BoardAddHandler extends AbstractBoardHandler {
-
-  public BoardAddHandler(List<Board> boardList) {
-    super(boardList);
-  }
+public class BoardAddHandler implements Command {
 
   @Override
-  public void service() {
-    System.out.println("[게시글 등록]");
+  public void service(DataInputStream in, DataOutputStream out) {
+    try {
+      System.out.println("[게시글 등록]");
 
-    Board b = new Board();
+      Board b = new Board();
 
-    b.setNo(Prompt.inputInt("번호? "));
-    b.setTitle(Prompt.inputString("제목? "));
-    b.setContent(Prompt.inputString("내용? "));
-    b.setWriter(Prompt.inputString("작성자? "));
-    b.setRegisteredDate(new Date(System.currentTimeMillis()));
+      b.setTitle(Prompt.inputString("제목? "));
+      b.setContent(Prompt.inputString("내용? "));
+      b.setWriter(Prompt.inputString("작성자? "));
 
-    boardList.add(b);
+      // 서버에 데이터 입력을 요청한다.
+      out.writeUTF("board/insert");
+      out.writeInt(1);
+      out.writeUTF(String.format("%s,%s,%s", b.getTitle(), b.getContent(), b.getWriter()));
+      out.flush();
 
-    System.out.println("게시글을 등록하였습니다.");
+      // 서버의 응답을 읽는다.
+      String status = in.readUTF();
+      in.readInt();
+
+      if (status.equals("error")) {
+        throw new Exception(in.readUTF());
+      }
+      System.out.println("게시글을 등록하였습니다.");
+
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }
 

@@ -7,6 +7,7 @@ import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import com.eomcs.pms.handler.BoardAddHandler;
 import com.eomcs.pms.handler.BoardListHandler;
 import com.eomcs.pms.handler.Command;
 import com.eomcs.util.Prompt;
@@ -35,7 +36,7 @@ public class ClientApp {
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
 
-    //    commandMap.put("/board/add", new BoardAddHandler(boardList));
+    commandMap.put("/board/add", new BoardAddHandler());
     commandMap.put("/board/list", new BoardListHandler());
     //    commandMap.put("/board/detail", new BoardDetailHandler(boardList));
     //    commandMap.put("/board/update", new BoardUpdateHandler(boardList));
