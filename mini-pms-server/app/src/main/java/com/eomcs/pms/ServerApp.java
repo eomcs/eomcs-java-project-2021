@@ -88,10 +88,10 @@ public class ServerApp {
     }
   }
 
-  private DataTable findDataTable(String request) {
+  private DataTable findDataTable(String command) {
     Set<String> keySet = tableMap.keySet();
     for (String key : keySet) {
-      if (request.startsWith(key)) {
+      if (command.startsWith(key)) {
         return tableMap.get(key);
       }
     }

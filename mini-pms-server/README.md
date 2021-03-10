@@ -100,12 +100,33 @@ success (UTF-8 문자열)
 - `com.eomcs.util.JsonFileHandler` 클래스 정의 
     - `loadObjects()`, `saveObjects()` 스태틱 메서드를 정의한다. 
 
-### 2단계 - 게시글 데이터를 다룰 BoardTable 클래스를 정의한다.
+### 3단계 - 클라이언트의 요청 처리와 관련된 클래스를 정의한다.
+
+- `com.eomcs.util.Request` 클래스 정의
+    - 클라이언트의 요청 정보(명령과 데이터 목록)를 다루는 클래스다.
+- `com.eomcs.util.Response` 클래스 정의
+    - 서버의 응답 데이터를 다룰 클래스다.
+
+### 4단계 - 게시글 데이터를 다룰 BoardTable 클래스를 정의한다.
 
 - `com.eomcs.pms.domain.Board` 클래스 추가
     - `mini-pms` 프로젝트에서 해당 파일을 가져온다.
 - `com.eomcs.pms.table.BoardTable` 클래스 정의
+    - 클라이언트가 요청한 명령에 데이터를 처리하고 응답 데이터를 준비한다.
+
+### 5단계 - 요청/응답 프로토콜에 따라 클라이언트 요청을 처리한다.
+
+- `com.eomcs.pms.ServerApp` 클래스 변경
+    - 클라이언트 요청 처리 코드에 대해 리팩토링을 수행한다.
 
 
 ## 실습 결과
+- build.gradle 변경
+- src/main/java/com/eomcs/util/JsonFileHandler.java 추가
+- src/main/java/com/eomcs/util/Request.java 추가
+- src/main/java/com/eomcs/util/Response.java 추가
+- src/main/java/com/eomcs/pms/table/DataTable.java 추가
+- src/main/java/com/eomcs/pms/domain/Board.java 추가
+- src/main/java/com/eomcs/pms/table/BoardTable.java 추가
 - src/main/java/com/eomcs/pms/ServerApp.java 변경
+
