@@ -1,36 +1,59 @@
 package com.eomcs.pms.handler;
 
-import java.util.List;
-import com.eomcs.pms.domain.Board;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import com.eomcs.util.Prompt;
 
-public class BoardDeleteHandler extends AbstractBoardHandler {
-
-  public BoardDeleteHandler(List<Board> boardList) {
-    super(boardList);
-  }
+public class BoardDeleteHandler implements Command {
 
   @Override
-  public void service() {
-    System.out.println("[게시글 삭제]");
+  public void service(DataInputStream in, DataOutputStream out) {
+    try {
+      System.out.println("[게시글 삭제]");
 
-    int no = Prompt.inputInt("번호? ");
+      int no = Prompt.inputInt("번호? ");
 
-    Board board = findByNo(no);
-    if (board == null) {
-      System.out.println("해당 번호의 게시글이 없습니다.");
-      return;
-    }
+      // 서버에 해당 번호의 게시글이 있는지 조회한다.
+      out.writeUTF("board/select");
+      out.writeInt(1);
+      out.writeUTF(Integer.toString(no));
+      out.flush();
 
-    String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
+      // 서버의 응답을 읽는다.
+      String status = in.readUTF();
+      in.readInt();
+      String data = in.readUTF();
 
-    if (input.equalsIgnoreCase("Y")) {
-      boardList.remove(board); 
+      if (status.equals("error")) {
+        System.out.println(data);
+        return;
+      }
+
+      String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
+      if (!input.equalsIgnoreCase("Y")) {
+        System.out.println("게시글 삭제를 취소하였습니다.");
+        return;
+      }
+
+      // 서버에 데이터 삭제를 요청한다.
+      out.writeUTF("board/delete");
+      out.writeInt(1);
+      out.writeUTF(Integer.toString(no));
+      out.flush();
+
+      // 서버의 응답을 읽는다.
+      status = in.readUTF();
+      in.readInt();
+
+      if (status.equals("error")) {
+        System.out.println(in.readUTF());
+        return;
+      }
 
       System.out.println("게시글을 삭제하였습니다.");
 
-    } else {
-      System.out.println("게시글 삭제를 취소하였습니다.");
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 }

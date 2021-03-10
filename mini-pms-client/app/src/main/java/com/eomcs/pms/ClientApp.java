@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import com.eomcs.pms.handler.BoardAddHandler;
+import com.eomcs.pms.handler.BoardDeleteHandler;
 import com.eomcs.pms.handler.BoardDetailHandler;
 import com.eomcs.pms.handler.BoardListHandler;
 import com.eomcs.pms.handler.BoardUpdateHandler;
@@ -42,7 +43,7 @@ public class ClientApp {
     commandMap.put("/board/list", new BoardListHandler());
     commandMap.put("/board/detail", new BoardDetailHandler());
     commandMap.put("/board/update", new BoardUpdateHandler());
-    //    commandMap.put("/board/delete", new BoardDeleteHandler(boardList));
+    commandMap.put("/board/delete", new BoardDeleteHandler());
 
     try (Socket socket = new Socket(this.serverAddress, this.port);
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
