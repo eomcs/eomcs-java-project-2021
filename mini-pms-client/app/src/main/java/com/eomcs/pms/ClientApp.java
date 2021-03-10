@@ -36,10 +36,11 @@ public class ClientApp {
         int no = Prompt.inputInt("개수> ");
         out.writeInt(no);
 
-        // 3) 서버에 데이터를 보낸다.
-        String parameter = Prompt.inputString("데이터> ");
-        out.writeUTF(parameter);
-
+        if (no > 0) {
+          // 3) 서버에 데이터를 보낸다.
+          String parameter = Prompt.inputString("데이터> ");
+          out.writeUTF(parameter);
+        }
         out.flush();
 
 

@@ -1,8 +1,8 @@
 package com.eomcs.pms.table;
 
-import java.io.DataOutputStream;
-import java.util.List;
+import com.eomcs.util.Request;
+import com.eomcs.util.Response;
 
 public interface DataTable {
-  void service(String command, List<String> data, DataOutputStream out) throws Exception;
+  void service(Request request, Response response) throws Exception;
 }
