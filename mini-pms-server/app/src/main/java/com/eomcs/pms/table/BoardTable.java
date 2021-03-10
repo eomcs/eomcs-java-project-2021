@@ -78,6 +78,8 @@ public class BoardTable implements DataTable {
           throw new Exception("해당 번호의 게시글이 없습니다.");
         }
         break;
+      case "board/selectByKeyword":
+        break;
       case "board/update":
         fields = request.getData().get(0).split(",");
 
