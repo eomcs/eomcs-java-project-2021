@@ -29,7 +29,8 @@ public class BoardAddHandler implements Command {
       in.readInt();
 
       if (status.equals("error")) {
-        throw new Exception(in.readUTF());
+        System.out.println(in.readUTF());
+        return;
       }
       System.out.println("게시글을 등록하였습니다.");
 

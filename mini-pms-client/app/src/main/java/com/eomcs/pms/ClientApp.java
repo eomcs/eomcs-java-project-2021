@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import com.eomcs.pms.handler.BoardAddHandler;
+import com.eomcs.pms.handler.BoardDetailHandler;
 import com.eomcs.pms.handler.BoardListHandler;
 import com.eomcs.pms.handler.Command;
 import com.eomcs.util.Prompt;
@@ -38,7 +39,7 @@ public class ClientApp {
 
     commandMap.put("/board/add", new BoardAddHandler());
     commandMap.put("/board/list", new BoardListHandler());
-    //    commandMap.put("/board/detail", new BoardDetailHandler(boardList));
+    commandMap.put("/board/detail", new BoardDetailHandler());
     //    commandMap.put("/board/update", new BoardUpdateHandler(boardList));
     //    commandMap.put("/board/delete", new BoardDeleteHandler(boardList));
 
