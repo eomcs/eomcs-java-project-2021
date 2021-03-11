@@ -11,6 +11,7 @@ import com.eomcs.pms.handler.BoardAddHandler;
 import com.eomcs.pms.handler.BoardDeleteHandler;
 import com.eomcs.pms.handler.BoardDetailHandler;
 import com.eomcs.pms.handler.BoardListHandler;
+import com.eomcs.pms.handler.BoardSearchHandler;
 import com.eomcs.pms.handler.BoardUpdateHandler;
 import com.eomcs.pms.handler.Command;
 import com.eomcs.util.Prompt;
@@ -44,6 +45,7 @@ public class ClientApp {
     commandMap.put("/board/detail", new BoardDetailHandler());
     commandMap.put("/board/update", new BoardUpdateHandler());
     commandMap.put("/board/delete", new BoardDeleteHandler());
+    commandMap.put("/board/search", new BoardSearchHandler());
 
     try (Socket socket = new Socket(this.serverAddress, this.port);
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());

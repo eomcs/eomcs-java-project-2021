@@ -79,6 +79,23 @@ public class BoardTable implements DataTable {
         }
         break;
       case "board/selectByKeyword":
+        String keyword = request.getData().get(0);
+
+        // 전체 게시글을 가져와서 검색어를 포함하는 게시글을 찾는다.
+        // 찾은 게시글을 CSV 문자열로 만들어 응답할 데이터에 추가한다.
+        for (Board b : list) {
+          if (b.getTitle().contains(keyword) || 
+              b.getContent().contains(keyword) ||
+              b.getWriter().contains(keyword)) {
+
+            response.appendData(String.format("%d,%s,%s,%s,%d", 
+                b.getNo(), 
+                b.getTitle(), 
+                b.getWriter(), 
+                b.getRegisteredDate(), 
+                b.getViewCount()));
+          }
+        }
         break;
       case "board/update":
         fields = request.getData().get(0).split(",");
