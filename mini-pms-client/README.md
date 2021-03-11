@@ -29,27 +29,21 @@
 
 - `com.eomcs.driver.Statement` 클래스 복사
 
+
 ### 2단계 - 핸들러 클래스에서 Statement를 사용하여 서버에 요청한다.
 
 - `com.eomcs.pms.handler.Command` 인터페이스 변경
     - service() 메서드의 파라미터를 Statement 객체로 변경한다.
 - `com.eomcs.pms.handler.XxxHandler` 클래스 변경
     - 서버와 직접 통신하는 대신에 Statement 객체를 사용해서 서버와 통신한다.
-
-
-### 3단계 - 데이터를 다룰 때는 서버에 위임한다.
-
 - `com.eomcs.pms.ClientApp` 변경
-    - `mini-pms-28-b` 프로젝트의 App 클래스에서 사용자 명령을 입력 받아서 처리하는 부분을 복사해 온다.
+    - `XxxHandler` 객체의 `service()`를 호출할 때 파라미터로 Statement 객체를 넘긴다.
+
 
     
 ## 실습 결과
 
-- src/main/java/com/eomcs/pms/domain/Board.java 추가
-- src/main/java/com/eomcs/pms/domain/Member.java 추가
-- src/main/java/com/eomcs/pms/domain/Project.java 추가
-- src/main/java/com/eomcs/pms/domain/Task.java 추가
-- src/main/java/com/eomcs/pms/handler/Command.java 추가
-- src/main/java/com/eomcs/pms/handler/XxxHandler.java 추가
-- src/main/java/com/eomcs/pms/handler/MemberValidator.java 추가
+- src/main/java/com/eomcs/pms/handler/Command.java 변경
+- src/main/java/com/eomcs/pms/handler/XxxHandler.java 변경
+- src/main/java/com/eomcs/driver/Statement.java 추가
 - src/main/java/com/eomcs/pms/ClientApp.java 변경
