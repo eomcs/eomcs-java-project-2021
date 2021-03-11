@@ -1,4 +1,5 @@
-# 29-e. 파일 관리를 별도의 애플리케이션으로 분리하기 : 파일 및 데이터 처리를 서버로 분리
+# 29-f. 파일 관리를 별도의 애플리케이션으로 분리하기 : 드라이버 객체 도입
+
 이번 훈련에서는,
 - **네트워크 API** 를 이용하여 데스크톱 애플리케이션을 클라이언트/서버 구조로 변경한다.
 
@@ -20,92 +21,21 @@
 - 응답 프로토콜을 변경하고 그에 맞게 구현한다.
 - 응답을 수신하는 코드를 별도의 메서드로 분리한다.
 
-### 요청 프로토콜
-
-```
-[데이터]/[명령](UTF-8 문자열)
-보내는 데이터의 개수(int)
-데이터(UTF-8 문자열)
-
-예) 게시글 전체 목록 
-board/selectall (UTF-8 문자열)
-0 (int)
-
-예) 게시글 상세 목록
-board/select (UTF-8 문자열)
-1 (int)
-100 (UTF-8 문자열)
-
-예) 게시글 등록
-board/add (UTF-8 문자열)
-1 (int)
-제목,내용,작성자 (UTF-8 문자열)
-
-예) 게시글 변경
-board/update (UTF-8 문자열)
-1 (int)
-100,제목,내용 (UTF-8 문자열)
-
-예) 게시글 삭제
-board/delete (UTF-8 문자열)
-1 (int)
-100 (UTF-8 문자열)
-```
-
-### 응답 프로토콜
-
-```
-success|error(UTF-8 문자열)
-보내는 데이터의 개수(int)
-데이터 또는 오류 메시지(UTF-8 문자열)
-
-예) board/selectall 요청에 대한 응답
-success (UTF-8 문자열)
-3 (int)
-101,제목,작성자,작성일,조회수 (UTF-8 문자열)
-102,제목,작성자,작성일,조회수 (UTF-8 문자열)
-103,제목,작성자,작성일,조회수 (UTF-8 문자열)
-
-
-예) board/select 요청에 대한 응답
-success (UTF-8 문자열)
-1 (int)
-101,제목,내용,작성자,작성일,조회수 (UTF-8 문자열)
-
-예) board/add 요청에 대한 응답
-success (UTF-8 문자열)
-0 (int)
-
-예) board/update 요청에 대한 응답
-success (UTF-8 문자열)
-0 (int)
-
-예) board/delete 요청에 대한 응답
-success (UTF-8 문자열)
-0 (int)
-```
 
 ## 실습
 
-기존의 **mini-pms-28-b** 프로젝트에서 게시글 관련 코드를 가져와 클라이언트에 적용한다.
 
-### 1단계 - domain 클래스 준비
+### 1단계 - 서버측에서 제공하는 Statement 클래스를 가져온다.
 
-- `com.eomcs.pms.domain.Board` 클래스 복사 및 편집
-- `com.eomcs.pms.domain.Member` 클래스 복사 및 편집
-- `com.eomcs.pms.domain.Project` 클래스 복사 및 편집
-- `com.eomcs.pms.domain.Task` 클래스 복사 및 편집
-    - 상태 번호로 라벨을 리턴하는 `getStatusLabel()` 메서드를 추가한다.
+- `com.eomcs.driver.Statement` 클래스 복사
 
-### 2단계 - 핸들러 클래스 준비
+### 2단계 - 핸들러 클래스에서 Statement를 사용하여 서버에 요청한다.
 
-- `com.eomcs.pms.handler.Command` 인터페이스 복사 및 변경
-    - 서버와 통신을 할 입출력 스트림을 파라미터로 받는다.
-- `com.eomcs.pms.handler.XxxHandler` 클래스 복사 및 변경
-    - 직접 Command 인터페이스를 구현한다.
-    - 서버와 통신하여 데이터를 다루도록 변경한다.
-- `com.eomcs.pms.handler.MemberValidator` 클래스 추가
-    - 기존의 `MemberValidatorHandler` 클래스를 가져와서 변경한다.
+- `com.eomcs.pms.handler.Command` 인터페이스 변경
+    - service() 메서드의 파라미터를 Statement 객체로 변경한다.
+- `com.eomcs.pms.handler.XxxHandler` 클래스 변경
+    - 서버와 직접 통신하는 대신에 Statement 객체를 사용해서 서버와 통신한다.
+
 
 ### 3단계 - 데이터를 다룰 때는 서버에 위임한다.
 

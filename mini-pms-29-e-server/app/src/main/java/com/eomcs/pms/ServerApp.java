@@ -39,7 +39,7 @@ public class ServerApp {
     tableMap.put("project/", new ProjectTable());
     tableMap.put("task/", new TaskTable());
 
-    // 클라이언트 연결을 기다리는 서버 소켓 생성
+    // 클라이언트 연결을 기다는 서버 소켓 생성
     try (ServerSocket serverSocket = new ServerSocket(this.port)) {
 
       System.out.println("서버 실행!");
@@ -47,7 +47,6 @@ public class ServerApp {
       while (true) {
         processRequest(serverSocket.accept());
       }
-
     } catch (Exception e) {
       System.out.println("서버 실행 중 오류 발생!");
       e.printStackTrace();
