@@ -11,6 +11,7 @@ import java.util.Set;
 import com.eomcs.pms.table.BoardTable;
 import com.eomcs.pms.table.DataTable;
 import com.eomcs.pms.table.MemberTable;
+import com.eomcs.pms.table.ProjectTable;
 import com.eomcs.util.Request;
 import com.eomcs.util.Response;
 
@@ -34,6 +35,7 @@ public class ServerApp {
     // 요청을 처리할 테이블 객체를 준비한다.
     tableMap.put("board/", new BoardTable());
     tableMap.put("member/", new MemberTable());
+    tableMap.put("project/", new ProjectTable());
 
     // 클라이언트 연결을 기다는 서버 소켓 생성
     try (ServerSocket serverSocket = new ServerSocket(this.port)) {

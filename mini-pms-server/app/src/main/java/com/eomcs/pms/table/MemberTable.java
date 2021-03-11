@@ -69,6 +69,22 @@ public class MemberTable implements DataTable {
           throw new Exception("해당 번호의 회원이 없습니다.");
         }
         break;
+      case "member/selectByName":
+        String name = request.getData().get(0);
+
+        member = getMemberByName(name);
+        if (member != null) {
+          response.appendData(String.format("%d,%s,%s,%s,%s,%s", 
+              member.getNo(), 
+              member.getName(), 
+              member.getEmail(),
+              member.getPhoto(),
+              member.getTel(),
+              member.getRegisteredDate()));
+        } else {
+          throw new Exception("해당 번호의 회원이 없습니다.");
+        }
+        break;
       case "member/update":
         fields = request.getData().get(0).split(",");
 
@@ -103,6 +119,15 @@ public class MemberTable implements DataTable {
   private Member getMember(int memberNo) {
     for (Member m : list) {
       if (m.getNo() == memberNo) {
+        return m;
+      }
+    }
+    return null;
+  }
+
+  private Member getMemberByName(String name) {
+    for (Member m : list) {
+      if (m.getName().equals(name)) {
         return m;
       }
     }

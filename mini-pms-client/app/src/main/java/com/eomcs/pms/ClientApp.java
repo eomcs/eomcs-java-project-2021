@@ -19,6 +19,11 @@ import com.eomcs.pms.handler.MemberDeleteHandler;
 import com.eomcs.pms.handler.MemberDetailHandler;
 import com.eomcs.pms.handler.MemberListHandler;
 import com.eomcs.pms.handler.MemberUpdateHandler;
+import com.eomcs.pms.handler.ProjectAddHandler;
+import com.eomcs.pms.handler.ProjectDeleteHandler;
+import com.eomcs.pms.handler.ProjectDetailHandler;
+import com.eomcs.pms.handler.ProjectListHandler;
+import com.eomcs.pms.handler.ProjectUpdateHandler;
 import com.eomcs.util.Prompt;
 
 public class ClientApp {
@@ -57,6 +62,12 @@ public class ClientApp {
     commandMap.put("/member/detail", new MemberDetailHandler());
     commandMap.put("/member/update", new MemberUpdateHandler());
     commandMap.put("/member/delete", new MemberDeleteHandler());
+
+    commandMap.put("/project/add", new ProjectAddHandler());
+    commandMap.put("/project/list", new ProjectListHandler());
+    commandMap.put("/project/detail", new ProjectDetailHandler());
+    commandMap.put("/project/update", new ProjectUpdateHandler());
+    commandMap.put("/project/delete", new ProjectDeleteHandler());
 
     try (Socket socket = new Socket(this.serverAddress, this.port);
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
