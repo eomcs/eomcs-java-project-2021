@@ -119,6 +119,7 @@ success (UTF-8 문자열)
 
 - `com.eomcs.pms.ServerApp` 클래스 변경
     - 클라이언트 요청 처리 코드에 대해 리팩토링을 수행한다.
+    - `BoardTable` 객체를 테이블 맵에 추가한다.
 
 ### 6단계 - 회원 데이터를 다룰 MemberTable 클래스를 정의한다.
 
@@ -127,7 +128,30 @@ success (UTF-8 문자열)
 - `com.eomcs.pms.table.MemberTable` 클래스 정의
     - 클라이언트가 요청한 명령에 데이터를 처리하고 응답 데이터를 준비한다.
     - insert/update/delete 명령을 처리한 후에 즉시 파일을 저장한다.
+- `com.eomcs.pms.ServerApp` 클래스 변경
+    - `MemberTable` 객체를 테이블 맵에 추가한다.
 
+### 7단계 - 프로젝트 데이터를 다룰 ProjectTable 클래스를 정의한다.
+
+- `com.eomcs.pms.domain.Project` 클래스 추가
+    - `mini-pms` 프로젝트에서 해당 파일을 가져온다.
+- `com.eomcs.pms.table.ProjectTable` 클래스 정의
+    - 클라이언트가 요청한 명령에 데이터를 처리하고 응답 데이터를 준비한다.
+    - insert/update/delete 명령을 처리한 후에 즉시 파일을 저장한다.
+- `com.eomcs.pms.table.MemberTable` 클래스 변경
+    - 회원 이름으로 데이터를 조회하는 기능 추가
+- `com.eomcs.pms.ServerApp` 클래스 변경
+    - `ProjectTable` 객체를 테이블 맵에 추가한다.
+
+### 8단계 - 작업 데이터를 다룰 TaskTable 클래스를 정의한다.
+
+- `com.eomcs.pms.domain.Task` 클래스 추가
+    - `mini-pms` 프로젝트에서 해당 파일을 가져온다.
+- `com.eomcs.pms.table.ProjectTable` 클래스 정의
+    - 클라이언트가 요청한 명령에 데이터를 처리하고 응답 데이터를 준비한다.
+    - insert/update/delete 명령을 처리한 후에 즉시 파일을 저장한다.
+- `com.eomcs.pms.ServerApp` 클래스 변경
+    - `TaskTable` 객체를 테이블 맵에 추가한다.
 
 ## 실습 결과
 - build.gradle 변경
@@ -136,6 +160,12 @@ success (UTF-8 문자열)
 - src/main/java/com/eomcs/util/Response.java 추가
 - src/main/java/com/eomcs/pms/table/DataTable.java 추가
 - src/main/java/com/eomcs/pms/domain/Board.java 추가
+- src/main/java/com/eomcs/pms/domain/Member.java 추가
+- src/main/java/com/eomcs/pms/domain/Project.java 추가
+- src/main/java/com/eomcs/pms/domain/Task.java 추가
 - src/main/java/com/eomcs/pms/table/BoardTable.java 추가
+- src/main/java/com/eomcs/pms/table/MemberTable.java 추가
+- src/main/java/com/eomcs/pms/table/ProjectTable.java 추가
+- src/main/java/com/eomcs/pms/table/TaskTable.java 추가
 - src/main/java/com/eomcs/pms/ServerApp.java 변경
 

@@ -92,6 +92,10 @@ success (UTF-8 문자열)
 ### 1단계 - domain 클래스 준비
 
 - `com.eomcs.pms.domain.Board` 클래스 복사 및 편집
+- `com.eomcs.pms.domain.Member` 클래스 복사 및 편집
+- `com.eomcs.pms.domain.Project` 클래스 복사 및 편집
+- `com.eomcs.pms.domain.Task` 클래스 복사 및 편집
+    - 상태 번호로 라벨을 리턴하는 `getStatusLabel()` 메서드를 추가한다.
 
 ### 2단계 - 핸들러 클래스 준비
 
@@ -100,7 +104,8 @@ success (UTF-8 문자열)
 - `com.eomcs.pms.handler.XxxHandler` 클래스 복사 및 변경
     - 직접 Command 인터페이스를 구현한다.
     - 서버와 통신하여 데이터를 다루도록 변경한다.
-
+- `com.eomcs.pms.handler.MemberValidator` 클래스 추가
+    - 기존의 `MemberValidatorHandler` 클래스를 가져와서 변경한다.
 
 ### 3단계 - 데이터를 다룰 때는 서버에 위임한다.
 
@@ -109,4 +114,12 @@ success (UTF-8 문자열)
 
     
 ## 실습 결과
+
+- src/main/java/com/eomcs/pms/domain/Board.java 추가
+- src/main/java/com/eomcs/pms/domain/Member.java 추가
+- src/main/java/com/eomcs/pms/domain/Project.java 추가
+- src/main/java/com/eomcs/pms/domain/Task.java 추가
+- src/main/java/com/eomcs/pms/handler/Command.java 추가
+- src/main/java/com/eomcs/pms/handler/XxxHandler.java 추가
+- src/main/java/com/eomcs/pms/handler/MemberValidator.java 추가
 - src/main/java/com/eomcs/pms/ClientApp.java 변경
