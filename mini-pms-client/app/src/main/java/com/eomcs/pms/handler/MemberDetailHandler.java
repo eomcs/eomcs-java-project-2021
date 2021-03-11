@@ -1,33 +1,39 @@
 package com.eomcs.pms.handler;
 
-import java.util.List;
-import com.eomcs.pms.domain.Member;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import com.eomcs.util.Prompt;
 
-public class MemberDetailHandler extends AbstractMemberHandler {
-
-  public MemberDetailHandler(List<Member> memberList) {
-    super(memberList);
-  }
+public class MemberDetailHandler implements Command {
 
   @Override
-  public void service() {
+  public void service(DataInputStream in, DataOutputStream out) throws Exception {
     System.out.println("[회원 상세보기]");
 
     int no = Prompt.inputInt("번호? ");
 
-    Member member = findByNo(no);
-    if (member == null) {
-      System.out.println("해당 번호의 회원이 없습니다.");
+    // 서버에 지정한 번호의 데이터를 요청한다.
+    out.writeUTF("member/select");
+    out.writeInt(1);
+    out.writeUTF(Integer.toString(no));
+    out.flush();
+
+    // 서버의 응답을 받는다.
+    String status = in.readUTF();
+    in.readInt();
+
+    if (status.equals("error")) {
+      System.out.println(in.readUTF());
       return;
     }
 
-    System.out.printf("이름: %s\n", member.getName());
-    System.out.printf("이메일: %s\n", member.getEmail());
-    System.out.printf("사진: %s\n", member.getPhoto());
-    System.out.printf("전화: %s\n", member.getTel());
-    System.out.printf("가입일: %s\n", member.getRegisteredDate());
+    String[] fields = in.readUTF().split(",");
 
+    System.out.printf("이름: %s\n", fields[1]);
+    System.out.printf("이메일: %s\n", fields[2]);
+    System.out.printf("사진: %s\n", fields[3]);
+    System.out.printf("전화: %s\n", fields[4]);
+    System.out.printf("가입일: %s\n", fields[5]);
   }
 }
 

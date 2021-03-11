@@ -1,25 +1,37 @@
 package com.eomcs.pms.handler;
 
-import java.util.Iterator;
-import java.util.List;
-import com.eomcs.pms.domain.Member;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
-public class MemberListHandler extends AbstractMemberHandler {
-
-  public MemberListHandler(List<Member> memberList) {
-    super(memberList);
-  }
+public class MemberListHandler implements Command {
 
   @Override
-  public void service() {
+  public void service(DataInputStream in, DataOutputStream out) throws Exception {
     System.out.println("[회원 목록]");
 
-    Iterator<Member> iterator = memberList.iterator();
+    // 서버에 데이터 목록을 달라고 요청한다.
+    out.writeUTF("member/selectall");
+    out.writeInt(0);
+    out.flush();
 
-    while (iterator.hasNext()) {
-      Member m = iterator.next();
-      System.out.printf("%d, %s, %s, %s, %s\n",
-          m.getNo(), m.getName(), m.getEmail(), m.getTel(), m.getRegisteredDate());
+    // 서버의 응답 데이터를 읽는다.
+    String status = in.readUTF();
+    int length = in.readInt();
+
+    if (status.equals("error")) {
+      System.out.println(in.readUTF());
+      return;
+    }
+
+    for (int i = 0; i < length; i++) {
+      String[] fields = in.readUTF().split(",");
+
+      System.out.printf("%s, %s, %s, %s, %s\n",
+          fields[0], 
+          fields[1], 
+          fields[2],
+          fields[3],
+          fields[4]);
     }
   }
 }
