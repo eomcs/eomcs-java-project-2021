@@ -19,18 +19,17 @@ import com.eomcs.util.Response;
 //1) 외부의 스레드 사용
 //2) 스태틱 중첩 클래스로 정의한 스레드 사용
 //3) inner 클래스로 정의한 스레드 사용
-//4) 로컬 클래스로 정의한 스레드 사용
-public class ServerApp {
+public class ServerApp03 {
 
   int port;
   HashMap<String,DataTable> tableMap = new HashMap<>();
 
   public static void main(String[] args) {
-    ServerApp app = new ServerApp(8888);
+    ServerApp03 app = new ServerApp03(8888);
     app.service();
   }
 
-  public ServerApp(int port) {
+  public ServerApp03(int port) {
     this.port = port;
   }
 

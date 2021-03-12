@@ -36,23 +36,25 @@
   - 클라이언트 요청 처리를 `StatementHandlerThread` 에게 맡긴다.
   - 백업: ServerApp01.java
 
-### 2단계 - `StatementHandlerThread` 를 스태틱 중첩 클래스로 변경한다.
+### 2단계 - `StatementHandlerThread` 를 `ServerApp` 의 스태틱 중첩 클래스로 변경한다.
 
 - `com.eomcs.pms.ServerApp` 클래스 변경
     - `StatementHandlerThread2` 스태틱 중첩 클래스를 정의한다.
   - 백업: ServerApp02.java
 
-### 2단계 - `ClientHandler` 를 `ServerApp` 의 중첩 클래스로 만든다.
+### 3단계 - `StatementHandlerThread` 를 `ServerApp` 의 inner 클래스로 만든다.
 
 - `com.eomcs.pms.ServerApp` 클래스 변경
-  - `ClientHandler` 클래스를 중첩 클래스(static nested class)로 만든다.
-  - 백업: ServerApp02.java
-
-### 3단계 - `ClientHandler` 를 `ServerApp.main()` 의 익명 클래스로 만든다.
-
-- `com.eomcs.pms.ServerApp` 클래스 변경
-  - `ClientHandler` 스태틱 중첩 클래스를 main()의 익명 클래스로 만든다.
+  - `StatementHandlerThread3` inner 클래스를 정의한다.
   - 백업: ServerApp03.java
+
+
+### 4단계 - `StatementHandlerThread` 를 `ServerApp.service()` 의 로컬 클래스로 만든다.
+
+- `com.eomcs.pms.ServerApp` 클래스 변경
+  - `StatementHandlerThread4` 로컬 클래스를 정의한다.
+  - 백업: ServerApp03.java
+
 
 ### 4단계 - `ClientHandler` 를 `ServerApp.main()` 의 익명 클래스로 만든다. II
 
