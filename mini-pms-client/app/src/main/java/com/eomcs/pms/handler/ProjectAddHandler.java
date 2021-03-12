@@ -6,8 +6,16 @@ import com.eomcs.util.Prompt;
 
 public class ProjectAddHandler implements Command {
 
+  Statement stmt;
+  MemberValidator memberValidator;
+
+  public ProjectAddHandler(Statement stmt, MemberValidator memberValidator) {
+    this.stmt = stmt;
+    this.memberValidator = memberValidator;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[프로젝트 등록]");
 
     Project p = new Project();
@@ -16,13 +24,13 @@ public class ProjectAddHandler implements Command {
     p.setStartDate(Prompt.inputDate("시작일? "));
     p.setEndDate(Prompt.inputDate("종료일? "));
 
-    p.setOwner(MemberValidator.inputMember("만든이?(취소: 빈 문자열) ", stmt));
+    p.setOwner(memberValidator.inputMember("만든이?(취소: 빈 문자열) "));
     if (p.getOwner() == null) {
       System.out.println("프로젝트 입력을 취소합니다.");
       return;
     }
 
-    p.setMembers(MemberValidator.inputMembers("팀원?(완료: 빈 문자열) ", stmt));
+    p.setMembers(memberValidator.inputMembers("팀원?(완료: 빈 문자열) "));
 
     stmt.executeUpdate("project/insert", 
         String.format("%s,%s,%s,%s,%s,%s", 

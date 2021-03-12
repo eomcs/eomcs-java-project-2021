@@ -6,8 +6,14 @@ import com.eomcs.util.Prompt;
 
 public class MemberAddHandler implements Command {
 
+  Statement stmt;
+
+  public MemberAddHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[회원 등록]");
 
     Member m = new Member();

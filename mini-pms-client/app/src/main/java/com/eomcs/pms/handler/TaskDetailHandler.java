@@ -6,8 +6,14 @@ import com.eomcs.util.Prompt;
 
 public class TaskDetailHandler implements Command {
 
+  Statement stmt;
+
+  public TaskDetailHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[작업 상세보기]");
 
     int no = Prompt.inputInt("번호? ");

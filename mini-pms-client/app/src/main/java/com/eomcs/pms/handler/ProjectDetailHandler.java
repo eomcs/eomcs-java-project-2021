@@ -5,8 +5,14 @@ import com.eomcs.util.Prompt;
 
 public class ProjectDetailHandler implements Command {
 
+  Statement stmt;
+
+  public ProjectDetailHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[프로젝트 상세보기]");
 
     int no = Prompt.inputInt("번호? ");

@@ -5,8 +5,14 @@ import com.eomcs.driver.Statement;
 
 public class MemberListHandler implements Command {
 
+  Statement stmt;
+
+  public MemberListHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[회원 목록]");
 
     Iterator<String> results = stmt.executeQuery("member/selectall");

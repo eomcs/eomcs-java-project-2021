@@ -5,8 +5,14 @@ import com.eomcs.util.Prompt;
 
 public class MemberDetailHandler implements Command {
 
+  Statement stmt;
+
+  public MemberDetailHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[회원 상세보기]");
 
     int no = Prompt.inputInt("번호? ");

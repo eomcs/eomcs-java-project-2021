@@ -5,8 +5,14 @@ import com.eomcs.util.Prompt;
 
 public class TaskDeleteHandler implements Command {
 
+  Statement stmt;
+
+  public TaskDeleteHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[작업 삭제]");
 
     int no = Prompt.inputInt("번호? ");

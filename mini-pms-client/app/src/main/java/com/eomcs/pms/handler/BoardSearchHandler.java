@@ -6,8 +6,14 @@ import com.eomcs.util.Prompt;
 
 public class BoardSearchHandler implements Command {
 
+  Statement stmt;
+
+  public BoardSearchHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     String keyword = Prompt.inputString("검색어? ");
 
     if (keyword.length() == 0) {

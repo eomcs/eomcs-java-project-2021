@@ -7,8 +7,17 @@ import com.eomcs.util.Prompt;
 
 public class TaskUpdateHandler implements Command {
 
+  Statement stmt;
+  MemberValidator memberValidator;
+
+  public TaskUpdateHandler(Statement stmt, MemberValidator memberValidator) {
+    this.stmt = stmt;
+    this.memberValidator = memberValidator;
+  }
+
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[작업 변경]");
 
     int no = Prompt.inputInt("번호? ");
@@ -20,7 +29,7 @@ public class TaskUpdateHandler implements Command {
     int stat = Prompt.inputInt(String.format(
         "상태(%s)?\n0: 신규\n1: 진행중\n2: 완료\n> ", 
         Task.getStatusLabel(Integer.parseInt(fields[3]))));
-    String owner = MemberValidator.inputMember(String.format("담당자(%s)?(취소: 빈 문자열) ", fields[4]), stmt);
+    String owner = memberValidator.inputMember(String.format("담당자(%s)?(취소: 빈 문자열) ", fields[4]));
     if(owner == null) {
       System.out.println("작업 변경을 취소합니다.");
       return;

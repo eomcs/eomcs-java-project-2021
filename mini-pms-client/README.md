@@ -36,8 +36,9 @@
     - service() 메서드의 파라미터를 Statement 객체로 변경한다.
 - `com.eomcs.pms.handler.XxxHandler` 클래스 변경
     - 서버와 직접 통신하는 대신에 Statement 객체를 사용해서 서버와 통신한다.
+    - 생성자를 통해 의존 객체 Statement 를 주입한다.
 - `com.eomcs.pms.ClientApp` 변경
-    - `XxxHandler` 객체의 `service()`를 호출할 때 파라미터로 Statement 객체를 넘긴다.
+    - `XxxHandler` 객체를 생성할 때 의존 객체를 주입한다.
 
 
     
@@ -45,5 +46,6 @@
 
 - src/main/java/com/eomcs/pms/handler/Command.java 변경
 - src/main/java/com/eomcs/pms/handler/XxxHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/MemberValidator.java 변경
 - src/main/java/com/eomcs/driver/Statement.java 추가
 - src/main/java/com/eomcs/pms/ClientApp.java 변경

@@ -5,8 +5,14 @@ import com.eomcs.util.Prompt;
 
 public class MemberDeleteHandler implements Command {
 
+  Statement stmt;
+
+  public MemberDeleteHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[회원 삭제]");
 
     int no = Prompt.inputInt("번호? ");

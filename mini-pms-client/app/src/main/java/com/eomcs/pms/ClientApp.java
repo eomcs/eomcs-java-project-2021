@@ -17,6 +17,7 @@ import com.eomcs.pms.handler.MemberDeleteHandler;
 import com.eomcs.pms.handler.MemberDetailHandler;
 import com.eomcs.pms.handler.MemberListHandler;
 import com.eomcs.pms.handler.MemberUpdateHandler;
+import com.eomcs.pms.handler.MemberValidator;
 import com.eomcs.pms.handler.ProjectAddHandler;
 import com.eomcs.pms.handler.ProjectDeleteHandler;
 import com.eomcs.pms.handler.ProjectDetailHandler;
@@ -40,7 +41,14 @@ public class ClientApp {
 
   public static void main(String[] args) {
     ClientApp app = new ClientApp("localhost", 8888);
-    app.execute();
+
+    try {
+      app.execute();
+
+    } catch (Exception e) {
+      System.out.println("클라이언트 실행 중 오류 발생!");
+      e.printStackTrace();
+    }
   }
 
   public ClientApp(String serverAddress, int port) {
@@ -48,38 +56,42 @@ public class ClientApp {
     this.port = port;
   }
 
-  public void execute() {
+  public void execute() throws Exception {
+
+    // 서버와 통신하는 것을 대행해 줄 객체를 준비한다.
+    Statement stmt = new Statement(serverAddress, port);
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
 
-    commandMap.put("/board/add", new BoardAddHandler());
-    commandMap.put("/board/list", new BoardListHandler());
-    commandMap.put("/board/detail", new BoardDetailHandler());
-    commandMap.put("/board/update", new BoardUpdateHandler());
-    commandMap.put("/board/delete", new BoardDeleteHandler());
-    commandMap.put("/board/search", new BoardSearchHandler());
+    commandMap.put("/board/add", new BoardAddHandler(stmt));
+    commandMap.put("/board/list", new BoardListHandler(stmt));
+    commandMap.put("/board/detail", new BoardDetailHandler(stmt));
+    commandMap.put("/board/update", new BoardUpdateHandler(stmt));
+    commandMap.put("/board/delete", new BoardDeleteHandler(stmt));
+    commandMap.put("/board/search", new BoardSearchHandler(stmt));
 
-    commandMap.put("/member/add", new MemberAddHandler());
-    commandMap.put("/member/list", new MemberListHandler());
-    commandMap.put("/member/detail", new MemberDetailHandler());
-    commandMap.put("/member/update", new MemberUpdateHandler());
-    commandMap.put("/member/delete", new MemberDeleteHandler());
+    commandMap.put("/member/add", new MemberAddHandler(stmt));
+    commandMap.put("/member/list", new MemberListHandler(stmt));
+    commandMap.put("/member/detail", new MemberDetailHandler(stmt));
+    commandMap.put("/member/update", new MemberUpdateHandler(stmt));
+    commandMap.put("/member/delete", new MemberDeleteHandler(stmt));
 
-    commandMap.put("/project/add", new ProjectAddHandler());
-    commandMap.put("/project/list", new ProjectListHandler());
-    commandMap.put("/project/detail", new ProjectDetailHandler());
-    commandMap.put("/project/update", new ProjectUpdateHandler());
-    commandMap.put("/project/delete", new ProjectDeleteHandler());
+    MemberValidator memberValidator = new MemberValidator(stmt);
 
-    commandMap.put("/task/add", new TaskAddHandler());
-    commandMap.put("/task/list", new TaskListHandler());
-    commandMap.put("/task/detail", new TaskDetailHandler());
-    commandMap.put("/task/update", new TaskUpdateHandler());
-    commandMap.put("/task/delete", new TaskDeleteHandler());
+    commandMap.put("/project/add", new ProjectAddHandler(stmt, memberValidator));
+    commandMap.put("/project/list", new ProjectListHandler(stmt));
+    commandMap.put("/project/detail", new ProjectDetailHandler(stmt));
+    commandMap.put("/project/update", new ProjectUpdateHandler(stmt, memberValidator));
+    commandMap.put("/project/delete", new ProjectDeleteHandler(stmt));
 
-    try (// 서버와 통신하는 것을 대행해 줄 객체를 준비한다.
-        Statement stmt = new Statement(serverAddress, port)) {
+    commandMap.put("/task/add", new TaskAddHandler(stmt, memberValidator));
+    commandMap.put("/task/list", new TaskListHandler(stmt));
+    commandMap.put("/task/detail", new TaskDetailHandler(stmt));
+    commandMap.put("/task/update", new TaskUpdateHandler(stmt, memberValidator));
+    commandMap.put("/task/delete", new TaskDeleteHandler(stmt));
+
+    try {
 
       while (true) {
 
@@ -112,7 +124,7 @@ public class ClientApp {
               if (commandHandler == null) {
                 System.out.println("실행할 수 없는 명령입니다.");
               } else {
-                commandHandler.service(stmt);
+                commandHandler.service();
               }
           }
         } catch (Exception e) {
@@ -128,6 +140,7 @@ public class ClientApp {
     }
 
     Prompt.close();
+    stmt.close();
   }
 
   private void printCommandHistory(Iterator<String> iterator) {

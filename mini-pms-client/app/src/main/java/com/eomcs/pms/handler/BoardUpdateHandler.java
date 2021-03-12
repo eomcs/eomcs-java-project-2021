@@ -5,8 +5,14 @@ import com.eomcs.util.Prompt;
 
 public class BoardUpdateHandler implements Command {
 
+  Statement stmt;
+
+  public BoardUpdateHandler(Statement stmt) {
+    this.stmt = stmt;
+  }
+
   @Override
-  public void service(Statement stmt) throws Exception {
+  public void service() throws Exception {
     System.out.println("[게시글 변경]");
 
     int no = Prompt.inputInt("번호? ");
