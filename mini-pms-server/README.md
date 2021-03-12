@@ -34,17 +34,13 @@
   - `ServerApp` 에서 해당 코드를 가져온다.
 - `ServerApp` 클래스 변경
   - 클라이언트 요청 처리를 `StatementHandlerThread` 에게 맡긴다.
-  - 백업: ServerApp00.java
-
-### 2단계 - `StatementHandlerThread` 를 중첩 클래스로 변경한다.
-
-- `com.eomcs.pms.StatementHandlerThread` 클래스 추가
-  - `Runnable` 인터페이스를 구현한다.
-  - 클라이언트의 요청 처리를 담당한다.
-  - `ServerApp` 에서 해당 코드를 가져온다.
-- `com.eomcs.pms.ServerApp` 클래스 변경
-  - 클라이언트 요청 처리를 `Thread` 를 통해 `ClientHandler` 에게 맡긴다.
   - 백업: ServerApp01.java
+
+### 2단계 - `StatementHandlerThread` 를 스태틱 중첩 클래스로 변경한다.
+
+- `com.eomcs.pms.ServerApp` 클래스 변경
+    - `StatementHandlerThread2` 스태틱 중첩 클래스를 정의한다.
+  - 백업: ServerApp02.java
 
 ### 2단계 - `ClientHandler` 를 `ServerApp` 의 중첩 클래스로 만든다.
 

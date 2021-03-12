@@ -18,17 +18,17 @@ import com.eomcs.util.Response;
 
 //1) 외부의 스레드 사용
 //2) 스태틱 중첩 클래스로 정의한 스레드 사용
-public class ServerApp {
+public class ServerApp02 {
 
   int port;
   HashMap<String,DataTable> tableMap = new HashMap<>();
 
   public static void main(String[] args) {
-    ServerApp app = new ServerApp(8888);
+    ServerApp02 app = new ServerApp02(8888);
     app.service();
   }
 
-  public ServerApp(int port) {
+  public ServerApp02(int port) {
     this.port = port;
   }
 
@@ -46,7 +46,7 @@ public class ServerApp {
       System.out.println("서버 실행!");
 
       while (true) {
-        new StatementHandlerThread3(serverSocket.accept()).start();
+        new StatementHandlerThread2(serverSocket.accept(), tableMap).start();
       }
 
     } catch (Exception e) {
@@ -55,25 +55,14 @@ public class ServerApp {
     }
   }
 
-  private DataTable findDataTable(String command) {
-    Set<String> keySet = tableMap.keySet();
-    for (String key : keySet) {
-      if (command.startsWith(key)) {
-        return tableMap.get(key);
-      }
-    }
-    return null;
-  }
-
-  // non-static 중첩 클래스 = inner 클래스
-  // - inner 클래스는 바깥 클래스 입장에서 인스턴스 멤버이다.
-  // - 따라서 바깥 클래스에 소속된 다른 인스턴스 멤버(필드나 메서드)에 바로 접근할 수 있다. 
-  class StatementHandlerThread3 extends Thread {
+  static class StatementHandlerThread2 extends Thread {
 
     Socket socket;
+    HashMap<String,DataTable> tableMap = new HashMap<>();
 
-    public StatementHandlerThread3(Socket socket) {
+    public StatementHandlerThread2(Socket socket, HashMap<String,DataTable> tableMap) {
       this.socket = socket;
+      this.tableMap = tableMap;
     }
 
     @Override
@@ -122,6 +111,16 @@ public class ServerApp {
 
     }
 
+    private DataTable findDataTable(String command) {
+      Set<String> keySet = tableMap.keySet();
+      for (String key : keySet) {
+        if (command.startsWith(key)) {
+          return tableMap.get(key);
+        }
+      }
+      return null;
+    }
+
     private Request receiveRequest(DataInputStream in) throws Exception {
       Request request = new Request();
 
@@ -167,7 +166,6 @@ public class ServerApp {
       }
     }
   }
-
 
 
 }
