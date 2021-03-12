@@ -33,12 +33,12 @@
   - 클라이언트 측 Statement 연결 및 요청 처리를 담당한다.
   - `ServerApp` 에서 해당 코드를 가져온다.
 - `ServerApp` 클래스 변경
-  - 클라이언트 요청 처리를 `ClientHandlerThread` 에게 맡긴다.
+  - 클라이언트 요청 처리를 `StatementHandlerThread` 에게 맡긴다.
   - 백업: ServerApp00.java
 
-### 1단계 - 클라이언트의 요청 처리 부분을 `Runnable` 구현체로 분리하여 처리한다.
+### 2단계 - `StatementHandlerThread` 를 중첩 클래스로 변경한다.
 
-- `com.eomcs.pms.ClientHandler` 클래스 추가
+- `com.eomcs.pms.StatementHandlerThread` 클래스 추가
   - `Runnable` 인터페이스를 구현한다.
   - 클라이언트의 요청 처리를 담당한다.
   - `ServerApp` 에서 해당 코드를 가져온다.
