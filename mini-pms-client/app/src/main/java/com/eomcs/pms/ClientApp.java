@@ -12,6 +12,21 @@ import com.eomcs.pms.handler.BoardListHandler;
 import com.eomcs.pms.handler.BoardSearchHandler;
 import com.eomcs.pms.handler.BoardUpdateHandler;
 import com.eomcs.pms.handler.Command;
+import com.eomcs.pms.handler.MemberAddHandler;
+import com.eomcs.pms.handler.MemberDeleteHandler;
+import com.eomcs.pms.handler.MemberDetailHandler;
+import com.eomcs.pms.handler.MemberListHandler;
+import com.eomcs.pms.handler.MemberUpdateHandler;
+import com.eomcs.pms.handler.ProjectAddHandler;
+import com.eomcs.pms.handler.ProjectDeleteHandler;
+import com.eomcs.pms.handler.ProjectDetailHandler;
+import com.eomcs.pms.handler.ProjectListHandler;
+import com.eomcs.pms.handler.ProjectUpdateHandler;
+import com.eomcs.pms.handler.TaskAddHandler;
+import com.eomcs.pms.handler.TaskDeleteHandler;
+import com.eomcs.pms.handler.TaskDetailHandler;
+import com.eomcs.pms.handler.TaskListHandler;
+import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.util.Prompt;
 
 public class ClientApp {
@@ -44,24 +59,24 @@ public class ClientApp {
     commandMap.put("/board/update", new BoardUpdateHandler());
     commandMap.put("/board/delete", new BoardDeleteHandler());
     commandMap.put("/board/search", new BoardSearchHandler());
-    //
-    //    commandMap.put("/member/add", new MemberAddHandler());
-    //    commandMap.put("/member/list", new MemberListHandler());
-    //    commandMap.put("/member/detail", new MemberDetailHandler());
-    //    commandMap.put("/member/update", new MemberUpdateHandler());
-    //    commandMap.put("/member/delete", new MemberDeleteHandler());
-    //
-    //    commandMap.put("/project/add", new ProjectAddHandler());
-    //    commandMap.put("/project/list", new ProjectListHandler());
-    //    commandMap.put("/project/detail", new ProjectDetailHandler());
-    //    commandMap.put("/project/update", new ProjectUpdateHandler());
-    //    commandMap.put("/project/delete", new ProjectDeleteHandler());
-    //
-    //    commandMap.put("/task/add", new TaskAddHandler());
-    //    commandMap.put("/task/list", new TaskListHandler());
-    //    commandMap.put("/task/detail", new TaskDetailHandler());
-    //    commandMap.put("/task/update", new TaskUpdateHandler());
-    //    commandMap.put("/task/delete", new TaskDeleteHandler());
+
+    commandMap.put("/member/add", new MemberAddHandler());
+    commandMap.put("/member/list", new MemberListHandler());
+    commandMap.put("/member/detail", new MemberDetailHandler());
+    commandMap.put("/member/update", new MemberUpdateHandler());
+    commandMap.put("/member/delete", new MemberDeleteHandler());
+
+    commandMap.put("/project/add", new ProjectAddHandler());
+    commandMap.put("/project/list", new ProjectListHandler());
+    commandMap.put("/project/detail", new ProjectDetailHandler());
+    commandMap.put("/project/update", new ProjectUpdateHandler());
+    commandMap.put("/project/delete", new ProjectDeleteHandler());
+
+    commandMap.put("/task/add", new TaskAddHandler());
+    commandMap.put("/task/list", new TaskListHandler());
+    commandMap.put("/task/detail", new TaskDetailHandler());
+    commandMap.put("/task/update", new TaskUpdateHandler());
+    commandMap.put("/task/delete", new TaskDeleteHandler());
 
     try (// 서버와 통신하는 것을 대행해 줄 객체를 준비한다.
         Statement stmt = new Statement(serverAddress, port)) {

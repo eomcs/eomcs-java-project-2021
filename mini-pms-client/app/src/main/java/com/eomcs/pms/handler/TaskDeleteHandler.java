@@ -1,32 +1,17 @@
 package com.eomcs.pms.handler;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.eomcs.driver.Statement;
 import com.eomcs.util.Prompt;
 
 public class TaskDeleteHandler implements Command {
 
   @Override
-  public void service(DataInputStream in, DataOutputStream out) throws Exception {
+  public void service(Statement stmt) throws Exception {
     System.out.println("[작업 삭제]");
 
     int no = Prompt.inputInt("번호? ");
 
-    // 서버에 해당 번호의 게시글이 있는지 조회한다.
-    out.writeUTF("task/select");
-    out.writeInt(1);
-    out.writeUTF(Integer.toString(no));
-    out.flush();
-
-    // 서버의 응답을 읽는다.
-    String status = in.readUTF();
-    in.readInt();
-    String data = in.readUTF();
-
-    if (status.equals("error")) {
-      System.out.println(data);
-      return;
-    }
+    stmt.executeQuery("task/select", Integer.toString(no));
 
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
     if (!input.equalsIgnoreCase("Y")) {
@@ -34,21 +19,8 @@ public class TaskDeleteHandler implements Command {
       return;
     }
 
-    // 서버에 데이터 삭제를 요청한다.
-    out.writeUTF("task/delete");
-    out.writeInt(1);
-    out.writeUTF(Integer.toString(no));
-    out.flush();
+    stmt.executeUpdate("task/delete", Integer.toString(no));
 
-    // 서버의 응답을 읽는다.
-    status = in.readUTF();
-    in.readInt();
-
-    if (status.equals("error")) {
-      System.out.println(in.readUTF());
-      return;
-    }
     System.out.println("작업을 삭제하였습니다.");
-
   }
 }
