@@ -46,33 +46,39 @@
 
 - `com.eomcs.pms.ServerApp` 클래스 변경
   - `StatementHandlerThread3` inner 클래스를 정의한다.
-  - 백업: ServerApp03.java
-
-
-### 4단계 - `StatementHandlerThread` 를 `ServerApp.service()` 의 로컬 클래스로 만든다.
-
-- `com.eomcs.pms.ServerApp` 클래스 변경
-  - `StatementHandlerThread4` 로컬 클래스를 정의한다.
-  - 백업: ServerApp03.java
-
-
-### 4단계 - `ClientHandler` 를 `ServerApp.main()` 의 익명 클래스로 만든다. II
-
-- `com.eomcs.pms.ServerApp` 클래스 변경
-  - 익명 클래스의 코드를 밖깥 클래스의 멤버로 만들어 놓고 사용한다.
+  - 스레드에서 사용하는 메서드를 밖깥 클래스의 멤버로 옮긴다.
   - 왜? 코드를 읽기 쉽도록 하기 위함이다.
   - 코드가 여러 블록에 중접되면 될 수록 들여쓰기 하면서
     코드를 읽기가 불편해진다.
-  - 백업: ServerApp04.java
+  - 백업: ServerApp03.java
 
-### 5단계 - 익명 클래스를 람다(lambda) 문법으로 정의한다.
+
+### 4단계 - `StatementHandlerThread` 를 `ServerApp.service()` 에서 로컬 클래스로 만든다.
 
 - `com.eomcs.pms.ServerApp` 클래스 변경
-  - 익명 클래스가 메서드 한 개짜리 인터페이스를 구현하고,
-    그 코드도 간단하다면,
-    람다 문법으로 표현하는 것이 편하다.
+  - `StatementHandlerThread4` 로컬 클래스를 정의한다.
+  - 백업: ServerApp04.java
+
+
+### 5단계 - `StatementHandlerThread` 를 `ServerApp.service()` 에서 익명 클래스로 만든다.
+- `com.eomcs.pms.ServerApp` 클래스 변경
+  - 익명 클래스를 사용하면 해당 클래스가 어떻게 정의되어 있는지 가까이에서 바로 알 수 있기 때문에 유지보수에 좋다.
+  - 백업: ServerApp05.java
+
+
+### 6단계 - `StatementHandlerThread` 를 Runnable 구현체로 만든다.
+- `com.eomcs.pms.ServerApp` 클래스 변경
+  - 직접 스레드를 상속 받는 대신에 Runnable 인터페이스의 구현체로 만든다.
+  - 백업: ServerApp06.java
+
+
+### 7단계 - Runnnable 구현체를 람다(lambda) 문법으로 정의한다.
+
+- `com.eomcs.pms.ServerApp` 클래스 변경
+  - Runnable 인터페이스는 한 개의 추상 메서드를 가진 functional interface이다.
+  - 이 경우 람다 문법으로 표현할 수 있다.
+
 
 ## 실습 결과
-- src/main/java/com/eomcs/pms/ClientHandlerThread.java 추가
-- src/main/java/com/eomcs/pms/ClientHandler.java 추가
+- src/main/java/com/eomcs/pms/StatementHandlerThread.java 추가
 - src/main/java/com/eomcs/pms/ServerApp.java 변경

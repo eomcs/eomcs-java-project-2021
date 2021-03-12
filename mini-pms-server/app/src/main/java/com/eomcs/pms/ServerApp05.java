@@ -21,19 +21,17 @@ import com.eomcs.util.Response;
 //3) inner 클래스로 정의한 스레드 사용
 //4) 로컬 클래스로 정의한 스레드 사용
 //5) 익명 클래스로 정의한 스레드 사용
-//6) 직접 스레드를 만들지 않고 스레드 객체사 사용할 Runnable 구현체를 정의한다.
-//7) Runnable 구현체를 lambda 문법으로 정의한다.
-public class ServerApp {
+public class ServerApp05 {
 
   int port;
   HashMap<String,DataTable> tableMap = new HashMap<>();
 
   public static void main(String[] args) {
-    ServerApp app = new ServerApp(8888);
+    ServerApp05 app = new ServerApp05(8888);
     app.service();
   }
 
-  public ServerApp(int port) {
+  public ServerApp05(int port) {
     this.port = port;
   }
 
@@ -51,7 +49,13 @@ public class ServerApp {
 
       while (true) {
         Socket socket = serverSocket.accept();
-        new Thread(() -> processRequest(socket)).start();
+        // 익명 클래스를 사용하여 스레드를 정의한다.
+        new Thread() {
+          @Override
+          public void run() {
+            processRequest(socket);
+          };
+        }.start();
       }
 
     } catch (Exception e) {

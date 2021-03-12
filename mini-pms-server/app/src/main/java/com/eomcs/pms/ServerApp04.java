@@ -20,24 +20,34 @@ import com.eomcs.util.Response;
 //2) 스태틱 중첩 클래스로 정의한 스레드 사용
 //3) inner 클래스로 정의한 스레드 사용
 //4) 로컬 클래스로 정의한 스레드 사용
-//5) 익명 클래스로 정의한 스레드 사용
-//6) 직접 스레드를 만들지 않고 스레드 객체사 사용할 Runnable 구현체를 정의한다.
-//7) Runnable 구현체를 lambda 문법으로 정의한다.
-public class ServerApp {
+public class ServerApp04 {
 
   int port;
   HashMap<String,DataTable> tableMap = new HashMap<>();
 
   public static void main(String[] args) {
-    ServerApp app = new ServerApp(8888);
+    ServerApp04 app = new ServerApp04(8888);
     app.service();
   }
 
-  public ServerApp(int port) {
+  public ServerApp04(int port) {
     this.port = port;
   }
 
   public void service() {
+
+    // 로컬 클래스로 스레드를 정의한다.
+    class StatementHandlerThread4 extends Thread {
+      Socket socket;
+      public StatementHandlerThread4(Socket socket) {
+        this.socket = socket;
+      }
+      @Override
+      public void run() {
+        processRequest(this.socket);
+      }
+    }
+
     // 요청을 처리할 테이블 객체를 준비한다.
     tableMap.put("board/", new BoardTable());
     tableMap.put("member/", new MemberTable());
@@ -50,8 +60,7 @@ public class ServerApp {
       System.out.println("서버 실행!");
 
       while (true) {
-        Socket socket = serverSocket.accept();
-        new Thread(() -> processRequest(socket)).start();
+        new StatementHandlerThread4(serverSocket.accept()).start();
       }
 
     } catch (Exception e) {
