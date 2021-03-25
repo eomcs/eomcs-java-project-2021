@@ -100,20 +100,20 @@ alter table pms_board
 
 ### 3단계 - DBMS를 이용하여 게시글을 저장하고 로딩한다.
 
-- com.eomcs.pms.listener.DataHandlerListener 변경
-  - 게시글 관련 데이터를 파일에서 로딩하고 파일로 저장하는 코드를 제거한다.
-- com.eomcs.pms.handler.BoardAddCommand 변경
+- com.eomcs.pms.handler.BoardAddHandler 변경
   - 데이터를 저장할 때 JDBC API를 사용한다.
-- com.eomcs.pms.handler.BoardListCommand 변경
+- com.eomcs.pms.handler.BoardListHandler 변경
   - 데이터를 조회할 때 JDBC API를 사용한다.
-- com.eomcs.pms.handler.BoardDetailCommand 변경
+- com.eomcs.pms.handler.BoardDetailHandler 변경
   - 데이터를 조회할 때 JDBC API를 사용한다.
-- com.eomcs.pms.handler.BoardUpdateCommand 변경
+- com.eomcs.pms.handler.BoardUpdateHandler 변경
   - 데이터를 변경할 때 JDBC API를 사용한다.
-- com.eomcs.pms.handler.BoardDeleteCommand 변경
+- com.eomcs.pms.handler.BoardDeleteHandler 변경
   - 데이터를 삭제할 때 JDBC API를 사용한다.
+- com.eomcs.pms.handler.BoardSearchHandler 변경
+  - 데이터를 검색할 때 JDBC API를 사용한다.
 - com.eomcs.pms.App 변경
-  - BoardXxxCommand 변경에 맞춰 소스 코드를 정리한다.
+  - BoardXxxHandler 변경에 맞춰 소스 코드를 정리한다.
 
 ### 4단계 - DBMS에 회원 정보를 저장할 테이블을 만들고, 이 테이블을 사용하여 회원 정보를 관리한다.
 
