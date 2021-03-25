@@ -1,16 +1,12 @@
 package com.eomcs.pms.handler;
 
-import java.util.Iterator;
-import com.eomcs.driver.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import com.eomcs.util.Prompt;
 
 public class BoardDetailHandler implements Command {
-
-  Statement stmt;
-
-  public BoardDetailHandler(Statement stmt) {
-    this.stmt = stmt;
-  }
 
   @Override
   public void service() throws Exception {
@@ -18,15 +14,28 @@ public class BoardDetailHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    Iterator<String> results = stmt.executeQuery("board/select", Integer.toString(no));
+    try (Connection con = DriverManager.getConnection( //
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement( //
+            "select * from pms_board where no = ?")) {
 
-    String[] fields = results.next().split(",");
+      stmt.setInt(1, no);
 
-    System.out.printf("제목: %s\n", fields[1]);
-    System.out.printf("내용: %s\n", fields[2]);
-    System.out.printf("작성자: %s\n", fields[3]);
-    System.out.printf("등록일: %s\n", fields[4]);
-    System.out.printf("조회수: %s\n", fields[5]);
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (!rs.next()) {
+          System.out.println("해당 번호의 게시글이 없습니다.");
+          return;
+        }
+
+        System.out.printf("제목: %s\n", rs.getString("title"));
+        System.out.printf("내용: %s\n", rs.getString("content"));
+        System.out.printf("작성자: %s\n", rs.getString("writer"));
+        System.out.printf("등록일: %s %s\n", rs.getDate("cdt"), rs.getTime("cdt"));
+        System.out.printf("조회수: %s\n", rs.getString("vw_cnt"));
+        System.out.printf("좋아요: %s\n", rs.getString("like_cnt"));
+      }
+    }
+
   }
 }
 
