@@ -1,16 +1,12 @@
 package com.eomcs.pms.handler;
 
-import java.util.Iterator;
-import com.eomcs.driver.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import com.eomcs.util.Prompt;
 
 public class BoardSearchHandler implements Command {
-
-  Statement stmt;
-
-  public BoardSearchHandler(Statement stmt) {
-    this.stmt = stmt;
-  }
 
   @Override
   public void service() throws Exception {
@@ -21,21 +17,35 @@ public class BoardSearchHandler implements Command {
       return;
     }
 
-    Iterator<String> results = stmt.executeQuery("board/selectByKeyword", keyword);
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement(
+            "select no,title,writer,cdt,vw_cnt"
+                + " from pms_board"
+                + " where title like concat('%',?,'%')"
+                + " or content like concat('%',?,'%')"
+                + " or writer like concat('%',?,'%')"
+                + " order by no desc")) {
 
-    if (!results.hasNext()) {
-      System.out.println("검색어에 해당하는 게시글이 없습니다.");
-      return;
-    }
+      stmt.setString(1, keyword);
+      stmt.setString(2, keyword);
+      stmt.setString(3, keyword);
 
-    while (results.hasNext()) {
-      String[] fields = results.next().split(",");
-      System.out.printf("%s, %s, %s, %s, %s\n", 
-          fields[0], 
-          fields[1], 
-          fields[2],
-          fields[3],
-          fields[4]);
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (!rs.next()) {
+          System.out.println("검색어에 해당하는 게시글이 없습니다.");
+          return;
+        }
+
+        do {
+          System.out.printf("%d, %s, %s, %s, %d\n", 
+              rs.getInt("no"), 
+              rs.getString("title"), 
+              rs.getString("writer"),
+              rs.getDate("cdt"),
+              rs.getInt("vw_cnt"));
+        } while (rs.next());
+      }
     }
   }
 }
