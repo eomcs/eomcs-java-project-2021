@@ -138,8 +138,6 @@ alter table pms_member
   add constraint pms_member_uk unique (email);
 ```
 
-- com.eomcs.pms.listener.DataHandlerListener 변경
-  - 회원 관련 데이터를 파일에서 로딩하고 파일로 저장하는 코드를 제거한다.
 - com.eomcs.pms.handler.MemberXxxCommand 변경
   - 데이터를 저장하고 조회, 변경, 삭제할 때 JDBC API를 사용한다.
 - com.eomcs.pms.App 변경
