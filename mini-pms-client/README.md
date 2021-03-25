@@ -163,8 +163,6 @@ alter table pms_project
   modify column no int not null auto_increment;
 ```
 
-- com.eomcs.pms.listener.DataHandlerListener 변경
-  - 프로젝트 관련 데이터를 파일에서 로딩하고 파일로 저장하는 코드를 제거한다.
 - com.eomcs.pms.handler.ProjectXxxCommand 변경
   - 데이터를 저장하고 조회, 변경, 삭제할 때 JDBC API를 사용한다.
 - com.eomcs.pms.App 변경
@@ -188,8 +186,6 @@ alter table pms_task
   modify column no int not null auto_increment;
 ```
 
-- com.eomcs.pms.listener.DataHandlerListener 삭제
-  - 이제 더이상 파일 입출력 기능이 필요 없다.
 - com.eomcs.pms.handler.TaskXxxCommand 변경
   - 데이터를 저장하고 조회, 변경, 삭제할 때 JDBC API를 사용한다.
 - com.eomcs.pms.App 변경
@@ -197,7 +193,7 @@ alter table pms_task
 
 
 ## 실습 결과
-- src/main/java/com/eomcs/pms/listener/DataHandlerListener.java 삭제
+- src/main/java/com/eomcs/driver/Statement.java 삭제
 - src/main/java/com/eomcs/pms/handler/BoardXxxCommand.java 변경
 - src/main/java/com/eomcs/pms/handler/MemberXxxCommand.java 변경
 - src/main/java/com/eomcs/pms/handler/ProjectXxxCommand.java 변경
