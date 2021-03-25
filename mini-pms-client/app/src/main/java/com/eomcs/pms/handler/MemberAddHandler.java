@@ -1,16 +1,12 @@
 package com.eomcs.pms.handler;
 
-import com.eomcs.driver.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.util.Prompt;
 
 public class MemberAddHandler implements Command {
-
-  Statement stmt;
-
-  public MemberAddHandler(Statement stmt) {
-    this.stmt = stmt;
-  }
 
   @Override
   public void service() throws Exception {
@@ -23,11 +19,21 @@ public class MemberAddHandler implements Command {
     m.setPhoto(Prompt.inputString("사진? "));
     m.setTel(Prompt.inputString("전화? "));
 
-    stmt.executeUpdate("member/insert", 
-        String.format("%s,%s,%s,%s,%s", 
-            m.getName(), m.getEmail(), m.getPassword(), m.getPhoto(), m.getTel()));
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement(
+            "insert into pms_member(name,email,password,photo,tel) values(?,?,password(?),?,?)");) {
 
-    System.out.println("회원을 등록하였습니다.");
+      stmt.setString(1, m.getName());
+      stmt.setString(2, m.getEmail());
+      stmt.setString(3, m.getPassword());
+      stmt.setString(4, m.getPhoto());
+      stmt.setString(5, m.getTel());
+      stmt.executeUpdate();
+
+      System.out.println("회원을 등록하였습니다.");
+    }
+
   }
 }
 
