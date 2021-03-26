@@ -23,7 +23,7 @@ public class MemberListHandler implements Command {
             rs.getString("name"), 
             rs.getString("email"),
             rs.getString("photo"),
-            rs.getInt("tel"));
+            rs.getString("tel"));
       }
     }
   }

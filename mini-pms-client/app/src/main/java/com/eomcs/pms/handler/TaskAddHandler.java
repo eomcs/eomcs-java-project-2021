@@ -1,5 +1,8 @@
 package com.eomcs.pms.handler;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import com.eomcs.driver.Statement;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.util.Prompt;
@@ -30,12 +33,22 @@ public class TaskAddHandler implements Command {
       return;
     }
 
-    stmt.executeUpdate("task/insert", 
-        String.format("%s,%s,%s,%s", 
-            t.getContent(),
-            t.getDeadline(),
-            t.getStatus(),
-            t.getOwner()));
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement(
+            "insert into pms_task(content,deadline,owner,members)"
+                + " values(?,?,?,?,?,?)");) {
+
+      stmt.setString(1, p.getTitle());
+      stmt.setString(2, p.getContent());
+      stmt.setDate(3, p.getStartDate());
+      stmt.setDate(4, p.getEndDate());
+      stmt.setString(5, p.getOwner());
+      stmt.setString(6, p.getMembers());
+      stmt.executeUpdate();
+
+      System.out.println("프로젝트를 등록했습니다.");
+    }
 
     System.out.println("작업을 등록했습니다.");
   }
