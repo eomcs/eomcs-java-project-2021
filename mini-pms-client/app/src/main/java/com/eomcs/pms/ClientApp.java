@@ -12,6 +12,13 @@ import com.eomcs.pms.handler.BoardSearchHandler;
 import com.eomcs.pms.handler.BoardUpdateHandler;
 import com.eomcs.pms.handler.Command;
 import com.eomcs.pms.handler.MemberAddHandler;
+import com.eomcs.pms.handler.MemberDeleteHandler;
+import com.eomcs.pms.handler.MemberDetailHandler;
+import com.eomcs.pms.handler.MemberListHandler;
+import com.eomcs.pms.handler.MemberUpdateHandler;
+import com.eomcs.pms.handler.MemberValidator;
+import com.eomcs.pms.handler.ProjectAddHandler;
+import com.eomcs.pms.handler.ProjectListHandler;
 import com.eomcs.util.Prompt;
 
 public class ClientApp {
@@ -53,15 +60,15 @@ public class ClientApp {
     commandMap.put("/board/search", new BoardSearchHandler());
 
     commandMap.put("/member/add", new MemberAddHandler());
-    //    commandMap.put("/member/list", new MemberListHandler(stmt));
-    //    commandMap.put("/member/detail", new MemberDetailHandler(stmt));
-    //    commandMap.put("/member/update", new MemberUpdateHandler(stmt));
-    //    commandMap.put("/member/delete", new MemberDeleteHandler(stmt));
-    //
-    //    MemberValidator memberValidator = new MemberValidator(stmt);
-    //
-    //    commandMap.put("/project/add", new ProjectAddHandler(stmt, memberValidator));
-    //    commandMap.put("/project/list", new ProjectListHandler(stmt));
+    commandMap.put("/member/list", new MemberListHandler());
+    commandMap.put("/member/detail", new MemberDetailHandler());
+    commandMap.put("/member/update", new MemberUpdateHandler());
+    commandMap.put("/member/delete", new MemberDeleteHandler());
+
+    MemberValidator memberValidator = new MemberValidator();
+
+    commandMap.put("/project/add", new ProjectAddHandler(memberValidator));
+    commandMap.put("/project/list", new ProjectListHandler());
     //    commandMap.put("/project/detail", new ProjectDetailHandler(stmt));
     //    commandMap.put("/project/update", new ProjectUpdateHandler(stmt, memberValidator));
     //    commandMap.put("/project/delete", new ProjectDeleteHandler(stmt));

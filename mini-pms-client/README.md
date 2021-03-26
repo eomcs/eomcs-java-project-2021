@@ -184,7 +184,7 @@ alter table pms_task
 
 alter table pms_task
   modify column no int not null auto_increment;
-```
+` ``
 
 - com.eomcs.pms.handler.TaskXxxCommand 변경
   - 데이터를 저장하고 조회, 변경, 삭제할 때 JDBC API를 사용한다.

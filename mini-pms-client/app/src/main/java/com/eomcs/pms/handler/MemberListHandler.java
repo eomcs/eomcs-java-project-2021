@@ -1,30 +1,30 @@
 package com.eomcs.pms.handler;
 
-import java.util.Iterator;
-import com.eomcs.driver.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class MemberListHandler implements Command {
-
-  Statement stmt;
-
-  public MemberListHandler(Statement stmt) {
-    this.stmt = stmt;
-  }
 
   @Override
   public void service() throws Exception {
     System.out.println("[회원 목록]");
 
-    Iterator<String> results = stmt.executeQuery("member/selectall");
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement(
+            "select no,name,email,photo,tel from pms_member order by name asc");
+        ResultSet rs = stmt.executeQuery()) {
 
-    while (results.hasNext()) {
-      String[] fields = results.next().split(",");
-      System.out.printf("%s, %s, %s, %s, %s\n",
-          fields[0], 
-          fields[1], 
-          fields[2],
-          fields[3],
-          fields[4]);
+      while (rs.next()) {
+        System.out.printf("%d, %s, %s, %s, %s\n", 
+            rs.getInt("no"), 
+            rs.getString("name"), 
+            rs.getString("email"),
+            rs.getString("photo"),
+            rs.getInt("tel"));
+      }
     }
   }
 }
