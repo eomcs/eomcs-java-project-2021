@@ -1,32 +1,31 @@
 package com.eomcs.pms.handler;
 
-import java.util.Iterator;
-import com.eomcs.driver.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import com.eomcs.pms.domain.Task;
 
 public class TaskListHandler implements Command {
-
-  Statement stmt;
-
-  public TaskListHandler(Statement stmt) {
-    this.stmt = stmt;
-  }
 
   @Override
   public void service() throws Exception {
     System.out.println("[작업 목록]");
 
-    Iterator<String> results = stmt.executeQuery("task/selectall");
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement(
+            "select no,content,deadline,owner,status from pms_task order by content asc");
+        ResultSet rs = stmt.executeQuery()) {
 
-    while (results.hasNext()) {
-      String[] fields = results.next().split(",");
-      System.out.printf("%s, %s, %s, %s, %s\n", 
-          fields[0], 
-          fields[1], 
-          fields[2],
-          Task.getStatusLabel(Integer.parseInt(fields[3])),
-          fields[4]);
+      while (rs.next()) {
+        System.out.printf("%d, %s, %s, %s, %s\n", 
+            rs.getInt("no"), 
+            rs.getString("content"), 
+            rs.getDate("deadline"),
+            rs.getString("owner"),
+            Task.getStatusLabel(rs.getInt("status")));
+      }
     }
   }
-
 }

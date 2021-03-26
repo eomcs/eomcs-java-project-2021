@@ -1,16 +1,13 @@
 package com.eomcs.pms.handler;
 
-import com.eomcs.driver.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.util.Prompt;
 
 public class TaskDetailHandler implements Command {
-
-  Statement stmt;
-
-  public TaskDetailHandler(Statement stmt) {
-    this.stmt = stmt;
-  }
 
   @Override
   public void service() throws Exception {
@@ -18,12 +15,24 @@ public class TaskDetailHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    String[] fields = stmt.executeQuery("task/select", Integer.toString(no)).next().split(",");
+    try (Connection con = DriverManager.getConnection( //
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement( //
+            "select * from pms_task where no=?")) {
 
-    System.out.printf("내용: %s\n", fields[1]);
-    System.out.printf("마감일: %s\n", fields[2]);
-    System.out.printf("상태: %s\n", Task.getStatusLabel(Integer.parseInt(fields[3])));
-    System.out.printf("담당자: %s\n", fields[4]);
+      stmt.setInt(1, no);
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (!rs.next()) {
+          System.out.println("해당 번호의 작업이 없습니다.");
+          return;
+        }
+
+        System.out.printf("내용: %s\n", rs.getString("content"));
+        System.out.printf("마감일: %s\n", rs.getDate("deadline"));
+        System.out.printf("상태: %s\n", Task.getStatusLabel(rs.getInt("status")));
+        System.out.printf("담당자: %s\n", rs.getString("owner"));
+      }
+    }
   }
-
 }
