@@ -104,14 +104,14 @@ alter table pms_member_project
   add constraint pms_member_project_pk primary key(member_no, project_no);
 ```
 
-### 2단계 - `pms_project` 테이블의 변경에 맞춰 외부키를 다룰 수 있도록 ProjectXxxCommand 클래스를 변경한다.
+### 2단계 - `pms_project` 테이블의 변경에 맞춰 외부키를 다룰 수 있도록 ProjectXxxHandler 클래스를 변경한다.
 
-- com.eomcs.pms.handler.MemberListCommand 변경
-  - findByName() 를 변경한다.
-  - Member 객체를 리턴할 때 회원 번호를 추가한다.
 - com.eomcs.pms.domain.Project 변경
   - owner 필드를 관리자 회원 정보를 저장하도록 Member 타입으로 변경한다.
   - members 필드를 참여자 회원 목록을 저장하도록 List<Member> 타입으로 변경한다.
+- com.eomcs.pms.handler.MemberValidator 변경
+  - inputMember()의 리턴 타입을 String에서 Member 로 변경한다.
+  
 - com.eomcs.pms.handler.ProjectAddCommand 변경
   - `pms_project` 테이블에 프로젝트를 입력할 때 회원 이름 대신 번호를 저장한다.
   - 프로젝트를 입력한 후 프로젝트의 멤버들은 `pms_member_project` 테이블에 입력한다.
