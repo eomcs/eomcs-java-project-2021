@@ -34,6 +34,7 @@ public class TaskAddHandler implements Command {
         Project p = new Project();
         p.setNo(rs.getInt("no"));
         p.setTitle(rs.getString("title"));
+        projects.add(p);
       }
 
 
@@ -42,6 +43,9 @@ public class TaskAddHandler implements Command {
       if (projects.size() == 0) {
         System.out.println("현재 등록된 프로젝트가 없습니다!");
         return;
+      }
+      for (Project p : projects) {
+        System.out.printf("  %d, %s\n", p.getNo(), p.getTitle());
       }
 
       // 3) 작업을 등록할 프로젝트를 선택한다.
