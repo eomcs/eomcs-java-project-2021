@@ -12,8 +12,6 @@ public class Project {
   private Member owner;
   private List<Member> members;
 
-  public Project() {}
-
   @Override
   public String toString() {
     return "Project [no=" + no + ", title=" + title + ", content=" + content + ", startDate="

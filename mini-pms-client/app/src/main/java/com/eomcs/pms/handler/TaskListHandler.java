@@ -15,7 +15,16 @@ public class TaskListHandler implements Command {
     try (Connection con = DriverManager.getConnection(
         "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
         PreparedStatement stmt = con.prepareStatement(
-            "select no,content,deadline,owner,status from pms_task order by content asc");
+            "select "
+                + " t.no,"
+                + " t.content,"
+                + " t.deadline,"
+                + " t.status,"
+                + " m.no as owner_no,"
+                + " m.name as owner_name"
+                + " from pms_task t "
+                + " inner join pms_member m on t.owner=m.no"
+                + " order by t.content asc");
         ResultSet rs = stmt.executeQuery()) {
 
       while (rs.next()) {
@@ -23,7 +32,7 @@ public class TaskListHandler implements Command {
             rs.getInt("no"), 
             rs.getString("content"), 
             rs.getDate("deadline"),
-            rs.getString("owner"),
+            rs.getString("owner_name"),
             Task.getStatusLabel(rs.getInt("status")));
       }
     }

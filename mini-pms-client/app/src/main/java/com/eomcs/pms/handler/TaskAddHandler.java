@@ -14,7 +14,6 @@ public class TaskAddHandler implements Command {
     this.memberValidator = memberValidator;
   }
 
-
   @Override
   public void service() throws Exception {
     System.out.println("[작업 등록]");
@@ -37,7 +36,7 @@ public class TaskAddHandler implements Command {
 
       stmt.setString(1, t.getContent());
       stmt.setDate(2, t.getDeadline());
-      stmt.setString(3, t.getOwner());
+      stmt.setInt(3, t.getOwner().getNo());
       stmt.setInt(4, t.getStatus());
       stmt.executeUpdate();
 
