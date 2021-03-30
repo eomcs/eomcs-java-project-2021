@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.dao.MemberDao;
+import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.handler.BoardAddHandler;
 import com.eomcs.pms.handler.BoardDeleteHandler;
 import com.eomcs.pms.handler.BoardDetailHandler;
@@ -62,6 +63,7 @@ public class ClientApp {
     // 핸들러가 사용할 DAO 객체 준비
     BoardDao boardDao = new BoardDao();
     MemberDao memberDao = new MemberDao();
+    ProjectDao projectDao = new ProjectDao();
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
@@ -81,11 +83,11 @@ public class ClientApp {
 
     MemberValidator memberValidator = new MemberValidator(memberDao);
 
-    commandMap.put("/project/add", new ProjectAddHandler(memberValidator));
-    commandMap.put("/project/list", new ProjectListHandler());
-    commandMap.put("/project/detail", new ProjectDetailHandler());
-    commandMap.put("/project/update", new ProjectUpdateHandler(memberValidator));
-    commandMap.put("/project/delete", new ProjectDeleteHandler());
+    commandMap.put("/project/add", new ProjectAddHandler(projectDao, memberValidator));
+    commandMap.put("/project/list", new ProjectListHandler(projectDao));
+    commandMap.put("/project/detail", new ProjectDetailHandler(projectDao));
+    commandMap.put("/project/update", new ProjectUpdateHandler(projectDao, memberValidator));
+    commandMap.put("/project/delete", new ProjectDeleteHandler(projectDao));
 
     commandMap.put("/task/add", new TaskAddHandler(memberValidator));
     commandMap.put("/task/list", new TaskListHandler());
