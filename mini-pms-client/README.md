@@ -1,205 +1,86 @@
-# 30-d. 데이터 관리를 DBMS에게 맡기기 : 무결성 제약 조건 다루기 II
+# 31-a. 데이터 처리 코드를 별도의 클래스로 분리하기 : DAO 클래스 도입
 
 이번 훈련에서는,
-- **무결성 제약 조건(integrity constraints)** 을 이용하여
-  무효한 데이터가 존재하지 않도록 하는 방법을 배울 것이다.
-- 테이블 간의 다대다 관계를 해소하기 위해 **관계 테이블** 을 다루는 방법을 배울 것이다.
+- **DAO** 의 역할을 이해하고 데이터 처리 코드를 분리하는 연습을 한다.
 
+**DAO(Data Access Object)**
+- DBMS 또는 File 을 이용하여 데이터를 저장, 조회, 변경, 삭제하는 일을 하는 객체이다.
+- 데이터 처리 로직을 DAO 객체로 분리해두면 객체를 재사용하거나 교체하기가 쉬워진다.
+
+**High Cohesion(높은 응집력)**
+- 하나의 모듈(메서드, 클래스 등)이 하나의 기능(역할)을 수행하게 하는 것을 의미한다.
+- 목적이 분명하도록 작성한 메서드나 클래스는 신뢰도가 높고, 재사용과 코드를 이해하기 쉽다.
+- 반대로 한 개의 메서드나 클래스가 여러 기능이나 역할을 수행한다면
+  유지보수나 재사용이 어렵고 코드를 이해하기도 어렵다.
 
 ## 훈련 목표
-- **무결성 제약 조건** 의 의미를 이해한다.
-- **외부 키** 를 설정하는 방법과 활용하는 것을 배운다.
-- **다대다 관계** 의 문제를 이해하고 **관계 테이블** 을 이용하여 해소하는 것을 배운다.
-- **조인** 을 활용하여 여러 테이블에 걸쳐 있는 데이터를 가져오는 것을 배운다.
-- 테이블 간의 관계에 맞춰 객체 간의 포함 관계를 구현하는 것을 배운다.
+- 소프트웨어 설계의 원칙 중 하나인 "High Cohesion"의 개념을 이해한다.
+- 기존 코드에서 특정 역할을 하는 코드를 분리해 내는 것을 연습한다.
+- DAO 의 역할과 DAO를 도입했을 때의 이점을 이해한다.
+- DAO와 DBMS 테이블의 관계를 이해한다.
 
 ## 훈련 내용
-- 작업 테이블의 멤버 번호와 프로젝트 번호가
-  `pms_member_project` 테이블의 PK를 가르키게 변경한다.
-  - `pms_task` 테이블의 `owner` 컬럼과 `project_no` 컬럼이
-    `pms_member_project`의 PK 값을 저장한다.
-- 게시글 테이블의 작성자 컬럼을 이름 대신 `pms_member` 테이블의 PK 값을 저장하도록
-  외부키로 설정한다.
+- 커맨드 클래스에서 데이터 처리 코드를 분리하여 별도의 클래스(DAO)로 정의한다.
 
 ## 실습
 
-### 1단계 - `pms_task` 테이블에 프로젝트를 참조하는 FK 컬럼을 추가한다.
+### 1단계 - `BoardXxx` 클래스에서 데이터 처리 코드를 분리하여 `BoardDao` 클래스를 정의한다.
 
-- 작업 테이블을 재정의한다.
-```
-create table pms_task(
-  no int not null,
-  content text not null,
-  deadline date not null,
-  owner int not null,   /* pms_member 의 PK 컬럼을 가리키는 외부키다*/
-  project_no int not null, /* pms_project 의 PK 컬럼을 가리키는 외부키다*/
-  status int default 0
-);
+- com.eomcs.pms.dao.BoardDao 클래스 생성
+  - `BoardXxxHandler` 에서 게시글 데이터를 처리하는 JDBC 코드를 가져와서 메서드로 정의한다.
+- com.eomcs.pms.dao.MemberDao 클래스 생성
+  - `MemberListHandler` 에서 회원 정보를 찾는 코드를 가져와서 findByName() 메서드로 정의한다.
+- `com.eomcs.pms.handler.BoardAddHandler` 변경
+  - 데이터 처리와 관련된 코드를 `BoardDao.insert()` 로 옮긴다.
+- `com.eomcs.pms.handler.BoardDeleteHandler` 변경
+  - 데이터 처리와 관련된 코드를 `BoardDao.delete()` 로 옮긴다.
+- - `com.eomcs.pms.handler.BoardDetailHandler` 변경
+  - 데이터 처리와 관련된 코드를 `BoardDao.findByNo()` 로 옮긴다.
+- - `com.eomcs.pms.handler.BoardListHandler` 변경
+  - 데이터 처리와 관련된 코드를 `BoardDao.findAll()` 로 옮긴다.
+- - `com.eomcs.pms.handler.BoardUpdateHandler` 변경
+  - 데이터 처리와 관련된 코드를 `BoardDao.update()` 로 옮긴다.
 
-alter table pms_task
-  add constraint pms_task_pk primary key(no);
+### 2단계 - `MemberXxxHandler` 클래스에서 데이터 처리 코드를 분리하여 `MemberDao` 클래스를 정의한다.
+- com.eomcs.pms.dao.MemberDao 클래스 변경
+  - `MemberAddHandler` 에서 데이터 입력 코드를 가져와서 insert() 메서드를 정의한다.
+  - `MemberDeleteHandler` 에서 데이터 삭제 코드를 가져와서 delete() 메서드를 정의한다.
+  - `MemberDetailHandler` 에서 데이터 조회 코드를 가져와서 findByNo() 메서드를 정의한다.
+  - `MemberListHandler` 에서 데이터 삭제 코드를 가져와서 findAll() 메서드를 정의한다.
+  - `MemberUpdateHandler` 에서 데이터 삭제 코드를 가져와서 update() 메서드를 정의한다.
+- com.eomcs.pms.handler.MemberXxxHandler 변경
+  - 데이터 처리는 `MemberDao` 를 사용하여 처리한다.
+  - `MemberListHandler` 의 findByName() 메서드를 삭제한다.
 
-alter table pms_task
-  modify column no int not null auto_increment;
+### 3단계 - `ProjectXxxHandler` 클래스에서 데이터 처리 코드를 분리하여 `ProjectDao` 클래스를 정의한다.
+- com.eomcs.pms.dao.ProjectDao 클래스 생성
+  - `ProjectAddHandler` 에서 데이터 입력 코드를 가져와서 insert() 메서드를 정의한다.
+  - `ProjectDeleteHandler` 에서 데이터 삭제 코드를 가져와서 delete() 메서드를 정의한다.
+  - `ProjectDetailHandler` 에서 데이터 조회 코드를 가져와서 findByNo() 메서드를 정의한다.
+  - `ProjectListHandler` 에서 데이터 삭제 코드를 가져와서 findAll() 메서드를 정의한다.
+  - `ProjectUpdateHandler` 에서 데이터 삭제 코드를 가져와서 update() 메서드를 정의한다.
+- com.eomcs.pms.handler.ProjectXxxHandler 변경
+  - 데이터 처리는 `ProjectDao` 를 사용하여 처리한다.
 
-/* 다음과 같이 회원 번호와 프로젝트 번호를
-   pms_member, pms_project 각 테이블에 대해서 FK를 설정하면,
-   프로젝트 회원이 아닌 경우에도 작업을 등록하는 문제가 있다. */
-/*   
-alter table pms_task
-  add constraint pms_task_fk1 foreign key(owner) references pms_member(no);
-
-alter table pms_task
-  add constraint pms_task_fk2 foreign key(project_no) references pms_project(no);
-*/
-
-alter table pms_task
-  add constraint pms_task_fk1 foreign key(owner, project_no)
-      references pms_member_project(member_no, project_no);
-
-```
-
-- com.eomcs.pms.domain.Task 변경
-  - 프로젝트 번호를 저장할 필드를 추가한다.
-  - 프로젝트 제목을 저장할 필드를 추가한다.
-    - 도메인 클래스는 입출력할 데이터를 임시 보관하는 용도로 사용된다.
-    - 따라서 테이블과 똑 같이 맞추려고 하지 말라.
-    - 필요하다면 필드를 추가하고 제거하는 것을 자유롭게 하라.
+### 4단계 - `TaskXxxHandler` 클래스에서 데이터 처리 코드를 분리하여 `TaskDao` 클래스를 정의한다.
+- com.eomcs.pms.dao.MemberDao 클래스 변경
+  - `TaskAddHandler` 에서 프로젝트 멤버 조회 코드를 가져와서 findByProjectNo() 메서드를 정의한다.
+- com.eomcs.pms.dao.TaskDao 클래스 생성
+  - `TaskAddHandler` 에서 데이터 입력 코드를 가져와서 insert() 메서드를 정의한다.
+  - `TaskDeleteHandler` 에서 데이터 삭제 코드를 가져와서 delete() 메서드를 정의한다.
+  - `TaskDetailHandler` 에서 데이터 조회 코드를 가져와서 findByNo() 메서드를 정의한다.
+  - `TaskListHandler` 에서 데이터 삭제 코드를 가져와서 findAll() 메서드를 정의한다.
+  - `TaskUpdateHandler` 에서 데이터 삭제 코드를 가져와서 update() 메서드를 정의한다.
 - com.eomcs.pms.handler.TaskXxxHandler 변경
-  - 작업 정보를 등록하거나 조회, 변경할 때 프로젝트 번호도 함께 다룬다.
-
-```
-> /task/add
-프로젝트들:
-  1, 가나다
-  2, 하하하
-  3, 오호라
-프로젝트 번호?(취소: 빈 문자열) 4
-유효하지 않은 프로젝트 번호 입니다.
-프로젝트 번호?(취소: 빈 문자열) 
-작업 등록을 취소합니다.
-프로젝트 번호?(취소: 빈 문자열) ok
-숫자를 입력하세요!
-프로젝트 번호?(취소: 빈 문자열) 3
-
-작업내용? 아아아아아
-마감일? 2020-1-1
-상태?
-0: 신규
-1: 진행중
-2: 완료
-> 1
-담당자?
-  1, 홍길동
-  7, 임꺽정
-  9, 유관순
-> 11
-유효한 담당자 번호가 아닙니다.
-> 7
-작업을 등록하였습니다.
-
-> 명령> /task/update
-[작업 변경]
-번호? 9
-현재 프로젝트: p2
-프로젝트들:
-  4, p2
-  3, p1
-변경할 프로젝트 번호?(0: 취소) 5
-프로젝트 번호가 맞지 않습니다.
-변경할 프로젝트 번호?(0: 취소) ok
-숫자를 입력하세요!
-변경할 프로젝트 번호?(0: 취소) 0
-기존 프로젝트를 유지합니다.
-변경할 프로젝트 번호?(0: 취소) 3
-내용(okok1)? xxxxx
-마감일(2020-01-01)? 2020-3-3
-상태(진행중)?
-0: 신규
-1: 진행중
-2: 완료
-> 2
-멤버들:
-  5, bbb
-  3, ccc
-변경할 멤버 번호?(0: 취소) 4
-멤버 번호가 맞지 않습니다.
-변경할 멤버 번호?(0: 취소) 1
-멤버 번호가 맞지 않습니다.
-변경할 멤버 번호?(0: 취소) 3
-정말 변경하시겠습니까?(y/N) y
-작업을 변경하였습니다.
-
-> 명령> /task/detail
-[작업 상세보기]
-번호? 9
-프로젝트: p2
-내용: task1xxx
-마감일: 2021-02-16
-상태: 진행중
-담당자: aa
-
-명령> /task/list
-프로젝트 번호?(전체: 빈 문자열) ok
-프로젝트 번호를 입력하세요.
-
-명령> /task/list
-프로젝트 번호?(전체: 빈 문자열) 100
-해당 번호의 프로젝트가 없거나 또는 등록된 작업이 없습니다.
-
-명령> /task/list
-프로젝트 번호?(전체: 빈 문자열) 7
-'pp3' 작업 목록:
-7, 7-task1, 2021-03-03, aa, 신규
-8, 7-task2, 2021-02-02, ff, 진행중
-9, 7-task3, 2021-04-04, dd, 완료
-
-명령> /task/list
-프로젝트 번호?(전체: 빈 문자열) 
-'pp3' 작업 목록:
-7, 7-task1, 2021-03-03, aa, 신규
-8, 7-task2, 2021-02-02, ff, 진행중
-9, 7-task3, 2021-04-04, dd, 완료
-'pp2' 작업 목록:
-4, task1xxx, 2021-02-16, aa, 진행중
-5, task2, 2021-01-01, gg, 신규
-6, task3, 2021-03-03, ccx, 완료
-
-명령> 
-```
-
-### 2단계 - `pms_board` 테이블에 회원 테이블을 참조하는 FK 컬럼을 추가한다.
-
-게시글을 저장할 때 직접 회원 이름을 입력하는 대신에 존재하는 회원 번호를 입력한다.
-
-- 게시글 테이블을 재정의 한다.
-```
-create table pms_board(
-  no int not null,
-  title varchar(255) not null,
-  content text not null,
-  writer int not null,
-  cdt datetime default now(),
-  vw_cnt int default 0
-);
-
-alter table pms_board
-  add constraint pms_board_pk primary key(no);
-
-alter table pms_board
-  modify column no int not null auto_increment;
-
-alter table pms_board
-  add constraint pms_board_fk foreign key(writer) references pms_member(no);
-```
-
-- com.eomcs.pms.domain.Board 변경
-  - writer 필드를 String 대신 회원 정보를 저장하도록 Member 타입으로 변경한다.
-- com.eomcs.pms.handler.BoardXxxCommand 변경
-  - `pms_board` 테이블에 적용된 FK 컬럼에 맞춰 등록, 조회, 변경을 처리한다.
+  - 데이터 처리는 `TaskDao` 를 사용하여 처리한다.
 
 ## 실습 결과
-- src/main/java/com/eomcs/pms/domain/Task.java 변경
-- src/main/java/com/eomcs/pms/domain/Board.java 변경
-- src/main/java/com/eomcs/pms/handler/TaskXxxCommand.java 변경
-- src/main/java/com/eomcs/pms/handler/BoardXxxCommand.java 변경
+- src/main/java/com/eomcs/pms/dao/BoardDao.java 생성
+- src/main/java/com/eomcs/pms/dao/MemberDao.java 생성
+- src/main/java/com/eomcs/pms/dao/ProjectDao.java 생성
+- src/main/java/com/eomcs/pms/dao/TeamDao.java 생성
+- src/main/java/com/eomcs/pms/handler/BoardXxxHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/MemberXxxHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectXxxHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/TaskXxxHandler.java 변경
+- src/main/java/com/eomcs/pms/App.java 변경
