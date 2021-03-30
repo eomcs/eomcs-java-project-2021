@@ -1,8 +1,6 @@
 package com.eomcs.pms.handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.util.Prompt;
 
 public class BoardDeleteHandler implements Command {
@@ -19,17 +17,10 @@ public class BoardDeleteHandler implements Command {
       return;
     }
 
-    try (Connection con = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-        PreparedStatement stmt = con.prepareStatement(
-            "delete from pms_board where no=?")) {
-
-      stmt.setInt(1, no);
-      if (stmt.executeUpdate() == 0) {
-        System.out.println("해당 번호의 게시글이 없습니다.");
-      } else {
-        System.out.println("게시글을 삭제하였습니다.");
-      }
+    if (BoardDao.delete(no) == 0) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
+    } else {
+      System.out.println("게시글을 삭제하였습니다.");
     }
   }
 }

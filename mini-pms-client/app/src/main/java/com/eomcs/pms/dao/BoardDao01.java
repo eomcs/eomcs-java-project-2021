@@ -10,23 +10,13 @@ import java.util.List;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 
-public class BoardDao {
-
-  static Connection con;
-
-  static {
-    try {
-      con = DriverManager.getConnection(
-          "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-    } catch (Exception e) {
-      System.out.println("DB 커넥션 객체 생성 중 오류 발생!");
-    }
-  }
+public class BoardDao01 {
 
   public static int insert(Board board) throws Exception {
-    try ( 
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
         PreparedStatement stmt =
-        con.prepareStatement("insert into pms_board(title, content, writer) values(?,?,?)");) {
+            con.prepareStatement("insert into pms_board(title, content, writer) values(?,?,?)");) {
 
       stmt.setString(1, board.getTitle());
       stmt.setString(2, board.getContent());

@@ -28,6 +28,8 @@ public class BoardDetailHandler implements Command {
     System.out.printf("조회수: %s\n", b.getViewCount());
     System.out.printf("좋아요: %s\n", b.getLike());
 
+    BoardDao.updateViewCount(no);
+
   }
 }
 
