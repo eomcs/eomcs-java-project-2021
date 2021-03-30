@@ -1,9 +1,12 @@
 package com.eomcs.pms;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.handler.BoardAddHandler;
 import com.eomcs.pms.handler.BoardDeleteHandler;
 import com.eomcs.pms.handler.BoardDetailHandler;
@@ -56,6 +59,15 @@ public class ClientApp {
   }
 
   public void execute() throws Exception {
+
+    // DAO 객체가 사용할 Connection 객체를 생성하여 주입한다.
+    try {
+      Connection con = DriverManager.getConnection(
+          "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+      BoardDao.con = con;
+    } catch (Exception e) {
+      System.out.println("DB 커넥션 객체 생성 중 오류 발생!");
+    }
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();

@@ -2,7 +2,6 @@ package com.eomcs.pms.dao;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -10,16 +9,23 @@ import java.util.List;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 
-// 한 번에 4번째 단계까지 가지말고 일단 3번째와 4번째 단계 사이에 있는 정도로 구현을 해보자.
-// - 각 DAO 클래스는 Connection 객체를 공유하기 위해 인스턴스 필드로 선언한다.
-// - 각 DAO 클래스는 DAO 인스턴스가 생성될 때 Connection 객체를 만든다.
-public class BoardDao {
+//1) 메서드를 호출 할 때 마다 Connection 객체 생성
+//- 즉 DBMS에 연결
+//2) 클래스가 로딩될 때 미리 Connection 객체 생성
+//- DAO 당 한 번만 DBMS에 연결
+//3) 여러 DAO가 Connection 객체를 공유할 수 있도록 외부에서 생성한 후 주입한다.
+//4) DAO에 대해 각 인스턴스 마다 Connection 객체를 구분해서 사용할 수 있도록 
+//   Connection 필드를 인스턴스 멤버로 선언한다.
+public class BoardDao04 {
 
+  // 이제 Connection 객체는 BoardDao 마다 다를 수 있다.
   Connection con;
 
-  public BoardDao() throws Exception {
-    this.con = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+  // 이렇게 생성자에서 Connection 객체를 파라미터로 요구하면
+  // Connection 객체를 필수 항목이 된다.
+  // 스태틱 필드로는 필수항목/선택항목을 제어할 수 었다.
+  public BoardDao04(Connection con) {
+    this.con = con;
   }
 
   // 이제 메서드들은 인스턴스 필드에 들어있는 Connection 객체를 사용해야 하기 때문에
