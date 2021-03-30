@@ -1,7 +1,5 @@
 package com.eomcs.pms;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,24 +58,18 @@ public class ClientApp {
 
   public void execute() throws Exception {
 
-    // DAO 객체가 사용할 Connection 객체를 생성하여 주입한다.
-    try {
-      Connection con = DriverManager.getConnection(
-          "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-      BoardDao.con = con;
-    } catch (Exception e) {
-      System.out.println("DB 커넥션 객체 생성 중 오류 발생!");
-    }
+    // 핸들러가 사용할 DAO 객체 준비
+    BoardDao boardDao = new BoardDao();
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
 
-    commandMap.put("/board/add", new BoardAddHandler());
-    commandMap.put("/board/list", new BoardListHandler());
-    commandMap.put("/board/detail", new BoardDetailHandler());
-    commandMap.put("/board/update", new BoardUpdateHandler());
-    commandMap.put("/board/delete", new BoardDeleteHandler());
-    commandMap.put("/board/search", new BoardSearchHandler());
+    commandMap.put("/board/add", new BoardAddHandler(boardDao));
+    commandMap.put("/board/list", new BoardListHandler(boardDao));
+    commandMap.put("/board/detail", new BoardDetailHandler(boardDao));
+    commandMap.put("/board/update", new BoardUpdateHandler(boardDao));
+    commandMap.put("/board/delete", new BoardDeleteHandler(boardDao));
+    commandMap.put("/board/search", new BoardSearchHandler(boardDao));
 
     commandMap.put("/member/add", new MemberAddHandler());
     commandMap.put("/member/list", new MemberListHandler());
