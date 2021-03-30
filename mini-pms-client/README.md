@@ -49,8 +49,6 @@
   - `MemberListHandler` 에서 데이터 삭제 코드를 가져와서 findAll() 메서드를 정의한다.
   - `MemberUpdateHandler` 에서 데이터 삭제 코드를 가져와서 update() 메서드를 정의한다.
 - com.eomcs.pms.handler.MemberXxxHandler 변경
-  - 데이터 처리는 `MemberDao` 를 사용하여 처리한다.
-  - `MemberListHandler` 의 findByName() 메서드를 삭제한다.
 
 ### 3단계 - `ProjectXxxHandler` 클래스에서 데이터 처리 코드를 분리하여 `ProjectDao` 클래스를 정의한다.
 - com.eomcs.pms.dao.ProjectDao 클래스 생성

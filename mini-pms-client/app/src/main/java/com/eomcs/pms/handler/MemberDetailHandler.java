@@ -1,12 +1,19 @@
 package com.eomcs.pms.handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import com.eomcs.pms.dao.MemberDao;
+import com.eomcs.pms.domain.Member;
 import com.eomcs.util.Prompt;
 
 public class MemberDetailHandler implements Command {
+
+  // 핸들러가 사용할 DAO : 의존 객체(dependency)
+  MemberDao memberDao;
+
+  // DAO 객체는 이 클래스가 작업하는데 필수 객체이기 때문에
+  // 생성자를 통해 반드시 주입 받도록 한다.
+  public MemberDetailHandler(MemberDao memberDao) {
+    this.memberDao = memberDao;
+  }
 
   @Override
   public void service() throws Exception {
@@ -14,26 +21,18 @@ public class MemberDetailHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    try (Connection con = DriverManager.getConnection( //
-        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-        PreparedStatement stmt = con.prepareStatement( //
-            "select * from pms_member where no = ?")) {
+    Member m = memberDao.findByNo(no);
 
-      stmt.setInt(1, no);
-
-      try (ResultSet rs = stmt.executeQuery()) {
-        if (!rs.next()) {
-          System.out.println("해당 번호의 회원이 없습니다.");
-          return;
-        }
-
-        System.out.printf("이름: %s\n", rs.getString("name"));
-        System.out.printf("이메일: %s\n", rs.getString("email"));
-        System.out.printf("사진: %s\n", rs.getString("photo"));
-        System.out.printf("전화: %s\n", rs.getString("tel"));
-        System.out.printf("가입일: %s\n", rs.getDate("cdt"));
-      }
+    if (m == null) {
+      System.out.println("해당 번호의 회원이 없습니다.");
+      return;
     }
+
+    System.out.printf("이름: %s\n", m.getName());
+    System.out.printf("이메일: %s\n", m.getEmail());
+    System.out.printf("사진: %s\n", m.getPhoto());
+    System.out.printf("전화: %s\n", m.getTel());
+    System.out.printf("가입일: %s\n", m.getRegisteredDate());
   }
 }
 

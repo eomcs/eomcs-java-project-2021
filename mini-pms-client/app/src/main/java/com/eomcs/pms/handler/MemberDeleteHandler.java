@@ -1,11 +1,18 @@
 package com.eomcs.pms.handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.util.Prompt;
 
 public class MemberDeleteHandler implements Command {
+
+  // 핸들러가 사용할 DAO : 의존 객체(dependency)
+  MemberDao memberDao;
+
+  // DAO 객체는 이 클래스가 작업하는데 필수 객체이기 때문에
+  // 생성자를 통해 반드시 주입 받도록 한다.
+  public MemberDeleteHandler(MemberDao memberDao) {
+    this.memberDao = memberDao;
+  }
 
   @Override
   public void service() throws Exception {
@@ -19,17 +26,10 @@ public class MemberDeleteHandler implements Command {
       return;
     }
 
-    try (Connection con = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-        PreparedStatement stmt = con.prepareStatement(
-            "delete from pms_member where no=?")) {
-
-      stmt.setInt(1, no);
-      if (stmt.executeUpdate() == 0) {
-        System.out.println("해당 번호의 회원이 없습니다.");
-      } else {
-        System.out.println("회원을 삭제하였습니다.");
-      }
+    if (memberDao.delete(no) == 0) {
+      System.out.println("해당 번호의 회원이 없습니다.");
+    } else {
+      System.out.println("회원을 삭제하였습니다.");
     }
   }
 }
