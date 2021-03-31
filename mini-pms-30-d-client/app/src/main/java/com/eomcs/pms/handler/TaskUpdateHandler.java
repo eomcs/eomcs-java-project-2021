@@ -117,7 +117,10 @@ public class TaskUpdateHandler implements Command {
         }
       }
 
-
+      if (selectedProjectNo != 0) {
+        task.setProjectNo(selectedProjectNo);
+      }
+      
       // 2) 사용자에게서 변경할 데이터를 입력 받는다.
       task.setContent(Prompt.inputString(String.format("내용(%s)? ", task.getContent())));
       task.setDeadline(Prompt.inputDate(String.format("마감일(%s)? ", task.getDeadline())));
