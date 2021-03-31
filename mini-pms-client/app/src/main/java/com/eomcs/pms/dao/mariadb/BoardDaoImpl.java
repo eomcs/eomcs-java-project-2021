@@ -1,33 +1,28 @@
-package com.eomcs.pms.dao;
+package com.eomcs.pms.dao.mariadb;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 
-//1) 메서드를 호출 할 때 마다 Connection 객체 생성
-//- 즉 DBMS에 연결
-//2) 클래스가 로딩될 때 미리 Connection 객체 생성
-//- DAO 당 한 번만 DBMS에 연결
-public class BoardDao02 {
+public class BoardDaoImpl implements BoardDao {
 
-  static Connection con;
+  Connection con;
 
-  static {
-    try {
-      con = DriverManager.getConnection(
-          "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-    } catch (Exception e) {
-      System.out.println("DB 커넥션 객체 생성 중 오류 발생!");
-    }
+  // Connection 객체를 자체적으로 생성하지 않고 외부에서 주입받는다.
+  // - Connection 객체를 여러 DAO가 공유할 수 있다.
+  // - 교체하기도 쉽다.
+  public BoardDaoImpl(Connection con) throws Exception {
+    this.con = con;
   }
 
-  public static int insert(Board board) throws Exception {
+  @Override
+  public int insert(Board board) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "insert into pms_board(title, content, writer) values(?,?,?)");) {
 
@@ -36,10 +31,11 @@ public class BoardDao02 {
       stmt.setInt(3, board.getWriter().getNo());
 
       return stmt.executeUpdate();
-    } 
+    }
   }
 
-  public static List<Board> findAll() throws Exception {
+  @Override
+  public List<Board> findAll() throws Exception {
     ArrayList<Board> list = new ArrayList<>();
 
     try (PreparedStatement stmt = con.prepareStatement(
@@ -75,7 +71,8 @@ public class BoardDao02 {
     return list;
   }
 
-  public static Board findByNo(int no) throws Exception {
+  @Override
+  public Board findByNo(int no) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "select"
             + " b.no,"
@@ -115,7 +112,8 @@ public class BoardDao02 {
     }
   }
 
-  public static int update(Board board) throws Exception {
+  @Override
+  public int update(Board board) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "update pms_board set title=?, content=? where no=?")) {
 
@@ -126,7 +124,8 @@ public class BoardDao02 {
     }
   }
 
-  public static int updateViewCount(int no) throws Exception {
+  @Override
+  public int updateViewCount(int no) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "update pms_board set vw_cnt=vw_cnt + 1 where no=?")) {
       stmt.setInt(1, no);
@@ -134,7 +133,8 @@ public class BoardDao02 {
     }
   }
 
-  public static int delete(int no) throws Exception {
+  @Override
+  public int delete(int no) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "delete from pms_board where no=?")) {
       stmt.setInt(1, no);
@@ -142,7 +142,8 @@ public class BoardDao02 {
     }
   }
 
-  public static List<Board> findByKeyword(String keyword) throws Exception {
+  @Override
+  public List<Board> findByKeyword(String keyword) throws Exception {
     ArrayList<Board> list = new ArrayList<>();
 
     try (PreparedStatement stmt = con.prepareStatement(

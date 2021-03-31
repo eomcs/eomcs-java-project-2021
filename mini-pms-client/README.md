@@ -1,84 +1,46 @@
-# 31-a. 데이터 처리 코드를 별도의 클래스로 분리하기 : DAO 클래스 도입
+# 31-c. 데이터 처리 코드를 별도의 클래스로 분리하기 : 의존 객체 주입과 DB 커넥션 객체 공유하기
 
 이번 훈련에서는,
-- **DAO** 의 역할을 이해하고 데이터 처리 코드를 분리하는 연습을 한다.
+- **의존 객체 주입** 을 통해 **DB 커넥션 객체를 공유** 하는 방법을 연습해 볼 것이다.
 
-**DAO(Data Access Object)**
-- DBMS 또는 File 을 이용하여 데이터를 저장, 조회, 변경, 삭제하는 일을 하는 객체이다.
-- 데이터 처리 로직을 DAO 객체로 분리해두면 객체를 재사용하거나 교체하기가 쉬워진다.
-
-**High Cohesion(높은 응집력)**
-- 하나의 모듈(메서드, 클래스 등)이 하나의 기능(역할)을 수행하게 하는 것을 의미한다.
-- 목적이 분명하도록 작성한 메서드나 클래스는 신뢰도가 높고, 재사용과 코드를 이해하기 쉽다.
-- 반대로 한 개의 메서드나 클래스가 여러 기능이나 역할을 수행한다면
-  유지보수나 재사용이 어렵고 코드를 이해하기도 어렵다.
+**의존 객체 주입(Dependency Injection: DI)** 은,
+- 역할을 수행하는데 필요한 객체를 외부에서 주입해 주는 방식이다.
+- 외부에서 객체를 관리하기 때문에 객체 교체가 용이하다.
+- 목업(mock up) 객체를 의존 객체로 주입할 수 있어 단위 테스트 하기가 쉽다.
 
 ## 훈련 목표
-- 소프트웨어 설계의 원칙 중 하나인 "High Cohesion"의 개념을 이해한다.
-- 기존 코드에서 특정 역할을 하는 코드를 분리해 내는 것을 연습한다.
-- DAO 의 역할과 DAO를 도입했을 때의 이점을 이해한다.
-- DAO와 DBMS 테이블의 관계를 이해한다.
+- **의존 객체 주입** 의 이점을 이해한다.
+- **DB 커넥션 객체** 를 공유할 때 이점을 이해한다.
 
 ## 훈련 내용
-- 커맨드 클래스에서 데이터 처리 코드를 분리하여 별도의 클래스(DAO)로 정의한다.
+- `AppInitListener` 에서 DB 커넥션을 준비한다.
+- `App` 에서 DAO 객체를 생성할 때 `AppInitListener` 가 준비한 DB 커넥션을 주입한다.
+- DAO 각 메서드는 DAO 생성자를 통해 주입 받은 DB 커넥션을 사용하여 SQL을 처리한다. 
 
 ## 실습
 
-### 1단계 - `BoardXxx` 클래스에서 데이터 처리 코드를 분리하여 `BoardDao` 클래스를 정의한다.
+### 1단계 - 각 DAO 메서드에서 DB 커넥션을 생성하지 않고 공유한다.
 
-- com.eomcs.pms.dao.BoardDao 클래스 생성
-  - `BoardXxxHandler` 에서 게시글 데이터를 처리하는 JDBC 코드를 가져와서 메서드로 정의한다.
-- com.eomcs.pms.dao.MemberDao 클래스 생성
-  - `MemberListHandler` 에서 회원 정보를 찾는 코드를 가져와서 findByName() 메서드로 정의한다.
-- `com.eomcs.pms.handler.BoardAddHandler` 변경
-  - 데이터 처리와 관련된 코드를 `BoardDao.insert()` 로 옮긴다.
-- `com.eomcs.pms.handler.BoardDeleteHandler` 변경
-  - 데이터 처리와 관련된 코드를 `BoardDao.delete()` 로 옮긴다.
-- - `com.eomcs.pms.handler.BoardDetailHandler` 변경
-  - 데이터 처리와 관련된 코드를 `BoardDao.findByNo()` 로 옮긴다.
-- - `com.eomcs.pms.handler.BoardListHandler` 변경
-  - 데이터 처리와 관련된 코드를 `BoardDao.findAll()` 로 옮긴다.
-- - `com.eomcs.pms.handler.BoardUpdateHandler` 변경
-  - 데이터 처리와 관련된 코드를 `BoardDao.update()` 로 옮긴다.
+- com.eomcs.pms.dao.mariadb.XxxDaoImpl 클래스 변경
+  - 생성자에서 파라미터로 DB 커넥션을 주입 받는다.
+  - 각 메서드는 이렇게 주입 받은 DB 커넥션을 사용한다.
+- com.eomcs.pms.ClientApp 변경
+  - Connection 객체를 생성한다.
+  - DAO 객체에 주입한다.
 
-### 2단계 - `MemberXxxHandler` 클래스에서 데이터 처리 코드를 분리하여 `MemberDao` 클래스를 정의한다.
-- com.eomcs.pms.dao.MemberDao 클래스 변경
-  - `MemberAddHandler` 에서 데이터 입력 코드를 가져와서 insert() 메서드를 정의한다.
-  - `MemberDeleteHandler` 에서 데이터 삭제 코드를 가져와서 delete() 메서드를 정의한다.
-  - `MemberDetailHandler` 에서 데이터 조회 코드를 가져와서 findByNo() 메서드를 정의한다.
-  - `MemberListHandler` 에서 데이터 삭제 코드를 가져와서 findAll() 메서드를 정의한다.
-  - `MemberUpdateHandler` 에서 데이터 삭제 코드를 가져와서 update() 메서드를 정의한다.
-- com.eomcs.pms.handler.MemberXxxHandler 변경
+### 2단계 - DAO의 작업 중에서 오류가 발생했을 때 rollback을 명시적으로 실행한다.
 
-### 3단계 - `ProjectXxxHandler` 클래스에서 데이터 처리 코드를 분리하여 `ProjectDao` 클래스를 정의한다.
-- com.eomcs.pms.dao.ProjectDao 클래스 생성
-  - `ProjectAddHandler` 에서 데이터 입력 코드를 가져와서 insert() 메서드를 정의한다.
-  - `ProjectDeleteHandler` 에서 데이터 삭제 코드를 가져와서 delete() 메서드를 정의한다.
-  - `ProjectDetailHandler` 에서 데이터 조회 코드를 가져와서 findByNo() 메서드를 정의한다.
-  - `ProjectListHandler` 에서 데이터 삭제 코드를 가져와서 findAll() 메서드를 정의한다.
-  - `ProjectUpdateHandler` 에서 데이터 삭제 코드를 가져와서 update() 메서드를 정의한다.
-- com.eomcs.pms.handler.ProjectXxxHandler 변경
-  - 데이터 처리는 `ProjectDao` 를 사용하여 처리한다.
+커넥션을 공유할 때,
+- 오류가 발생할 때 rollback을 명확히 수행하지 않으면
+- 다음 작업에 영향을 끼친다.
+- 따라서 오류가 발생했을 때 commit 하지 않은 데이터 변경 작업은 rollback을 통해 확실히 취소해야 한다. 
 
-### 4단계 - `TaskXxxHandler` 클래스에서 데이터 처리 코드를 분리하여 `TaskDao` 클래스를 정의한다.
-- com.eomcs.pms.dao.MemberDao 클래스 변경
-  - `TaskAddHandler` 에서 프로젝트 멤버 조회 코드를 가져와서 findByProjectNo() 메서드를 정의한다.
-- com.eomcs.pms.dao.TaskDao 클래스 생성
-  - `TaskAddHandler` 에서 데이터 입력 코드를 가져와서 insert() 메서드를 정의한다.
-  - `TaskDeleteHandler` 에서 데이터 삭제 코드를 가져와서 delete() 메서드를 정의한다.
-  - `TaskDetailHandler` 에서 데이터 조회 코드를 가져와서 findByNo() 메서드를 정의한다.
-  - `TaskListHandler` 에서 데이터 삭제 코드를 가져와서 findAll() 메서드를 정의한다.
-  - `TaskUpdateHandler` 에서 데이터 삭제 코드를 가져와서 update() 메서드를 정의한다.
-- com.eomcs.pms.handler.TaskXxxHandler 변경
-  - 데이터 처리는 `TaskDao` 를 사용하여 처리한다.
+- com.eomcs.pms.dao.mariadb.ProjectDaoImpl 클래스 변경
+  - insert()/update()/delete() 메서드 변경
 
 ## 실습 결과
-- src/main/java/com/eomcs/pms/dao/BoardDao.java 생성
-- src/main/java/com/eomcs/pms/dao/MemberDao.java 생성
-- src/main/java/com/eomcs/pms/dao/ProjectDao.java 생성
-- src/main/java/com/eomcs/pms/dao/TaskDao.java 생성
-- src/main/java/com/eomcs/pms/handler/BoardXxxHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/MemberXxxHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectXxxHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/TaskXxxHandler.java 변경
-- src/main/java/com/eomcs/pms/App.java 변경
+- src/main/java/com/eomcs/pms/dao/mariadb/BoardDaoImpl.java 변경
+- src/main/java/com/eomcs/pms/dao/mariadb/MemberDaoImpl.java 변경
+- src/main/java/com/eomcs/pms/dao/mariadb/ProjectDaoImpl.java 변경
+- src/main/java/com/eomcs/pms/dao/mariadb/TaskDaoImpl.java 변경
+- src/main/java/com/eomcs/pms/ClientApp.java 변경

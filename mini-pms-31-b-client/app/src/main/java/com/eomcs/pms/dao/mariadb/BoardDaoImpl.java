@@ -1,35 +1,27 @@
-package com.eomcs.pms.dao;
+package com.eomcs.pms.dao.mariadb;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 
-//1) 메서드를 호출 할 때 마다 Connection 객체 생성
-//- 즉 DBMS에 연결
-//2) 클래스가 로딩될 때 미리 Connection 객체 생성
-//- DAO 당 한 번만 DBMS에 연결
-//3) 여러 DAO가 Connection 객체를 공유할 수 있도록 외부에서 생성한 후 주입한다.
-//4) DAO에 대해 각 인스턴스 마다 Connection 객체를 구분해서 사용할 수 있도록 
-//   Connection 필드를 인스턴스 멤버로 선언한다.
-public class BoardDao04 {
+// DAO를 만들 때 인터페이스 규칙에 따라 만든다.
+public class BoardDaoImpl implements BoardDao {
 
-  // 이제 Connection 객체는 BoardDao 마다 다를 수 있다.
   Connection con;
 
-  // 이렇게 생성자에서 Connection 객체를 파라미터로 요구하면
-  // Connection 객체를 필수 항목이 된다.
-  // 스태틱 필드로는 필수항목/선택항목을 제어할 수 었다.
-  public BoardDao04(Connection con) {
-    this.con = con;
+  public BoardDaoImpl() throws Exception {
+    this.con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
   }
 
-  // 이제 메서드들은 인스턴스 필드에 들어있는 Connection 객체를 사용해야 하기 때문에
-  // 스태틱 메서드가 아닌 인스턴스 메서드로 선언해야 한다.
+  @Override
   public int insert(Board board) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "insert into pms_board(title, content, writer) values(?,?,?)");) {
@@ -39,9 +31,10 @@ public class BoardDao04 {
       stmt.setInt(3, board.getWriter().getNo());
 
       return stmt.executeUpdate();
-    } 
+    }
   }
 
+  @Override
   public List<Board> findAll() throws Exception {
     ArrayList<Board> list = new ArrayList<>();
 
@@ -78,6 +71,7 @@ public class BoardDao04 {
     return list;
   }
 
+  @Override
   public Board findByNo(int no) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "select"
@@ -118,6 +112,7 @@ public class BoardDao04 {
     }
   }
 
+  @Override
   public int update(Board board) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "update pms_board set title=?, content=? where no=?")) {
@@ -129,6 +124,7 @@ public class BoardDao04 {
     }
   }
 
+  @Override
   public int updateViewCount(int no) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "update pms_board set vw_cnt=vw_cnt + 1 where no=?")) {
@@ -137,6 +133,7 @@ public class BoardDao04 {
     }
   }
 
+  @Override
   public int delete(int no) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
         "delete from pms_board where no=?")) {
@@ -145,6 +142,7 @@ public class BoardDao04 {
     }
   }
 
+  @Override
   public List<Board> findByKeyword(String keyword) throws Exception {
     ArrayList<Board> list = new ArrayList<>();
 
