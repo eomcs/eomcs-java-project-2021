@@ -37,47 +37,14 @@ public class TaskDao {
   }
 
   public List<Task> findAll() throws Exception {
-    ArrayList<Task> list = new ArrayList<>();
-
-    try (PreparedStatement stmt = con.prepareStatement(
-        "select "
-            + "   t.no,"
-            + "   t.content,"
-            + "   t.deadline,"
-            + "   t.status,"
-            + "   m.no as owner_no,"
-            + "   m.name as owner_name,"
-            + "   p.no as project_no,"
-            + "   p.title as project_title"
-            + " from pms_task t "
-            + "   inner join pms_member m on t.owner=m.no"
-            + "   inner join pms_project p on t.project_no=p.no"
-            + " order by p.no desc, t.content asc");
-        ResultSet rs = stmt.executeQuery()) {
-
-      while (rs.next()) {
-        Task task = new Task();
-        task.setNo(rs.getInt("no"));
-        task.setContent(rs.getString("content"));
-        task.setDeadline(rs.getDate("deadline"));
-
-        Member owner = new Member();
-        owner.setNo(rs.getInt("owner_no"));
-        owner.setName(rs.getString("owner_name"));
-        task.setOwner(owner);
-
-        task.setStatus(rs.getInt("status"));
-
-        task.setProjectNo(rs.getInt("project_no"));
-        task.setProjectTitle(rs.getString("project_title"));
-
-        list.add(task);
-      }
-      return list;
-    }
+    return findAll(0);
   }
 
   public List<Task> findByProjectNo(int projectNo) throws Exception {
+    return findAll(projectNo);
+  }
+
+  private List<Task> findAll(int projectNo) throws Exception {
     ArrayList<Task> list = new ArrayList<>();
 
     try (PreparedStatement stmt = con.prepareStatement(
@@ -93,10 +60,12 @@ public class TaskDao {
             + " from pms_task t "
             + "   inner join pms_member m on t.owner=m.no"
             + "   inner join pms_project p on t.project_no=p.no"
-            + " where t.project_no=?"
+            + " where t.project_no=? or 0=?"
             + " order by p.no desc, t.content asc")) {
 
       stmt.setInt(1, projectNo);
+      stmt.setInt(2, projectNo);
+
       ResultSet rs = stmt.executeQuery();
 
       while (rs.next()) {
@@ -120,7 +89,6 @@ public class TaskDao {
       return list;
     }
   }
-
   /*
   public Task findByNo(int no) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
@@ -170,7 +138,7 @@ public class TaskDao {
             + " sdt=?,"
             + " edt=?,"
             + " owner=?"
-            + " where no=?")) { 
+            + " where no=?")) {
 
       con.setAutoCommit(false);
 
