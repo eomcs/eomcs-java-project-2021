@@ -1,4 +1,4 @@
-# 31-c. 데이터 처리 코드를 별도의 클래스로 분리하기 : 의존 객체 주입과 DB 커넥션 객체 공유하기, 명시적인 rollback
+# 31-c. 데이터 처리 코드를 별도의 클래스로 분리하기 : 의존 객체 주입과 DB 커넥션 객체 공유하기
 
 이번 훈련에서는,
 - **의존 객체 주입** 을 통해 **DB 커넥션 객체를 공유** 하는 방법을 연습해 볼 것이다.
@@ -28,15 +28,6 @@
   - Connection 객체를 생성한다.
   - DAO 객체에 주입한다.
 
-### 2단계 - DAO의 작업 중에서 오류가 발생했을 때 rollback을 명시적으로 실행한다.
-
-커넥션을 공유할 때,
-- 오류가 발생할 때 rollback을 명확히 수행하지 않으면
-- 다음 작업에 영향을 끼친다.
-- 따라서 오류가 발생했을 때 commit 하지 않은 데이터 변경 작업은 rollback을 통해 확실히 취소해야 한다. 
-
-- com.eomcs.pms.dao.mariadb.ProjectDaoImpl 클래스 변경
-  - insert()/update()/delete() 메서드 변경
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/dao/mariadb/BoardDaoImpl.java 변경

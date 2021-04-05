@@ -27,11 +27,6 @@ public class ProjectDaoImpl implements ProjectDao {
         "insert into pms_project(title,content,sdt,edt,owner) values(?,?,?,?,?)",
         Statement.RETURN_GENERATED_KEYS)) {
 
-      // 수동 커밋으로 설정한다.
-      // - pms_project 테이블과 pms_member_project 테이블에 모두 성공적으로 데이터를 저장했을 때
-      //   작업을 완료한다.
-      con.setAutoCommit(false); // 의미 => 트랜잭션 시작
-
       // 1) 프로젝트를 추가한다.
       stmt.setString(1, project.getTitle());
       stmt.setString(2, project.getContent());
@@ -51,23 +46,7 @@ public class ProjectDaoImpl implements ProjectDao {
         insertMember(project.getNo(), member.getNo());
       }
 
-      // 프로젝트 정보 뿐만 아니라 팀원 정보도 정상적으로 입력되었다면,
-      // 실제 테이블에 데이터를 적용한다.
-      con.commit(); // 의미 : 트랜잭션 종료
-
       return count;
-
-    } catch (Exception e) {
-      con.rollback();
-
-      // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
-      // rollback을 실행하는 것이다.
-      // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
-      throw e;
-
-    } finally {
-      // 트랜잭션 종료 후 auto commit 을 원래 상태로 설정한다.
-      con.setAutoCommit(true);
     }
   }
 
@@ -160,8 +139,6 @@ public class ProjectDaoImpl implements ProjectDao {
             + " owner=?"
             + " where no=?")) {
 
-      con.setAutoCommit(false);
-
       stmt.setString(1, project.getTitle());
       stmt.setString(2, project.getContent());
       stmt.setDate(3, project.getStartDate());
@@ -178,21 +155,7 @@ public class ProjectDaoImpl implements ProjectDao {
         insertMember(project.getNo(), member.getNo());
       }
 
-      con.commit();
-
       return count;
-
-    } catch (Exception e) {
-      con.rollback();
-
-      // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
-      // rollback을 실행하는 것이다.
-      // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
-      throw e;
-
-    } finally {
-      // 트랜잭션 종료 후 auto commit 을 원래 상태로 설정한다.
-      con.setAutoCommit(true);
     }
   }
 
@@ -201,29 +164,14 @@ public class ProjectDaoImpl implements ProjectDao {
     try (PreparedStatement stmt = con.prepareStatement(
         "delete from pms_project where no=?")) {
 
-      con.setAutoCommit(false);
-
       // 프로젝트에 소속된 팀원 정보 삭제
       deleteMembers(no);
 
       // 프로젝트 정보 삭제
       stmt.setInt(1, no);
       int count = stmt.executeUpdate();
-      con.commit();
 
       return count;
-
-    } catch (Exception e) {
-      con.rollback();
-
-      // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
-      // rollback을 실행하는 것이다.
-      // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
-      throw e;
-
-    } finally {
-      // 트랜잭션 종료 후 auto commit 을 원래 상태로 설정한다.
-      con.setAutoCommit(true);
     }
   }
 
