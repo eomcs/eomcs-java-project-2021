@@ -89,7 +89,7 @@ public class ClientApp {
 
     // 핸들러가 사용할 DAO 객체 준비
     BoardDao boardDao = new BoardDaoImpl(sqlSession);
-    MemberDao memberDao = new MemberDaoImpl(con);
+    MemberDao memberDao = new MemberDaoImpl(sqlSession);
     ProjectDao projectDao = new ProjectDaoImpl(con);
     TaskDao taskDao = new TaskDaoImpl(con);
 

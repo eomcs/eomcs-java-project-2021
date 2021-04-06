@@ -20,18 +20,20 @@ public class MemberUpdateHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    Member member = memberDao.findByNo(no);
+    Member oldMember = memberDao.findByNo(no);
 
-    if (member == null) {
+    if (oldMember == null) {
       System.out.println("해당 번호의 회원이 없습니다.");
       return;
     }
 
-    member.setName(Prompt.inputString(String.format("이름(%s)? ", member.getName())));
-    member.setEmail(Prompt.inputString(String.format("이메일(%s)? ", member.getEmail())));
+    Member member = new Member();
+    member.setNo(oldMember.getNo());
+    member.setName(Prompt.inputString(String.format("이름(%s)? ", oldMember.getName())));
+    member.setEmail(Prompt.inputString(String.format("이메일(%s)? ", oldMember.getEmail())));
     member.setPassword(Prompt.inputString("새암호? "));
-    member.setPhoto(Prompt.inputString(String.format("사진(%s)? ", member.getPhoto())));
-    member.setTel(Prompt.inputString(String.format("전화(%s)? ", member.getTel())));
+    member.setPhoto(Prompt.inputString(String.format("사진(%s)? ", oldMember.getPhoto())));
+    member.setTel(Prompt.inputString(String.format("전화(%s)? ", oldMember.getTel())));
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
     if (!input.equalsIgnoreCase("Y")) {
