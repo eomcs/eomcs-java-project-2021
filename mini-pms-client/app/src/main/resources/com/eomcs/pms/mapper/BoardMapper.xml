@@ -53,7 +53,7 @@
     where 
       b.title like concat('%', #{value},'%')
       or b.content like concat('%', #{value},'%')
-      or m.name like concat('%', #{value},'%')"
+      or m.name like concat('%', #{value},'%')
     order by b.no desc
   </select>
   

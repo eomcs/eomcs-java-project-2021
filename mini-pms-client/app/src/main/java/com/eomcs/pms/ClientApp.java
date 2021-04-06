@@ -1,11 +1,16 @@
 package com.eomcs.pms;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.pms.dao.ProjectDao;
@@ -67,12 +72,23 @@ public class ClientApp {
 
   public void execute() throws Exception {
 
+    // Mybatis 설정 파일을 읽을 입력 스트림 객체 준비
+    InputStream mybatisConfigStream = Resources.getResourceAsStream(
+        "com/eomcs/pms/conf/mybatis-config.xml");
+
+    // SqlSessionFactory 객체 준비
+    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatisConfigStream);
+
+    // DAO가 사용할 SqlSession 객체 준비
+    // => 단 auto commit 으로 동작하는 SqlSession 객체를 준비한다.
+    SqlSession sqlSession = sqlSessionFactory.openSession(true);
+
     // DB Connection 객체 생성
     Connection con = DriverManager.getConnection(
         "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
 
     // 핸들러가 사용할 DAO 객체 준비
-    BoardDao boardDao = new BoardDaoImpl(con);
+    BoardDao boardDao = new BoardDaoImpl(sqlSession);
     MemberDao memberDao = new MemberDaoImpl(con);
     ProjectDao projectDao = new ProjectDaoImpl(con);
     TaskDao taskDao = new TaskDaoImpl(con);
