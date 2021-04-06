@@ -59,21 +59,13 @@
   - 의존 객체 SqlSession을 생성자를 통해 주입 받는다.
   - SQL을 뜯어내어 BoardMapper.xml로 옮긴다.
   - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
-  - 백업: BoardDaoImpl01.java
 
 
+### 4단계: ClientApp 에서 DAO가 사용할 SqlSession 객체를 준비한다.
 
-### 4단계: App 에서 사용하는 객체를 AppInitListener 에서 모두 준비한다.
-
-- com.eomcs.pms.dao.mariadb.BoardDaoImpl 클래스 변경
-  - 각 메서드에서 SqlSessionFactory를 준비하는 대신에 생성자의 파라미터로 주입 받는다.
-- com.eomcs.pms.listener.AppInitListener 클래스 변경
-  - `SqlSessionFactory` 객체를 생성한다.
-  - `XxxDao` 구현체 생성 코드도 이 클래스로 옮긴다.
-  - `Command` 구현체 생성 코드도 이 클래스로 옮긴다.
-- com.eomcs.pms.App 클래스 변경
-  - DAO 구현체 생성 코드와 Command 구현체 생성 코드를 제거한다.
-  - commandMap 객체 생성 코드도 제거한다.
+- com.eomcs.pms.ClientApp 클래스 변경
+  - `SqlSession` 객체를 생성한다.
+  - DAO 구현체를 생성할 때 SqlSession 객체를 주입한다.
 
 ### 5단계: MemberDaoImpl 에 Mybatis를 적용한다.
 
