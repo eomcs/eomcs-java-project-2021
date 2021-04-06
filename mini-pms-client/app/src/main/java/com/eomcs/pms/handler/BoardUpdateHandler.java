@@ -22,14 +22,23 @@ public class BoardUpdateHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    Board board = boardDao.findByNo(no);
-    if (board == null) {
+    // Mybatis 해당 번호의 게시글 데이터를 가져와서 Board 객체를 만든 후 리턴한다.
+    // 만약 이전에 조회할 게시글의 PK 값과 같은 값을 갖는 객체가 있다면,
+    // 새로 Board 객체를 만들지 않고 기존 객체를 리턴한다.
+    // => 이유?
+    //    동일한 객체를 계속해서 만들지 않기 위해서이다.
+    // => 동일한 객체인지 어떻게 아는가?
+    //    PK에 해당하는 프로퍼티 값이 같을 경우 같은 객체로 간주한다.
+    Board oldBoard = boardDao.findByNo(no);
+    if (oldBoard == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
 
-    board.setTitle(Prompt.inputString(String.format("제목(%s)? ", board.getTitle())));
-    board.setContent(Prompt.inputString(String.format("내용(%s)? ", board.getContent())));
+    Board board = new Board();
+    board.setNo(oldBoard.getNo());
+    board.setTitle(Prompt.inputString(String.format("제목(%s)? ", oldBoard.getTitle())));
+    board.setContent(Prompt.inputString(String.format("내용(%s)? ", oldBoard.getContent())));
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
     if (!input.equalsIgnoreCase("Y")) {
