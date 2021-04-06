@@ -1,76 +1,128 @@
-# 31-d. 데이터 처리 코드를 별도의 클래스로 분리하기 : 트랜잭션이 필요한 이유와 명시적인 rollback
+# 32-a. DB 프로그래밍을 더 쉽고 간단히 하는 방법 : Mybatis 퍼시스턴스 프레임워크 도입
 
 이번 훈련에서는,
-- **트랜잭션** 이 필요한 이유와 다루는 방법을 배울 것이다.
+- 실무에서 자주 쓰이는 *퍼시스턴스 프레임워크* 중에 하나인 **마이바티스** 프레임워크의 사용법을 배울 것이다.
 
-**트랜잭션(transaction)** 은,
-- 여러 개의 데이터 변경 작업(insert/update/delete)을 한 단위로 묶은 것을 가리키는 용어다.
-- 트랜잭션은 DBMS나 개발자에 의해 `ACID` 가 보장되어야 한다.
+**퍼시스턴스 프레임워크(Persistence Framework)** 는,
+- 데이터의 저장, 조회, 변경, 삭제를 다루는 클래스 및 설정 파일들의 집합이다.(위키백과)
+- JDBC 프로그래밍의 번거로움 없이 간결하게 데이터베이스와 연동할 수 있다.
+- 소스 코드에서 SQL 문을 분리하여 관리한다.
 
-**ACID(원자성, 일관성, 고립성, 지속성)** 란?
-- 원자성(Atomicity)
-  - 트랜잭션으로 묶인 작업은 모두 완전히 실행되거나 전혀 실행되지 않아야 한다.
-  - 계좌이체의 경우, 내 계좌에서의 *출금* 과 다른 계좌로의 *입금* 이 모두 이루어졌을 때 완료된다.
-  - *출금* 만 성공하고, *입금* 이 실패했다면 *출금* 작업을 취소해야 한다.
-- 일관성(Consistency)
-  - 트랜잭션을 수행한 후에도 데이터는 일관된 상태를 유지해야 한다.
-  - 계좌이체의 경우, 내 계좌에서 100원을 출금했다면 상대편 계좌에 100원이 정확하게 입금되어야 한다.
-  - 출금과 입금이 맞지 않다면 *일관성이 없는 상태* 가 된다.
-- 고립성(Isolation)
-  - 트랜잭션을 수행하는 다른 트랜잭션의 연산 작업이 끼어들지 못하도록 해야 한다.
-  - 한 트랜잭션이 변경 중인 데이터를 다른 트랜잭션에서 사용한다면 데이터 일관성이 깨질 수 있다.
-- 지속성(Durability)
-  - 트랜잭션을 성공적으로 완료한 후에 변경한 데이터는 반드시 데이터베이스에 기록되어야 한다.
-  - 시스템 전원이 나가거나 장애로 인해 데이터베이스에 기록되지 않은 경우에는,
-    - 복구 시스템을 통해 로그에 기록된 것을 바탕으로 데이터베이스에 저장한다.
-    - 또는 트랜잭션 실패로 처리한다.
-
-프로그래밍에서 **트랜잭션** 을 다루는 방법은,
-- DB 커넥션 객체에 대해 *자동 커밋* 을 취소하면 트랜잭션이 시작된다.
-- 트랜잭션이 시작된 상태에서 수행된 데이터 변경은 DBMS의 임시 데이터베이스에 그 결과가 보관된다.
-- `commit()` 을 호출하면 DBMS는 임시 데이터베이스에 보관된 데이터 변경 결과를 실제 데이터베이스에 반영한다.
-- `rollback()` 을 호출하면 DBMS의 임시 데이터베이스에 보관된 데이터 변경 결과를 모두 버린다.
-
+**마이바티스(Mybatis)** 는,
+- *퍼시스턴스 프레임워크* 중의 하나이다.
+- JDBC 프로그래밍을 캡슐화하여 데이터베이스 연동을 쉽게 하도록 도와준다.
+- 자바 소스 파일에서 SQL을 분리하여 별도의 파일로 관리하기 때문에
+  자바 소스 코드를 간결하게 유지할 수 있다.
+- JDBC 프로그래밍 할 때와 마찬가지로 직접 SQL을 다루기 때문에
+  레거시(legacy) 시스템에서 사용하는 데이터베이스와 연동할 때 유리하다.
+- SQL을 통해 데이터베이스와 연동한다고 해서 보통 **SQL 매퍼(mapper)** 라 부른다.
 
 ## 훈련 목표
-- **트랜잭션** 이 적용되지 않았을 때 발생되는 문제를 경험하고 트랜잭션이 필요한 이유를 이해한다.
-- `commit()` 과 `rollback()`을 사용하여 *트랜잭션* 을 다루는 방법을 연습한다.
+- **Mybatis SQL 맵퍼** 의 특징과 동작 원리를 이해한다.
+- Mybatis 퍼시스턴스 프레임워크를 설정하고 다루는 방법을 배운다.
 
 ## 훈련 내용
-- 프로젝트 정보를 등록, 변경, 삭제하는 작업에 **트랜잭션** 을 적용하지 않았을 때의 문제점을 확인한다.
-- 프로젝트 정보를 등록할 때 프로젝트 데이터를 입력하는 것과 팀원을 입력하는 것을 한 단위 작업으로 묶어 다룬다.
-- 프로젝트 변경, 삭제 또한 마찬가지이다.
+- *Mybatis 프레임워크* 라이브러리 파일을 프로젝트에 추가한다.
+- *Mybatis* 를 설정한다.
+- *DAO* 에 *Mybatis* 를 적용한다.
 
 ## 실습
 
-### 1단계 - `ProjectAddCommand` 를 통해 트랜잭션이 적용되지 않았을 때의 상태를 경험한다.
+### 1단계 - 프로젝트에 MyBatis 라이브러리를 추가한다.
 
-- com.eomcs.pms.dao.mariadb.ProjectDaoImpl 변경
-  - 프로젝트 정보를 `pms_project` 테이블에 입력 한 후,
-    60초 지연했다가 프로젝트 멤버를 `pms_member_project` 테이블에 입력한다.
-  - 지연되는 중에 mariadb client 프로그램으로 프로젝트 멤버로 입력할 회원을 삭제한다.
-  - 60초 지연 시간이 지난 후 프로젝트 멤버를 입력할 때,
-    회원이 삭제되었기 때문에 FK 컬럼 오류가 발생할 것이다.
-  - 그럼에도 불구하고 `pms_project` 테이블에 프로젝트 정보는 정상적으로 입력 될 것이다.
+- build.gradle   
+  - `search.maven.org` 사이트에서 *mybatis* 라이브러리 정보를 찾는다.
+  - 의존 라이브러리 블록에서 `mybatis` 라이브러리를 등록한다.
+- gradle을 이용하여 eclipse 설정 파일을 갱신한다.
+  - `$ gradle eclipse`
+- 이클립스에서 프로젝트를 갱신한다.
 
-### 2단계 - `ProjectDao` 에 트랜잭션을 적용한다.
+### 2단계 - `MyBatis` 설정 파일을 준비한다.
 
-- com.eomcs.pms.dao.mariadb.ProjectDaoImpl 변경
-  - `insert()` 메서드에서 수행하는 프로젝트 등록과 프로젝트 멤버 등록을 한 단위 작업으로 묶는다.
-    - `Connection.setAutoCommit(false)` 로 설정한다.
-    - 정상적으로 수행했을 때만 `commit()` 을 호출한다.
-  - `update()` 메서드에서 수행하는 프로젝트 변경과 프로젝트 멤버 삭제, 등록을 한 단위 작업으로 묶는다.
-  - `delete()` 메서드에서 수행하는 데이터 변경 작업을 한 단위의 작업으로 묶는다.
+- src/main/resources/com/eomcs/pms/conf/jdbc.properties
+  - 마이바티스 홈 : <http://www.mybatis.org>
+  - `MyBatis` 설정 파일에서 참고할 DBMS 접속 정보를 등록한다.
+- src/main/resources/com/eomcs/pms/conf/mybatis-config.xml
+  - `MyBatis` 설정 파일이다.
+  - DBMS 서버의 접속 정보를 갖고 있는 jdbc.properties 파일의 경로를 등록한다.
+  - DBMS 서버 정보를 설정한다.
+  - DB 커넥션 풀을 설정한다.
 
-### 3단계 - DAO의 작업 중에서 오류가 발생했을 때 rollback을 명시적으로 실행한다.
 
-커넥션을 공유할 때,
-- 오류가 발생할 때 rollback을 명확히 수행하지 않으면
-- 다음 작업에 영향을 끼친다.
-- 따라서 오류가 발생했을 때 commit 하지 않은 데이터 변경 작업은 rollback을 통해 확실히 취소해야 한다. 
+### 3단계: BoardDaoImpl 에 Mybatis를 적용한다.
+
+- com/eomcs/pms/conf/mybatis-config.xml 변경
+  - BoardMapper.xml 파일의 경로를 등록한다.
+- com/eomcs/pms/mapper/BoardMapper.xml 추가
+  - BoardDaoImpl 에 있던 SQL문을 이 파일로 옮긴다.
+- com.eomcs.pms.dao.mariadb.BoardDaoImpl 클래스 변경
+  - 의존 객체 SqlSession을 생성자를 통해 주입 받는다.
+  - SQL을 뜯어내어 BoardMapper.xml로 옮긴다.
+  - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
+  - 백업: BoardDaoImpl01.java
+
+
+
+### 4단계: App 에서 사용하는 객체를 AppInitListener 에서 모두 준비한다.
+
+- com.eomcs.pms.dao.mariadb.BoardDaoImpl 클래스 변경
+  - 각 메서드에서 SqlSessionFactory를 준비하는 대신에 생성자의 파라미터로 주입 받는다.
+- com.eomcs.pms.listener.AppInitListener 클래스 변경
+  - `SqlSessionFactory` 객체를 생성한다.
+  - `XxxDao` 구현체 생성 코드도 이 클래스로 옮긴다.
+  - `Command` 구현체 생성 코드도 이 클래스로 옮긴다.
+- com.eomcs.pms.App 클래스 변경
+  - DAO 구현체 생성 코드와 Command 구현체 생성 코드를 제거한다.
+  - commandMap 객체 생성 코드도 제거한다.
+
+### 5단계: MemberDaoImpl 에 Mybatis를 적용한다.
+
+- com.eomcs.pms.dao.mariadb.MemberDaoImpl 클래스 변경
+  - SQL을 뜯어내어 MemberMapper.xml로 옮긴다.
+  - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
+- com/eomcs/pms/mapper/MemberMapper.xml 추가
+  - MemberDaoImpl 에 있던 SQL문을 이 파일로 옮긴다.
+- com/eomcs/pms/conf/mybatis-config.xml 변경
+  - MemberMapper.xml 파일의 경로를 등록한다.
+
+### 6단계: ProjectDaoImpl 에 Mybatis를 적용한다.
 
 - com.eomcs.pms.dao.mariadb.ProjectDaoImpl 클래스 변경
-  - insert()/update()/delete() 메서드 변경
+  - SQL을 뜯어내어 ProjectMapper.xml로 옮긴다.
+  - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
+- com.eomcs.pms.dao.TaskDao 인터페이스 변경
+  - 프로젝트의 작업을 삭제하는 deleteByProjectNo() 메서드 추가
+- com.eomcs.pms.dao.mariadb.TaskDaoImpl 클래스 변경
+  - 프로젝트의 작업을 삭제하는 deleteByProjectNo() 메서드 구현
+    - 프로젝트에 종속된 작업을 삭제하는 SQL을 뜯어내어 TaskMapper.xml로 옮긴다.
+    - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
+- com/eomcs/pms/mapper/ProjectMapper.xml 추가
+  - ProjectDaoImpl 에 있던 SQL문을 이 파일로 옮긴다.
+- com/eomcs/pms/mapper/TaskMapper.xml 추가
+  - ProjectDaoImpl 에 있던 프로젝트의 작업을 삭제하는 SQL문을 이 파일로 옮긴다.
+- com/eomcs/pms/conf/mybatis-config.xml 변경
+  - ProjectMapper.xml 파일의 경로를 등록한다.
+  - TaskMapper.xml 파일의 경로를 등록한다.
+
+### 7단계: TaskDaoImpl 에 Mybatis를 적용한다.
+
+- com.eomcs.pms.dao.mariadb.TaskDaoImpl 클래스 변경
+  - SQL을 뜯어내어 TaskMapper.xml로 옮긴다.
+  - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
+- com/eomcs/pms/mapper/TaskMapper.xml 변경
+  - TaskDaoImpl 에 있던 SQL문을 이 파일로 옮긴다.
+
 
 ## 실습 결과
+- build.gradle 변경
+- src/main/resources/com/eomcs/pms/conf/jdbc.properties 생성
+- src/main/resources/com/eomcs/pms/mapper/BoardMapper.xml 생성
+- src/main/resources/com/eomcs/pms/mapper/MemberMapper.xml 생성
+- src/main/resources/com/eomcs/pms/mapper/ProjectMapper.xml 생성
+- src/main/resources/com/eomcs/pms/mapper/TaskMapper.xml 생성
+- src/main/java/com/eomcs/pms/dao/mariadb/BoardDaoImpl.java 변경
+- src/main/java/com/eomcs/pms/dao/mariadb/MemberDaoImpl.java 변경
 - src/main/java/com/eomcs/pms/dao/mariadb/ProjectDaoImpl.java 변경
+- src/main/java/com/eomcs/pms/dao/TaskDao.java 변경
+- src/main/java/com/eomcs/pms/dao/mariadb/TaskDaoImpl.java 변경
+- src/main/java/com/eomcs/pms/listener/AppInitListener.java 변경

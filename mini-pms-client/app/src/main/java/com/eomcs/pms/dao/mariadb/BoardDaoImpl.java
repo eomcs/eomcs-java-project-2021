@@ -1,37 +1,28 @@
 package com.eomcs.pms.dao.mariadb;
 
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.ibatis.session.SqlSession;
 import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 
 public class BoardDaoImpl implements BoardDao {
 
-  Connection con;
+  SqlSession sqlSession;
 
-  // Connection 객체를 자체적으로 생성하지 않고 외부에서 주입받는다.
-  // - Connection 객체를 여러 DAO가 공유할 수 있다.
-  // - 교체하기도 쉽다.
-  public BoardDaoImpl(Connection con) throws Exception {
-    this.con = con;
+  public BoardDaoImpl(SqlSession sqlSession) throws Exception {
+    this.sqlSession = sqlSession;
   }
 
   @Override
   public int insert(Board board) throws Exception {
-    try (PreparedStatement stmt = con.prepareStatement(
-        "insert into pms_board(title, content, writer) values(?,?,?)");) {
-
-      stmt.setString(1, board.getTitle());
-      stmt.setString(2, board.getContent());
-      stmt.setInt(3, board.getWriter().getNo());
-
-      return stmt.executeUpdate();
-    }
+    int count = sqlSession.insert("BoardMapper.insert", board);
+    sqlSession.commit();
+    return count;
   }
 
   @Override
