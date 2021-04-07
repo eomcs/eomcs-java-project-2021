@@ -33,30 +33,7 @@ public class ProjectDaoImpl implements ProjectDao {
 
   @Override
   public List<Project> findAll() throws Exception {
-    ArrayList<Project> list = new ArrayList<>();
-
-    try (PreparedStatement stmt = con.prepareStatement(
-        );
-        ResultSet rs = stmt.executeQuery()) {
-
-      while (rs.next()) {
-        Project project = new Project();
-        project.setNo(rs.getInt("no"));
-        project.setTitle(rs.getString("title"));
-        project.setStartDate(rs.getDate("sdt"));
-        project.setEndDate(rs.getDate("edt"));
-
-        Member owner = new Member();
-        owner.setNo(rs.getInt("owner_no"));
-        owner.setName(rs.getString("owner_name"));
-        project.setOwner(owner);
-
-        project.setMembers(findAllMembers(project.getNo()));
-
-        list.add(project);
-      }
-    }
-    return list;
+    return sqlSession.selectList("ProjectMapper.findAll");
   }
 
   @Override
