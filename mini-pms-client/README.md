@@ -92,7 +92,12 @@
 
 ### 7단계: ProjectDaoImpl 에 Mybatis를 적용한다.
 
+- com/eomcs/pms/conf/mybatis-config.xml 변경
+  - ProjectMapper.xml 파일의 경로를 등록한다.
+- com/eomcs/pms/mapper/ProjectMapper.xml 추가
+  - ProjectDaoImpl 에 있던 SQL문을 이 파일로 옮긴다.
 - com.eomcs.pms.dao.mariadb.ProjectDaoImpl 클래스 변경
+  - 의존 객체 SqlSession을 생성자를 통해 주입 받는다.
   - SQL을 뜯어내어 ProjectMapper.xml로 옮긴다.
   - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
 - com.eomcs.pms.dao.TaskDao 인터페이스 변경
