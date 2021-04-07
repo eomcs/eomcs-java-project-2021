@@ -38,7 +38,7 @@
       photo,
       tel 
     from pms_member
-    where name like concat('%', #{value}, '%')
+    where name = #{value}
     order by name asc
   </select>
   
