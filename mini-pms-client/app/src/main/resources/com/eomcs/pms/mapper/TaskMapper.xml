@@ -95,6 +95,10 @@
     where no = #{value}
   </delete>
 
+  <delete id="deleteByProjectNo" parameterType="int">
+    delete from pms_task 
+    where project_no = #{value}
+  </delete>
 </mapper>
 
 

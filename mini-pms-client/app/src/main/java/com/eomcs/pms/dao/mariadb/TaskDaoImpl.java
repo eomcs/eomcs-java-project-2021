@@ -42,6 +42,11 @@ public class TaskDaoImpl implements TaskDao {
   public int delete(int no) throws Exception {
     return sqlSession.delete("TaskMapper.delete", no);
   }
+
+  @Override
+  public int deleteByProjectNo(int projectNo) throws Exception {
+    return sqlSession.delete("TaskMapper.deleteByProjectNo", projectNo);
+  }
 }
 
 

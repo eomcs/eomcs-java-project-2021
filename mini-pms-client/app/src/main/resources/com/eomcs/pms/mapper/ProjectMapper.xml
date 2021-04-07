@@ -16,6 +16,11 @@
 	    <id column="owner_no" property="no"/>
 	    <result column="owner_name" property="name"/>
     </association>
+    
+    <collection property="members" ofType="com.eomcs.pms.domain.Member">
+      <id column="member_no" property="no"/>
+      <result column="member_name" property="name"/>
+    </collection>
   </resultMap>
   
   <insert id="insert" parameterType="com.eomcs.pms.domain.Project"
@@ -55,9 +60,13 @@
       p.sdt,
       p.edt,
       m.no as owner_no,
-      m.name as owner_name
+      m.name as owner_name,
+      m2.no as member_no,
+      m2.name as member_name
     from pms_project p
       inner join pms_member m on p.owner=m.no
+      left outer join pms_member_project mp on mp.project_no=p.no
+      left outer join pms_member m2 on mp.member_no=m2.no
     order by title asc
   </select>
   
@@ -69,9 +78,13 @@
       p.sdt,
       p.edt,
       m.no as owner_no,
-      m.name as owner_name
+      m.name as owner_name,
+      m2.no as member_no,
+      m2.name as member_name
     from pms_project p
       inner join pms_member m on p.owner=m.no
+      left outer join pms_member_project mp on mp.project_no=p.no
+      left outer join pms_member m2 on mp.member_no=m2.no
     where p.no=#{value}
   </select>
   

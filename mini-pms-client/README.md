@@ -101,7 +101,7 @@
   - SQL을 뜯어내어 ProjectMapper.xml로 옮긴다.
   - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
 - com.eomcs.pms.dao.TaskDao 인터페이스 변경
-  - 프로젝트의 작업을 삭제하는 deleteByProjectNo() 메서드 추가
+  - 프로젝트를 삭제할 때 그 프로젝트에 소속된 작업도 삭제할 수 있도록 deleteByProjectNo() 메서드를 추가한다.
 - com.eomcs.pms.dao.mariadb.TaskDaoImpl 클래스 변경
   - 프로젝트의 작업을 삭제하는 deleteByProjectNo() 메서드 구현
     - 프로젝트에 종속된 작업을 삭제하는 SQL을 뜯어내어 TaskMapper.xml로 옮긴다.
