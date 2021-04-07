@@ -20,11 +20,6 @@ public class BoardDaoImpl implements BoardDao {
   }
 
   @Override
-  public List<Board> findAll() throws Exception {
-    return sqlSession.selectList("BoardMapper.findAll");
-  }
-
-  @Override
   public Board findByNo(int no) throws Exception {
     return sqlSession.selectOne("BoardMapper.findByNo", no);
   }

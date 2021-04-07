@@ -5,7 +5,7 @@
 
 <mapper namespace="MemberMapper">
   
-  <resultMap id="memberMap" type="com.eomcs.pms.domain.Member">
+  <resultMap id="memberMap" type="member">
     <id column="no" property="no"/>
     <result column="name" property="name"/>
     <result column="email" property="email"/>
@@ -14,7 +14,7 @@
     <result column="cdt" property="registeredDate"/>
   </resultMap>
   
-  <insert id="insert" parameterType="com.eomcs.pms.domain.Member">
+  <insert id="insert" parameterType="member">
     insert into pms_member(name,email,password,photo,tel) 
     values(#{name}, #{email}, password(#{password}), #{photo}, #{tel})
   </insert>
@@ -54,7 +54,7 @@
     where no = #{value}
   </select>
   
-  <update id="update" parameterType="com.eomcs.pms.domain.Member">
+  <update id="update" parameterType="member">
     update pms_member set 
       name=#{name},
       email=#{email},

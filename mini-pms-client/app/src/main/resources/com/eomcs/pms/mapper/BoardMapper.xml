@@ -5,7 +5,7 @@
 
 <mapper namespace="BoardMapper">
   
-  <resultMap id="boardMap" type="com.eomcs.pms.domain.Board">
+  <resultMap id="boardMap" type="board">
     <id column="no" property="no"/>
     <result column="title" property="title"/>
     <result column="content" property="content"/>
@@ -13,32 +13,18 @@
     <result column="vw_cnt" property="viewCount"/>
     <result column="like_cnt" property="like"/>
     
-    <association property="writer" javaType="com.eomcs.pms.domain.Member">
+    <association property="writer" javaType="member">
 	    <id column="writer_no" property="no"/>
 	    <result column="writer_name" property="name"/>
     </association>
     
   </resultMap>
   
-  <insert id="insert" parameterType="com.eomcs.pms.domain.Board">
+  <insert id="insert" parameterType="board">
     insert into pms_board(title, content, writer) 
     values(#{title}, #{content}, #{writer.no})
   </insert>
-  
-  <select id="findAll" resultMap="boardMap">
-    select
-      b.no,
-      b.title,
-      b.cdt,
-      b.vw_cnt,
-      b.like_cnt,
-      m.no as writer_no,
-      m.name as writer_name
-    from pms_board b
-      inner join pms_member m on m.no=b.writer
-    order by b.no desc
-  </select>
-  
+
   <select id="findByKeyword" resultMap="boardMap" parameterType="string">
     select
       b.no,
@@ -50,10 +36,14 @@
       m.name as writer_name
     from pms_board b
       inner join pms_member m on m.no=b.writer
+    
+    <if test="value != null">
     where 
       b.title like concat('%', #{value},'%')
       or b.content like concat('%', #{value},'%')
       or m.name like concat('%', #{value},'%')
+    </if>
+    
     order by b.no desc
   </select>
   
@@ -72,7 +62,7 @@
     where b.no = #{value}
   </select>
   
-  <update id="update" parameterType="com.eomcs.pms.domain.Board">
+  <update id="update" parameterType="board">
     update pms_board set
         title = #{title}, 
         content = #{content}

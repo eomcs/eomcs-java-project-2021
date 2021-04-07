@@ -5,25 +5,25 @@
 
 <mapper namespace="ProjectMapper">
   
-  <resultMap id="projectMap" type="com.eomcs.pms.domain.Project">
+  <resultMap id="projectMap" type="project">
     <id column="no" property="no"/>
     <result column="title" property="title"/>
     <result column="content" property="content"/>
     <result column="sdt" property="startDate"/>
     <result column="edt" property="endDate"/>
     
-    <association property="owner" javaType="com.eomcs.pms.domain.Member">
+    <association property="owner" javaType="member">
 	    <id column="owner_no" property="no"/>
 	    <result column="owner_name" property="name"/>
     </association>
     
-    <collection property="members" ofType="com.eomcs.pms.domain.Member">
+    <collection property="members" ofType="member">
       <id column="member_no" property="no"/>
       <result column="member_name" property="name"/>
     </collection>
   </resultMap>
   
-  <insert id="insert" parameterType="com.eomcs.pms.domain.Project"
+  <insert id="insert" parameterType="project"
           useGeneratedKeys="true" keyColumn="no" keyProperty="no">
     insert into pms_project(title,content,sdt,edt,owner) 
     values(#{title}, #{content}, #{startDate}, #{endDate}, #{owner.no})
@@ -88,7 +88,7 @@
     where p.no=#{value}
   </select>
   
-  <update id="update" parameterType="com.eomcs.pms.domain.Project">
+  <update id="update" parameterType="project">
     update pms_project set
       title=#{title},
       content=#{content},
@@ -114,7 +114,7 @@
     where project_no=#{value}
   </delete>
   
-  <select id="findAllMembers" resultType="com.eomcs.pms.domain.Member" parameterType="int">
+  <select id="findAllMembers" resultType="member" parameterType="int">
     select
       m.no,
       m.name

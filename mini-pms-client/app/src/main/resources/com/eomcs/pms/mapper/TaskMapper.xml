@@ -5,7 +5,7 @@
 
 <mapper namespace="TaskMapper">
   
-  <resultMap id="taskMap" type="com.eomcs.pms.domain.Task">
+  <resultMap id="taskMap" type="task">
     <id column="no" property="no"/>
     <result column="content" property="content"/>
     <result column="deadline" property="deadline"/>
@@ -13,13 +13,13 @@
     <result column="project_no" property="projectNo"/>
     <result column="project_title" property="projectTitle"/>
     
-    <association property="owner" javaType="com.eomcs.pms.domain.Member">
+    <association property="owner" javaType="member">
 	    <id column="owner_no" property="no"/>
 	    <result column="owner_name" property="name"/>
     </association>
   </resultMap>
   
-  <insert id="insert" parameterType="com.eomcs.pms.domain.Task">
+  <insert id="insert" parameterType="task">
     insert into pms_task(content,deadline,owner,status,project_no) 
     values(#{content}, #{deadline}, #{owner.no}, #{status}, #{projectNo})
   </insert>
@@ -80,7 +80,7 @@
       t.no = #{value}
   </select>
   
-  <update id="update" parameterType="com.eomcs.pms.domain.Task">
+  <update id="update" parameterType="task">
     update pms_task set 
       content=#{content},
       deadline=#{deadline},

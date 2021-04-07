@@ -8,7 +8,7 @@ public interface BoardDao {
 
   int insert(Board board) throws Exception;
 
-  List<Board> findAll() throws Exception;
+  List<Board> findByKeyword(String keyword) throws Exception;
 
   Board findByNo(int no) throws Exception;
 
@@ -17,8 +17,6 @@ public interface BoardDao {
   int updateViewCount(int no) throws Exception;
 
   int delete(int no) throws Exception;
-
-  List<Board> findByKeyword(String keyword) throws Exception;
 }
 
 
