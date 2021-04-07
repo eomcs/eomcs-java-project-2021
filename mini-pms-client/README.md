@@ -115,6 +115,7 @@
 21, javajavaxx, 2020-02-02 ~ 2020-03-03, aaa, [ccc,ddd]
 17, java1, 2020-01-01 ~ 2020-02-02, aaa, []
 ```
+
 - com.eomcs.pms.handler.ProjectSearchHandler 클래스 생성
   - `ProjectListHandler`를 복사해 온다.
   - 사용자에게서 검색 항목과 검색어를 입력 받는 코드를 추가한다.
@@ -126,6 +127,7 @@
 - src/main/resources/com/eomcs/pms/mapper/ProjectMapper.xml 변경
   - `findAll` SQL 문을 `findByKeyword` SQL 문으로 변경한다.
   - if 태그를 사용하여 검색 조건에 따라 where 절을 바꾼다.
+
 ```
 <select id="findByKeyword" resultMap="ProjectMap" parameterType="map">
 ...
@@ -147,32 +149,39 @@
   - `ProjectDao.findAll()`을 `ProjectDao.findByKeyword()` 로 변경한다.
 - com.eomcs.pms.handler.TaskUpdateHandler 클래스 변경
   - `ProjectDao.findAll()`을 `ProjectDao.findByKeyword()` 로 변경한다.
+- com.eomcs.pms.ClientApp 클래스 변경
+  - `/project/search` 명령 처리 코드 추가
 
 ### 5단계 - 프로젝트 상세 검색 기능을 추가한다.
 
-마이바티스의 `where` 태그를 사용하여 동적 SQL을 작성한다.
+마이바티스의 `where` 태그와 `if` 태그를 사용하여 동적 SQL을 작성한다.
 
 ```
 명령> /project/detailSearch
-[프로젝트 상세 검색]
-프로젝트명? java
-관리자명? aaa
-팀원? bbb
+[프로젝트 상세 검색]   <== 모든 조건을 만족해야 한다.(and)
+프로젝트명?(조건에서 제외: 빈 문자열) java   <== 프로젝트 명에 해당 문자열을 포함하는 경우(like)
+관리자명?(조건에서 제외: 빈 문자열) aaa   <== 관리자 이름과 일치하는 경우(=)
+팀원?(조건에서 제외: 빈 문자열) bbb   <== 팀원 이름과 일치하는 경우(=)
 번호, 프로젝트명, 시작일 ~ 종료일, 관리자, 팀원
 21, javajavaxx, 2020-02-02 ~ 2020-03-03, aaa, [ccc,ddd]
 17, java1, 2020-01-01 ~ 2020-02-02, aaa, []
 ```
 
+- com.eomcs.pms.handler.ProjectDetailSearchHandler 클래스 생성
+  - `ProjectSearchHandler`를 복사해 온다.
+  - 사용자에게서 검색 항목과 검색어를 입력 받는 코드를 추가한다.
+  - `ProjectDao.findByKeywords()` 를 메서드를 호출한다.
+- com.eomcs.pms.dao.ProjectDao 인터페이스 변경
+  - `findByKeywords(String title, String owner, String member)` 를 추가한다.
+- com.eomcs.pms.dao.mariadb.ProjectDaoImpl 클래스 변경
+  - `findByKeywords(String title, String owner, String member)` 메서드를 구현한다.
+- src/main/resources/com/eomcs/pms/mapper/ProjectMapper.xml 변경
+  - `findByKeywords` SQL 문을 추가한다.
+  - if 태그를 사용하여 여러 검색 조건을 만족하는 결과를 얻도록 where 절을 만든다.
 - src/main/resources/com/eomcs/pms/mapper/ProjectMapper.xml 변경
   - `findByDetailKeyword` SQL 문을 추가한다.
-- com.eomcs.pms.dao.ProjectDao 인터페이스 변경
-  - `findByDetailKeyword(Map<String,Object> keywords)` 을 추가한다.
-- com.eomcs.pms.dao.mariadb.ProjectDaoImpl 클래스 변경
-  - `findByDetailKeyword(String item, String keyword)` 를 구현한다.
-- com.eomcs.pms.handler.ProjectDetailSearchCommand 클래스 생성
-  - `ProjectDao.findByDetailKeyword()` 을 사용하여 검색 기능을 처리한다.
-- com.eomcs.pms.listener.AppInitListener 클래스 변경
-  - `/project/detailSearch` 를 처리할 `ProjectDetailSearchCommand` 객체를 등록한다.
+- com.eomcs.pms.ClientApp 클래스 변경
+  - `/project/detailSearch` 명령 처리 코드 추가
 
 ### 6단계 - 프로젝트 검색 기능의 mybatis 코드를 변경한다.
 

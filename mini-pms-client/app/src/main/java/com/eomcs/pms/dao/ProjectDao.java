@@ -10,6 +10,8 @@ public interface ProjectDao {
 
   List<Project> findByKeyword(String item, String keyword) throws Exception;
 
+  List<Project> findByKeywords(String title, String owner, String member) throws Exception;
+
   Project findByNo(int no) throws Exception;
 
   int update(Project project) throws Exception;

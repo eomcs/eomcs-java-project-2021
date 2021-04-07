@@ -39,6 +39,17 @@ public class ProjectDaoImpl implements ProjectDao {
   }
 
   @Override
+  public List<Project> findByKeywords(String title, String owner, String member) throws Exception {
+
+    HashMap<String,Object> params = new HashMap<>();
+    params.put("title", title);
+    params.put("owner", owner);
+    params.put("member", member);
+
+    return sqlSession.selectList("ProjectMapper.findByKeywords", params);
+  }
+
+  @Override
   public Project findByNo(int no) throws Exception {
     return sqlSession.selectOne("ProjectMapper.findByNo", no);
   }

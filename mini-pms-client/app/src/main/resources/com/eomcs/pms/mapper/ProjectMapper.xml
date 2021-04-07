@@ -79,6 +79,34 @@
     order by title asc
   </select>
   
+    <select id="findByKeywords" resultMap="projectMap" parameterType="map">
+    select
+      p.no,
+      p.title,
+      p.sdt,
+      p.edt,
+      m.no as owner_no,
+      m.name as owner_name,
+      m2.no as member_no,
+      m2.name as member_name
+    from pms_project p
+      inner join pms_member m on p.owner=m.no
+      left outer join pms_member_project mp on mp.project_no=p.no
+      left outer join pms_member m2 on mp.member_no=m2.no
+    <where>
+	    <if test="title != ''">
+	      p.title like concat('%', #{title}, '%')
+	    </if>
+	    <if test="owner != ''">
+	      and m.name = #{owner}
+	    </if>
+	    <if test="member != ''">
+	      and m2.name = #{member}
+	    </if>
+    </where>
+    order by title asc
+  </select>
+  
   <select id="findByNo" resultMap="projectMap" parameterType="int">
     select
       p.no,
