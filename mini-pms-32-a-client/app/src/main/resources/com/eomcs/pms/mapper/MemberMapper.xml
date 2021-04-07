@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MemberMapper">
+  
+  <resultMap id="memberMap" type="com.eomcs.pms.domain.Member">
+    <id column="no" property="no"/>
+    <result column="name" property="name"/>
+    <result column="email" property="email"/>
+    <result column="photo" property="photo"/>
+    <result column="tel" property="tel"/>
+    <result column="cdt" property="registeredDate"/>
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.eomcs.pms.domain.Member">
+    insert into pms_member(name,email,password,photo,tel) 
+    values(#{name}, #{email}, password(#{password}), #{photo}, #{tel})
+  </insert>
+  
+  <select id="findAll" resultMap="memberMap">
+    select 
+      no,
+      name,
+      email,
+      photo,
+      tel 
+    from pms_member 
+    order by name asc
+  </select>
+  
+  <select id="findByName" resultMap="memberMap" parameterType="string">
+    select 
+      no,
+      name,
+      email,
+      photo,
+      tel 
+    from pms_member
+    where name like concat('%', #{value}, '%')
+    order by name asc
+  </select>
+  
+  <select id="findByNo" resultMap="memberMap" parameterType="int">
+    select 
+      no,
+      name,
+      email,
+      photo,
+      tel,
+      cdt 
+    from pms_member 
+    where no = #{value}
+  </select>
+  
+  <update id="update" parameterType="com.eomcs.pms.domain.Member">
+    update pms_member set 
+      name=#{name},
+      email=#{email},
+      password=password(#{password}),
+      photo=#{photo},
+      tel=#{tel} 
+    where no=#{no}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    delete from pms_member 
+    where no=#{value}
+  </delete>
+
+</mapper>
+
+
+
+
+
+
+
