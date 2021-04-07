@@ -90,7 +90,7 @@ public class ClientApp {
     // 핸들러가 사용할 DAO 객체 준비
     BoardDao boardDao = new BoardDaoImpl(sqlSession);
     MemberDao memberDao = new MemberDaoImpl(sqlSession);
-    ProjectDao projectDao = new ProjectDaoImpl(con);
+    ProjectDao projectDao = new ProjectDaoImpl(sqlSession);
     TaskDao taskDao = new TaskDaoImpl(sqlSession);
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.

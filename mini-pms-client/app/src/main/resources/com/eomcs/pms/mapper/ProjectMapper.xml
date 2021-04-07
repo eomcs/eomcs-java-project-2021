@@ -8,6 +8,7 @@
   <resultMap id="projectMap" type="com.eomcs.pms.domain.Project">
     <id column="no" property="no"/>
     <result column="title" property="title"/>
+    <result column="content" property="content"/>
     <result column="sdt" property="startDate"/>
     <result column="edt" property="endDate"/>
     
@@ -60,57 +61,33 @@
     order by title asc
   </select>
   
-  <select id="findByProjectNo" resultMap="taskMap" parameterType="int">
+  <select id="findByNo" resultMap="projectMap" parameterType="int">
     select
-      t.no,
-      t.content,
-      t.deadline,
-      t.status,
+      p.no,
+      p.title,
+      p.content,
+      p.sdt,
+      p.edt,
       m.no as owner_no,
-      m.name as owner_name,
-      p.no as project_no,
-      p.title as project_title
-    from 
-      pms_task t
-      inner join pms_member m on t.owner=m.no
-      inner join pms_project p on t.project_no=p.no
-    where
-      p.no = #{value}
-    order by 
-      p.no desc, t.content asc
+      m.name as owner_name
+    from pms_project p
+      inner join pms_member m on p.owner=m.no
+    where p.no=#{value}
   </select>
   
-  <select id="findByNo" resultMap="taskMap" parameterType="int">
-    select
-      t.no,
-      t.content,
-      t.deadline,
-      t.status,
-      m.no as owner_no,
-      m.name as owner_name,
-      p.no as project_no,
-      p.title as project_title
-    from 
-      pms_task t
-      inner join pms_member m on t.owner=m.no
-      inner join pms_project p on t.project_no=p.no
-    where
-      t.no = #{value}
-  </select>
-  
-  <update id="update" parameterType="com.eomcs.pms.domain.Task">
-    update pms_task set 
+  <update id="update" parameterType="com.eomcs.pms.domain.Project">
+    update pms_project set
+      title=#{title},
       content=#{content},
-      deadline=#{deadline},
-      owner=#{owner.no},
-      status=#{status},
-      project_no=#{projectNo} 
+      sdt=#{startDate},
+      edt=#{endDate},
+      owner=#{owner.no}
     where no=#{no}
   </update>
   
   <delete id="delete" parameterType="int">
-    delete from pms_task 
-    where no = #{value}
+    delete from pms_project 
+    where no=#{value}
   </delete>
 
 
@@ -118,6 +95,21 @@
     insert into pms_member_project(member_no,project_no) 
     values(#{memberNo}, #{projectNo})
   </insert>
+  
+  <delete id="deleteMembers" parameterType="int">
+    delete from pms_member_project 
+    where project_no=#{value}
+  </delete>
+  
+  <select id="findAllMembers" resultType="com.eomcs.pms.domain.Member" parameterType="int">
+    select
+      m.no,
+      m.name
+    from pms_member_project mp
+      inner join pms_member m on mp.member_no=m.no
+    where 
+      mp.project_no=#{value}
+  </select>
 </mapper>
 
 
