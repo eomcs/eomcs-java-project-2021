@@ -4,20 +4,29 @@ import java.util.List;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
+import com.eomcs.util.Prompt;
 
-public class ProjectListHandler implements Command {
+public class ProjectSearchHandler implements Command {
 
   ProjectDao projectDao;
 
-  public ProjectListHandler(ProjectDao projectDao) {
+  public ProjectSearchHandler(ProjectDao projectDao) {
     this.projectDao = projectDao;
   }
 
   @Override
   public void service() throws Exception {
-    System.out.println("[프로젝트 목록]");
+    System.out.println("[프로젝트 검색]");
 
-    List<Project> projects = projectDao.findByKeyword(null, null);
+    String item = Prompt.inputString("항목(1:프로젝트명, 2:관리자명, 3:팀원, 그 외: 전체)? ");
+    String keyword = null;
+    if (item.equals("1") || 
+        item.equals("2") || 
+        item.equals("3")) {
+      keyword = Prompt.inputString("검색어? ");
+    }
+
+    List<Project> projects = projectDao.findByKeyword(item, keyword);
 
     for (Project p : projects) {
 

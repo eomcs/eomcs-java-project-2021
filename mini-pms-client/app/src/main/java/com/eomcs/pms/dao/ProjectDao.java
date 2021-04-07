@@ -8,7 +8,7 @@ public interface ProjectDao {
 
   int insert(Project project) throws Exception;
 
-  List<Project> findAll() throws Exception;
+  List<Project> findByKeyword(String item, String keyword) throws Exception;
 
   Project findByNo(int no) throws Exception;
 

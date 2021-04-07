@@ -53,7 +53,7 @@
     }
    -->
   
-  <select id="findAll" resultMap="projectMap">
+  <select id="findByKeyword" resultMap="projectMap" parameterType="map">
     select
       p.no,
       p.title,
@@ -67,6 +67,15 @@
       inner join pms_member m on p.owner=m.no
       left outer join pms_member_project mp on mp.project_no=p.no
       left outer join pms_member m2 on mp.member_no=m2.no
+    <if test="item == 1">
+    where p.title like concat('%', #{keyword}, '%')
+    </if>
+    <if test="item == 2">
+    where m.name like concat('%', #{keyword}, '%')
+    </if>
+    <if test="item == 3">
+    where m2.name like concat('%', #{keyword}, '%')
+    </if>
     order by title asc
   </select>
   

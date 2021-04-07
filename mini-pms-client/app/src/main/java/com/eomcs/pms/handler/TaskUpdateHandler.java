@@ -34,7 +34,7 @@ public class TaskUpdateHandler implements Command {
 
     System.out.printf("현재 프로젝트: %s\n", oldTask.getProjectTitle());
 
-    List<Project> projects = projectDao.findAll();
+    List<Project> projects = projectDao.findByKeyword(null, null);
     System.out.println("프로젝트들:");
     if (projects.size() == 0) {
       System.out.println("현재 등록된 프로젝트가 없습니다!");
