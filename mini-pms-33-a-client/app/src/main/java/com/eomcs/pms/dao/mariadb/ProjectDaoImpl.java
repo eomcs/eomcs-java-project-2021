@@ -9,7 +9,7 @@ import com.eomcs.pms.domain.Project;
 
 public class ProjectDaoImpl implements ProjectDao {
 
-  public SqlSession sqlSession;
+  SqlSession sqlSession;
 
   public ProjectDaoImpl(SqlSession sqlSession) throws Exception {
     this.sqlSession = sqlSession;
@@ -128,6 +128,7 @@ public class ProjectDaoImpl implements ProjectDao {
 
   @Override
   public int insertMembers(int projectNo, List<Member> members) throws Exception {
+    try {
       HashMap<String,Object> params = new HashMap<>();
       params.put("projectNo", projectNo);
       params.put("members", members);
@@ -138,6 +139,10 @@ public class ProjectDaoImpl implements ProjectDao {
       sqlSession.commit();
       return count;
 
+    } catch (Exception e) {
+      sqlSession.rollback();
+      throw e;
+    }
   }
 
   @Override
