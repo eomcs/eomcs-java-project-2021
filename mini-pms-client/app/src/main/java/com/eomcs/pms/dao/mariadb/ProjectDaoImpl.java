@@ -35,8 +35,8 @@ public class ProjectDaoImpl implements ProjectDao {
       insertMembers(project.getNo(), project.getMembers());
 
       sqlSession.commit();
-
       return count;
+
     } catch (Exception e) {
       // 이전에 성공한 작업이 있으면 모두 취소한다.
       sqlSession.rollback();
@@ -82,24 +82,34 @@ public class ProjectDaoImpl implements ProjectDao {
       deleteMembers(project.getNo());
 
       // 3) 프로젝트 멤버를 추가한다.
-      //    for (Member member : project.getMembers()) {
-      //      insertMember(project.getNo(), member.getNo());
-      //    }
       insertMembers(project.getNo(), project.getMembers());
 
+      sqlSession.commit();
       return count;
-    } catch (Exception e) {
 
+    } catch (Exception e) {
+      sqlSession.rollback();
+
+      throw e;
     }
   }
 
   @Override
   public int delete(int no) throws Exception {
-    // 1) 프로젝트에 소속된 팀원 정보 삭제
-    deleteMembers(no);
+    try {
+      // 1) 프로젝트에 소속된 팀원 정보 삭제
+      deleteMembers(no);
 
-    // 2) 프로젝트 삭제
-    return sqlSession.delete("ProjectMapper.delete", no);
+      // 2) 프로젝트 삭제
+      int count = sqlSession.delete("ProjectMapper.delete", no);
+
+      sqlSession.commit();
+      return count;
+
+    } catch (Exception e) {
+      sqlSession.rollback();
+      throw e;
+    }
   }
 
   @Override
@@ -115,7 +125,9 @@ public class ProjectDaoImpl implements ProjectDao {
     HashMap<String,Object> params = new HashMap<>();
     params.put("projectNo", projectNo);
     params.put("members", members);
-    return sqlSession.insert("ProjectMapper.insertMembers", params);
+    int count = sqlSession.insert("ProjectMapper.insertMembers", params);
+    sqlSession.commit();
+    return count;
   }
 
   @Override
@@ -125,7 +137,9 @@ public class ProjectDaoImpl implements ProjectDao {
 
   @Override
   public int deleteMembers(int projectNo) throws Exception {
-    return sqlSession.delete("ProjectMapper.deleteMembers", projectNo);
+    int count = sqlSession.delete("ProjectMapper.deleteMembers", projectNo);
+    sqlSession.commit();
+    return count;
   }
 }
 

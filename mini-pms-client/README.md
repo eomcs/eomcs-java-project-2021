@@ -51,20 +51,11 @@
   - insert/update/delete 을 실행한 후에는 반드시 commit()을 호출한다.
   - 여러 개의 작업을 묶은 경우에는 예외가 발생했을 때 rollback()을 반드시 호출한다.
 
-
-  - `TaskDaoImpl.deleteByProjectNo()` 에서 사용한 `SqlSession` 객체와
-    `ProjectDaoImpl.delete()` 에서 사용한 `SqlSession` 객체가 다르기 때문이다.
-  - Mybatis 에서는 각 SqlSession 이 트랜잭션을 관리한다.
+### 3단계 - DAO의 각 메서드에서 트랜잭션을 제어할 때 발생하는 문제점 확인
 
 
-- com.eomcs.pms.handler.ProjectDeleteCommand
-  - `TaskDao` 를 통해 작업을 삭제한다.
-  - `ProjectDao` 를 통해 프로젝트 멤버와 프로젝트를 삭제한다.
-  - *프로젝트 멤버 삭제* 와 *프로젝트 삭제* 작업은 한 트랜잭션으로 묶여 있다.
-  - 그러나 *작업 삭제* 는 다른 트랜잭션에서 수행한다.
-  - 만약 *프로젝트 삭제* 중에 예외가 발생한다면,
-    *프로젝트 멤버 삭제* 는 자동 취소되지만,
-    같은 트랜잭션에 묶여있지 않은 *작업 삭제* 는 취소되지 않는다.
+
+
 
 - **DAO** 객체에서 트랜잭션을 다루면 안되는 이유?
   - **DAO** 의 각 메서드는 작업을 수행하기 위해 현재 별도의 `SqlSession` 객체를 사용한다.

@@ -35,6 +35,7 @@ import com.eomcs.pms.handler.ProjectDeleteHandler;
 import com.eomcs.pms.handler.ProjectDetailHandler;
 import com.eomcs.pms.handler.ProjectDetailSearchHandler;
 import com.eomcs.pms.handler.ProjectListHandler;
+import com.eomcs.pms.handler.ProjectMemberUpdateHandler;
 import com.eomcs.pms.handler.ProjectSearchHandler;
 import com.eomcs.pms.handler.ProjectUpdateHandler;
 import com.eomcs.pms.handler.TaskAddHandler;
@@ -114,6 +115,7 @@ public class ClientApp {
     commandMap.put("/project/delete", new ProjectDeleteHandler(projectDao, taskDao));
     commandMap.put("/project/search", new ProjectSearchHandler(projectDao));
     commandMap.put("/project/detailSearch", new ProjectDetailSearchHandler(projectDao));
+    commandMap.put("/project/memberUpdate", new ProjectMemberUpdateHandler(projectDao, memberValidator));
 
     commandMap.put("/task/add", new TaskAddHandler(taskDao, projectDao, memberValidator));
     commandMap.put("/task/list", new TaskListHandler(taskDao));
