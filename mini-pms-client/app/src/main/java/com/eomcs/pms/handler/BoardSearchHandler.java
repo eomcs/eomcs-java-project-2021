@@ -1,20 +1,16 @@
 package com.eomcs.pms.handler;
 
 import java.util.List;
-import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.domain.Board;
+import com.eomcs.pms.service.BoardService;
 import com.eomcs.util.Prompt;
 
 public class BoardSearchHandler implements Command {
 
+  BoardService boardService;
 
-  // 핸들러가 사용할 DAO : 의존 객체(dependency)
-  BoardDao boardDao;
-
-  // DAO 객체는 이 클래스가 작업하는데 필수 객체이기 때문에
-  // 생성자를 통해 반드시 주입 받도록 한다.
-  public BoardSearchHandler(BoardDao boardDao) {
-    this.boardDao = boardDao;
+  public BoardSearchHandler(BoardService boardService) {
+    this.boardService = boardService;
   }
 
   @Override
@@ -26,7 +22,7 @@ public class BoardSearchHandler implements Command {
       return;
     }
 
-    List<Board> list = boardDao.findByKeyword(keyword);
+    List<Board> list = boardService.search(keyword);
 
     if (list.size() == 0) {
       System.out.println("검색어에 해당하는 게시글이 없습니다.");
