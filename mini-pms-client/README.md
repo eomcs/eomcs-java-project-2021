@@ -1,12 +1,7 @@
-### 32-c. DB 프로그래밍을 더 쉽고 간단히 하는 방법 : Mybatis에서 트랜잭션 다루기
+### 33-a. 비즈니스 로직 분리하기 : DAO에서 트랜잭션을 다룰 때의 한계 
 
 이번 훈련에서는,
-- *Mybatis* 에서 *트랜잭션* 을 다루는 방법을 배울 것이다.
-- 기존 클래스의 코드를 손대지 않고 일부 기능을 변경하는 **프록시 패턴** 설계 기법을 배운다.
-
-**프록시(proxy) 디자인 패턴** 은,
-- 특정 객체의 접근을
-
+- *DAO* 에서 *트랜잭션* 을 제어할 때의 문제점을 확인하고 이해한다.
 
 ## 훈련 목표
 - `SqlSession` 객체를 통해 트랜잭션을 다루는 방법을 연습한다.
@@ -21,42 +16,70 @@
 
 ## 실습
 
-### 1단계 - 자동 커밋의 문제점을 이해한다.
+### 1단계 - 프로젝트의 멤버를 변경하는 기능을 추가한다.
 
-문제 상황 실습:
-- com.eomcs.pms.dao.mariadb.ProjectDaoImpl 변경
-  - `ProjectDaoImpl` 클래스의 `insert()` 메서드를 호출할 때,
-    *프로젝트 정보를 등록* 한 후 바로 다음에 예외를 발생시키자.
-  - 그러면 프로젝트 멤버가 등록되지 않은채로 프로젝트 기본 정보가 등록된다.
-  - 즉 프로젝트 등록이 온전히 완료되지 않는다.
-- 이유?
-  - SqlSession 객체가 자동 커밋 모드이기 때문이다.
-  - 데이터 변경(insert/update/delete) 작업을 수행하면 그 즉시 테이블에 변경 결과를 적용한다.
-- 실습
-  - `/project/add` 명령을 실행하여 프로젝트 정보 등록을 수행해보라!
-  - 그리고 프로젝트 정보만 등록된 것을 확인해 보라!
+다음과 같이 명령어를 입력했을 때 프로젝트 멤버를 변경하도록 기능을 추가하라.
+```
+명령> /project/memberUpdate
+[프로젝트 멤버 변경]
+프로젝트 번호? 15
+프로젝트 명: pp6
+멤버:
 
-### 2단계 - 트랜잭션을 다루기 위해 수동 커밋 모드 활용하기 
+프로젝트의 멤버를 새로 등록하세요.
+팀원?(완료: 빈 문자열) dd
+팀원?(완료: 빈 문자열) cc
+팀원?(완료: 빈 문자열) ee
+팀원?(완료: 빈 문자열) 
+정말 변경하시겠습니까?(y/N) y
+프로젝트 멤버를 변경하였습니다.
 
-- 자동 커밋 문제의 해결
-  - 프로젝트 등록과 프로젝트 멤버 등록은 함께 묶어서 처리해야하는 작업이다.
-  - 이 두 작업은 한 트랜잭션으로 다뤄야 한다.
-- Mybatis에서 트랜잭션을 다루는 방법
-  - SqlSessionFactory에서 SqlSession 객체를 생성할 때 수동 커밋 모드로 생성한다.
-  - 그런데 현재 코드는 SqlSession을 생성할 때 자동 커밋 모드로 생성하였다.
+명령> 
+```
 
-- com.eomcs.pms.ClientApp 클래스 변경
-  - SqlSession 객체를 얻을 때 수동 커밋 모드로 생성한다.
-- com.eomcs.pms.dao.mariadb.XxxDaoImpl 클래스 변경
-  - insert/update/delete 을 실행한 후에는 반드시 commit()을 호출한다.
-  - 여러 개의 작업을 묶은 경우에는 예외가 발생했을 때 rollback()을 반드시 호출한다.
-
-### 3단계 - DAO의 각 메서드에서 트랜잭션을 제어할 때 발생하는 문제점 확인
-
-
-
+- com.eomcs.pms.handler.ProjectMemberUpdateHandler 클래스 추가
+  - 기존의 `ProjectUpdateHandler` 클래스를 가져와서 편집하라.
+- com.eomcs.pms.dao.mariadb.ProjectDaoImpl 클래스 변경
+  - 기존의 `insertMember()`, `insertMembers()`, `deleteMembers()` 메서드는
+    insert()/update()/delete() 을 호출할 때 실행되기 때문에
+    따로 커밋을 수행하지 않았다.
+  - 그러나 이제 이들 메서드는 위의 핸들러 클래스에서 독자적으로 호출하기 때문에
+    따로 커밋을 수행해야 한다.
+  - `insertMember()`, `insertMembers()`, `deleteMembers()` 메서드를 변경하라.
+    - 입력, 삭제 후 commit 을 수행하라.
+  
 
 
+- src/main/resources/com/eomcs/pms/mapper/TaskMapper.xml 변경
+  - `findAll` SQL 변경
+- com.eomcs.pms.dao.TaskDao 인터페이스 변경
+  - `findAll(Map<String,Object>)` 메서드를 변경한다.
+- com.eomcs.pms.dao.mariadb.TaskDaoImpl 클래스 변경
+  - `findAll(Map<String,Object>)` 메서드를 변경한다.
+- com.eomcs.pms.handler.TaskListCommand 변경
+  - `findAll(null)` 호출 코드 변경
+- com.eomcs.pms.handler.ProjectDetailCommand 변경
+  - 프로젝트 정보 외에 작업 목록을 추가로 출력한다.
+
+### 2단계 - 현재 프로젝트에서 트랜잭션을 다루는 방식과 문제점을 이해한다.
+
+- com.eomcs.pms.handler.ProjectDeleteCommand
+  - `TaskDao` 를 통해 작업을 삭제한다.
+  - `ProjectDao` 를 통해 프로젝트 멤버와 프로젝트를 삭제한다.
+  - *프로젝트 멤버 삭제* 와 *프로젝트 삭제* 작업은 한 트랜잭션으로 묶여 있다.
+  - 그러나 *작업 삭제* 는 다른 트랜잭션에서 수행한다.
+  - 만약 *프로젝트 삭제* 중에 예외가 발생한다면,
+    *프로젝트 멤버 삭제* 는 자동 취소되지만,
+    같은 트랜잭션에 묶여있지 않은 *작업 삭제* 는 취소되지 않는다.
+- 문제 상황 실습:
+  - com.eomcs.pms.dao.mariadb.ProjectDaoImpl 변경
+    - `ProjectDaoImpl` 클래스에서 *프로젝트 삭제* 를 수행하기 전에 예외를 발생시킨다.
+    - 그런 후, 그 전에 수행했던 *프로젝트 멤버 삭제* 가 취소된 것을 확인한다.
+    - 그러나 *작업 삭제* 가 취소되지 않은 것을 확인한다.
+  - 이유?
+    - `TaskDaoImpl.deleteByProjectNo()` 에서 사용한 `SqlSession` 객체와
+      `ProjectDaoImpl.delete()` 에서 사용한 `SqlSession` 객체가 다르기 때문이다.
+    - Mybatis 에서는 각 SqlSession 이 트랜잭션을 관리한다.
 - **DAO** 객체에서 트랜잭션을 다루면 안되는 이유?
   - **DAO** 의 각 메서드는 작업을 수행하기 위해 현재 별도의 `SqlSession` 객체를 사용한다.
   - 트랜잭션은 `SqlSession` 객체에서 제어한다.

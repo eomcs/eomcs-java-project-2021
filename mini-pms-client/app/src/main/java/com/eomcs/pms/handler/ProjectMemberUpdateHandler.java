@@ -22,60 +22,37 @@ public class ProjectMemberUpdateHandler implements Command {
 
     int no = Prompt.inputInt("프로젝트 번호? ");
 
-    Project oldProject = projectDao.findByNo(no);
+    Project project = projectDao.findByNo(no);
 
-    if (oldProject == null) {
+    if (project == null) {
       System.out.println("해당 번호의 프로젝트가 없습니다.");
       return;
     }
 
+    System.out.printf("프로젝트 명: %s\n", project.getTitle());
     System.out.println("멤버:");
-    for (Member m : oldProject.getMembers()) {
+    for (Member m : project.getMembers()) {
       System.out.printf("  %s(%d)\n", m.getName(), m.getNo());
     }
-
-    // 사용자에게서 변경할 데이터를 입력 받는다.
-    Project project = new Project();
-    project.setNo(no);
-    project.setTitle(Prompt.inputString(
-        String.format("프로젝트명(%s)? ", oldProject.getTitle())));
-    project.setContent(Prompt.inputString(
-        String.format("내용(%s)? ", oldProject.getContent())));
-    project.setStartDate(Prompt.inputDate(
-        String.format("시작일(%s)? ", oldProject.getStartDate())));
-    project.setEndDate(Prompt.inputDate(
-        String.format("종료일(%s)? ", oldProject.getEndDate())));
-    project.setOwner(memberValidator.inputMember(
-        String.format("만든이(%s)?(취소: 빈 문자열) ", oldProject.getOwner().getName())));
-
-    if (project.getOwner() == null) {
-      System.out.println("프로젝트 변경을 취소합니다.");
-      return;
-    }
+    System.out.println();
 
     // 프로젝트 팀원 정보를 입력 받는다.
-    StringBuilder strBuilder = new StringBuilder();
-    List<Member> members = oldProject.getMembers();
-    for (Member m : members) {
-      if (strBuilder.length() > 0) {
-        strBuilder.append("/");
-      }
-      strBuilder.append(m.getName());
-    }
-
-    project.setMembers(memberValidator.inputMembers(
-        String.format("팀원(%s)?(완료: 빈 문자열) ", strBuilder)));
+    System.out.println("프로젝트의 멤버를 새로 등록하세요.");
+    List<Member> members = memberValidator.inputMembers("팀원?(완료: 빈 문자열) ");
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
     if (!input.equalsIgnoreCase("Y")) {
-      System.out.println("프로젝트 변경을 취소하였습니다.");
+      System.out.println("프로젝트의 멤버 변경을 취소하였습니다.");
       return;
     }
 
-    // DBMS에게 프로젝트 변경을 요청한다.
-    projectDao.update(project);
+    // 프로젝트의 기존 멤버를 모두 삭제한다.
+    projectDao.deleteMembers(no);
 
-    System.out.println("프로젝트을 변경하였습니다.");
+    // 새 프로젝트 멤버를 등록한다.
+    projectDao.insertMembers(no, members);
+
+    System.out.println("프로젝트 멤버를 변경하였습니다.");
   }
 }
 
