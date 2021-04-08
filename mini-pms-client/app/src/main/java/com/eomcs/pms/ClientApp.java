@@ -1,8 +1,6 @@
 package com.eomcs.pms;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -82,12 +80,8 @@ public class ClientApp {
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatisConfigStream);
 
     // DAO가 사용할 SqlSession 객체 준비
-    // => 단 auto commit 으로 동작하는 SqlSession 객체를 준비한다.
-    SqlSession sqlSession = sqlSessionFactory.openSession(true);
-
-    // DB Connection 객체 생성
-    Connection con = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+    // => 수동 commit 으로 동작하는 SqlSession 객체를 준비한다.
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
 
     // 핸들러가 사용할 DAO 객체 준비
     BoardDao boardDao = new BoardDaoImpl(sqlSession);
@@ -174,7 +168,7 @@ public class ClientApp {
       System.out.println("서버와 통신 하는 중에 오류 발생!");
     }
 
-    con.close();
+    sqlSession.close();
     Prompt.close();
   }
 

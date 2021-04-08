@@ -15,7 +15,9 @@ public class TaskDaoImpl implements TaskDao {
 
   @Override
   public int insert(Task task) throws Exception {
-    return sqlSession.insert("TaskMapper.insert", task);
+    int count = sqlSession.insert("TaskMapper.insert", task);
+    sqlSession.commit();
+    return count;
   }
 
   @Override
@@ -35,17 +37,23 @@ public class TaskDaoImpl implements TaskDao {
 
   @Override
   public int update(Task task) throws Exception {
-    return sqlSession.update("TaskMapper.update", task);
+    int count = sqlSession.update("TaskMapper.update", task);
+    sqlSession.commit();
+    return count;
   }
 
   @Override
   public int delete(int no) throws Exception {
-    return sqlSession.delete("TaskMapper.delete", no);
+    int count = sqlSession.delete("TaskMapper.delete", no);
+    sqlSession.commit();
+    return count;
   }
 
   @Override
   public int deleteByProjectNo(int projectNo) throws Exception {
-    return sqlSession.delete("TaskMapper.deleteByProjectNo", projectNo);
+    int count = sqlSession.delete("TaskMapper.deleteByProjectNo", projectNo);
+    sqlSession.commit();
+    return count;
   }
 }
 
