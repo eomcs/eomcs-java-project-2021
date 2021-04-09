@@ -1,18 +1,15 @@
 package com.eomcs.pms.handler;
 
-import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.pms.domain.Member;
+import com.eomcs.pms.service.MemberService;
 import com.eomcs.util.Prompt;
 
 public class MemberDetailHandler implements Command {
 
-  // 핸들러가 사용할 DAO : 의존 객체(dependency)
-  MemberDao memberDao;
+  MemberService memberService;
 
-  // DAO 객체는 이 클래스가 작업하는데 필수 객체이기 때문에
-  // 생성자를 통해 반드시 주입 받도록 한다.
-  public MemberDetailHandler(MemberDao memberDao) {
-    this.memberDao = memberDao;
+  public MemberDetailHandler(MemberService memberService) {
+    this.memberService = memberService;
   }
 
   @Override
@@ -21,7 +18,7 @@ public class MemberDetailHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    Member m = memberDao.findByNo(no);
+    Member m = memberService.get(no);
 
     if (m == null) {
       System.out.println("해당 번호의 회원이 없습니다.");

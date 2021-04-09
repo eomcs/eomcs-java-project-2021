@@ -21,7 +21,7 @@ public class BoardDetailHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    Board b = boardService.detail(no);
+    Board b = boardService.get(no);
     if (b == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;

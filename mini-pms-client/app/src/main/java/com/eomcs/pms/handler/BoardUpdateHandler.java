@@ -19,7 +19,7 @@ public class BoardUpdateHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    Board oldBoard = boardService.detail(no);
+    Board oldBoard = boardService.get(no);
     if (oldBoard == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
