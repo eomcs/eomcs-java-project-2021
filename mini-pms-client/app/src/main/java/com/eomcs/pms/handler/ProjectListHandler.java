@@ -1,23 +1,23 @@
 package com.eomcs.pms.handler;
 
 import java.util.List;
-import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.service.ProjectService;
 
 public class ProjectListHandler implements Command {
 
-  ProjectDao projectDao;
+  ProjectService projectService;
 
-  public ProjectListHandler(ProjectDao projectDao) {
-    this.projectDao = projectDao;
+  public ProjectListHandler(ProjectService projectService) {
+    this.projectService = projectService;
   }
 
   @Override
   public void service() throws Exception {
     System.out.println("[프로젝트 목록]");
 
-    List<Project> projects = projectDao.findByKeyword(null, null);
+    List<Project> projects = projectService.list();
 
     for (Project p : projects) {
 

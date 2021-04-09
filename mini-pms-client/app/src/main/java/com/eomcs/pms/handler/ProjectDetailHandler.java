@@ -1,17 +1,17 @@
 package com.eomcs.pms.handler;
 
 import java.util.List;
-import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.service.ProjectService;
 import com.eomcs.util.Prompt;
 
 public class ProjectDetailHandler implements Command {
 
-  ProjectDao projectDao;
+  ProjectService projectService;
 
-  public ProjectDetailHandler(ProjectDao projectDao) {
-    this.projectDao = projectDao;
+  public ProjectDetailHandler(ProjectService projectService) {
+    this.projectService = projectService;
   }
 
   @Override
@@ -20,7 +20,7 @@ public class ProjectDetailHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    Project project = projectDao.findByNo(no);
+    Project project = projectService.get(no);
 
     if (project == null) {
       System.out.println("해당 번호의 프로젝트가 없습니다.");

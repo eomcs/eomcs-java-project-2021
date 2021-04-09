@@ -46,6 +46,7 @@ import com.eomcs.pms.handler.TaskListHandler;
 import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.pms.service.BoardService;
 import com.eomcs.pms.service.MemberService;
+import com.eomcs.pms.service.ProjectService;
 import com.eomcs.util.Prompt;
 
 public class ClientApp {
@@ -95,6 +96,7 @@ public class ClientApp {
 
     BoardService boardService = new BoardService(sqlSession, boardDao);
     MemberService memberService = new MemberService(sqlSession, memberDao);
+    ProjectService projectService = new ProjectService(sqlSession, projectDao, taskDao);
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
@@ -114,15 +116,15 @@ public class ClientApp {
 
     MemberValidator memberValidator = new MemberValidator(memberService);
 
-    commandMap.put("/project/add", new ProjectAddHandler(projectDao, memberValidator));
-    commandMap.put("/project/list", new ProjectListHandler(projectDao));
-    commandMap.put("/project/detail", new ProjectDetailHandler(projectDao));
-    commandMap.put("/project/update", new ProjectUpdateHandler(projectDao, memberValidator));
-    commandMap.put("/project/delete", new ProjectDeleteHandler(projectDao, taskDao));
-    commandMap.put("/project/search", new ProjectSearchHandler(projectDao));
-    commandMap.put("/project/detailSearch", new ProjectDetailSearchHandler(projectDao));
-    commandMap.put("/project/memberUpdate", new ProjectMemberUpdateHandler(projectDao, memberValidator));
-    commandMap.put("/project/memberDelete", new ProjectMemberDeleteHandler(projectDao));
+    commandMap.put("/project/add", new ProjectAddHandler(projectService, memberValidator));
+    commandMap.put("/project/list", new ProjectListHandler(projectService));
+    commandMap.put("/project/detail", new ProjectDetailHandler(projectService));
+    commandMap.put("/project/update", new ProjectUpdateHandler(projectService, memberValidator));
+    commandMap.put("/project/delete", new ProjectDeleteHandler(projectService));
+    commandMap.put("/project/search", new ProjectSearchHandler(projectService));
+    commandMap.put("/project/detailSearch", new ProjectDetailSearchHandler(projectService));
+    commandMap.put("/project/memberUpdate", new ProjectMemberUpdateHandler(projectService, memberValidator));
+    commandMap.put("/project/memberDelete", new ProjectMemberDeleteHandler(projectService));
 
     commandMap.put("/task/add", new TaskAddHandler(taskDao, projectDao, memberValidator));
     commandMap.put("/task/list", new TaskListHandler(taskDao));

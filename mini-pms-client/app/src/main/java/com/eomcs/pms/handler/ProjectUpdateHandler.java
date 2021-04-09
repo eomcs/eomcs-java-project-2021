@@ -1,18 +1,18 @@
 package com.eomcs.pms.handler;
 
 import java.util.List;
-import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.service.ProjectService;
 import com.eomcs.util.Prompt;
 
 public class ProjectUpdateHandler implements Command {
 
-  ProjectDao projectDao;
+  ProjectService projectService;
   MemberValidator memberValidator;
 
-  public ProjectUpdateHandler(ProjectDao projectDao, MemberValidator memberValidator) {
-    this.projectDao = projectDao;
+  public ProjectUpdateHandler(ProjectService projectService, MemberValidator memberValidator) {
+    this.projectService = projectService;
     this.memberValidator = memberValidator;
   }
 
@@ -22,7 +22,7 @@ public class ProjectUpdateHandler implements Command {
 
     int no = Prompt.inputInt("번호? ");
 
-    Project oldProject = projectDao.findByNo(no);
+    Project oldProject = projectService.get(no);
 
     if (oldProject == null) {
       System.out.println("해당 번호의 프로젝트가 없습니다.");
@@ -68,7 +68,7 @@ public class ProjectUpdateHandler implements Command {
     }
 
     // DBMS에게 프로젝트 변경을 요청한다.
-    projectDao.update(project);
+    projectService.update(project);
 
     System.out.println("프로젝트을 변경하였습니다.");
   }

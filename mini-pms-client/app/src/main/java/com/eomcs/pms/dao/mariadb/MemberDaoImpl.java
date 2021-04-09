@@ -15,9 +15,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int insert(Member member) throws Exception {
-    int count = sqlSession.insert("MemberMapper.insert", member);
-    sqlSession.commit();
-    return count;
+    return sqlSession.insert("MemberMapper.insert", member);
   }
 
   @Override
@@ -32,16 +30,12 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int update(Member member) throws Exception {
-    int count = sqlSession.update("MemberMapper.update", member);
-    sqlSession.commit();
-    return count;
+    return sqlSession.update("MemberMapper.update", member);
   }
 
   @Override
   public int delete(int no) throws Exception {
-    int count = sqlSession.delete("MemberMapper.delete", no);
-    sqlSession.commit();
-    return count;
+    return sqlSession.delete("MemberMapper.delete", no);
   }
 
   @Override

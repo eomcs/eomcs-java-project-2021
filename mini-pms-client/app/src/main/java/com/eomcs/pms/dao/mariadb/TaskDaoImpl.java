@@ -51,9 +51,7 @@ public class TaskDaoImpl implements TaskDao {
 
   @Override
   public int deleteByProjectNo(int projectNo) throws Exception {
-    int count = sqlSession.delete("TaskMapper.deleteByProjectNo", projectNo);
-    sqlSession.commit();
-    return count;
+    return sqlSession.delete("TaskMapper.deleteByProjectNo", projectNo);
   }
 }
 
