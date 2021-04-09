@@ -47,6 +47,7 @@ import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.pms.service.BoardService;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
+import com.eomcs.pms.service.TaskService;
 import com.eomcs.util.Prompt;
 
 public class ClientApp {
@@ -97,6 +98,7 @@ public class ClientApp {
     BoardService boardService = new BoardService(sqlSession, boardDao);
     MemberService memberService = new MemberService(sqlSession, memberDao);
     ProjectService projectService = new ProjectService(sqlSession, projectDao, taskDao);
+    TaskService taskService = new TaskService(sqlSession, taskDao);
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
@@ -126,11 +128,11 @@ public class ClientApp {
     commandMap.put("/project/memberUpdate", new ProjectMemberUpdateHandler(projectService, memberValidator));
     commandMap.put("/project/memberDelete", new ProjectMemberDeleteHandler(projectService));
 
-    commandMap.put("/task/add", new TaskAddHandler(taskDao, projectDao, memberValidator));
-    commandMap.put("/task/list", new TaskListHandler(taskDao));
-    commandMap.put("/task/detail", new TaskDetailHandler(taskDao));
-    commandMap.put("/task/update", new TaskUpdateHandler(taskDao, projectDao, memberValidator));
-    commandMap.put("/task/delete", new TaskDeleteHandler(taskDao));
+    commandMap.put("/task/add", new TaskAddHandler(taskService, projectService, memberValidator));
+    commandMap.put("/task/list", new TaskListHandler(taskService));
+    commandMap.put("/task/detail", new TaskDetailHandler(taskService));
+    commandMap.put("/task/update", new TaskUpdateHandler(taskService, projectService, memberValidator));
+    commandMap.put("/task/delete", new TaskDeleteHandler(taskService));
 
     try {
 

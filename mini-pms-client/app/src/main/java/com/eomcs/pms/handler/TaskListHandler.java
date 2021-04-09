@@ -1,16 +1,16 @@
 package com.eomcs.pms.handler;
 
 import java.util.List;
-import com.eomcs.pms.dao.TaskDao;
 import com.eomcs.pms.domain.Task;
+import com.eomcs.pms.service.TaskService;
 import com.eomcs.util.Prompt;
 
 public class TaskListHandler implements Command {
 
-  TaskDao taskDao;
+  TaskService taskService;
 
-  public TaskListHandler(TaskDao taskDao) {
-    this.taskDao = taskDao;
+  public TaskListHandler(TaskService taskService) {
+    this.taskService = taskService;
   }
 
   @Override
@@ -33,9 +33,9 @@ public class TaskListHandler implements Command {
     // 2) 해당 프로젝트에 소속된 작업 목록을 가져온다.
     List<Task> tasks = null;
     if (projectNo == 0) {
-      tasks = taskDao.findAll();
+      tasks = taskService.list();
     } else {
-      tasks = taskDao.findByProjectNo(projectNo);
+      tasks = taskService.listOfProject(projectNo);
     }
 
     if (tasks.size() == 0) {

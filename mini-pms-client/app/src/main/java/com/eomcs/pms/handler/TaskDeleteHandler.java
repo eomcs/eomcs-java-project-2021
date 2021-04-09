@@ -1,14 +1,14 @@
 package com.eomcs.pms.handler;
 
-import com.eomcs.pms.dao.TaskDao;
+import com.eomcs.pms.service.TaskService;
 import com.eomcs.util.Prompt;
 
 public class TaskDeleteHandler implements Command {
 
-  TaskDao taskDao;
+  TaskService taskService;
 
-  public TaskDeleteHandler(TaskDao taskDao) {
-    this.taskDao = taskDao;
+  public TaskDeleteHandler(TaskService taskService) {
+    this.taskService = taskService;
   }
 
   @Override
@@ -23,7 +23,7 @@ public class TaskDeleteHandler implements Command {
       return;
     }
 
-    if (taskDao.delete(no) == 0) {
+    if (taskService.delete(no) == 0) {
       System.out.println("해당 번호의 작업이 없습니다.");
     } else {
       System.out.println("작업을 삭제하였습니다.");
