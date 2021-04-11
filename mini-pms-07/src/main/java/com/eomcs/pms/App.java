@@ -1,64 +1,85 @@
 package com.eomcs.pms;
 
-// 1) 프롬프트 관련 메서드를 별도로 분류한다.
-//    - Prompt 클래스를 생성한다.
-//    - promptString(), promptInt(), promptDate() 메서드를 옮긴다.
-//    - 메서드 이름을 변경한다.
-//      - promptString() ==> inputString()
-//      - promptInt() ==> inputInt()
-//      - promptDate() ==> inputDate()
-//    - Prompt 클래스의 메서드들이 사용하는 변수도 옮긴다.
-//      - keyboardScan 변수를 옮긴다.
-// 2) 회원 데이터를 다루는 메서드를 별도로 분류한다.
-//    - MemberHandler 클래스를 생성한다.
-//    - addMember(), listMember() 메서드를 옮긴다.
-//    - MemberHandler의 메서드들이 사용할 변수를 App에서 옮겨 온다.
-//    - 메서드의 이름을 변경한다.
-//      - addMember() ==> add()
-//      - listMember() ==> list();
-// 3) 프로젝트 데이터를 다루는 메서드를 별도로 분류한다.
-//    - ProjectHandler 클래스를 생성한다.
-//    - addProject(), listProject() 메서드를 옮긴다.
-//    - ProjectHandler의 메서드들이 사용할 변수를 App에서 옮겨 온다.
-//    - 메서드의 이름을 변경한다.
-//      - addProject() ==> add()
-//      - listProject() ==> list();
-// 4) 작업 데이터를 다루는 메서드를 별도로 분류한다.
-//    - TaskHandler 클래스를 생성한다.
-//    - addTask(), listTask() 메서드를 옮긴다.
-//    - TaskHandler의 메서드들이 사용할 변수를 App에서 옮겨 온다.
-//    - 메서드의 이름을 변경한다.
-//      - addTask() ==> add()
-//      - listTask() ==> list();
-// 5) 다른 클래스에 소속된 값은 그 클래스에게 맡긴다.
-//    - Prompt 클래스에 close() 메서드를 추가한다.
-//    - App 클래스는 Prompt의 close()를 호출하여 키보드 스캐너를 닫는다.
+import com.eomcs.pms.handler.BoardHandler;
+import com.eomcs.pms.handler.MemberHandler;
+import com.eomcs.pms.handler.ProjectHandler;
+import com.eomcs.pms.handler.TaskHandler;
+import com.eomcs.util.Prompt;
+
 public class App {
 
   public static void main(String[] args) {
 
+    BoardHandler boardList = new BoardHandler();
+    MemberHandler memberList = new MemberHandler();
+    ProjectHandler projectList = new ProjectHandler(memberList);
+    TaskHandler taskList = new TaskHandler(memberList);
+
+
     loop:
       while (true) {
-        String command = Prompt.inputString("명령> ");
+        String command = com.eomcs.util.Prompt.inputString("명령> ");
 
         switch (command) {
           case "/member/add":
-            MemberHandler.add();
+            memberList.add();
             break;
           case "/member/list":
-            MemberHandler.list();
+            memberList.list();
+            break;
+          case "/member/detail":
+            memberList.detail();
+            break;  
+          case "/member/update":
+            memberList.update();
+            break; 
+          case "/member/delete":
+            memberList.delete();
             break;
           case "/project/add":
-            ProjectHandler.add();
+            projectList.add();
             break;
           case "/project/list":
-            ProjectHandler.list();
+            projectList.list();
+            break;
+          case "/project/detail": 
+            projectList.detail();
+            break;  
+          case "/project/update":
+            projectList.update();
+            break; 
+          case "/project/delete":
+            projectList.delete();
             break;
           case "/task/add":
-            TaskHandler.add();
+            taskList.add();
             break;
           case "/task/list":
-            TaskHandler.list();
+            taskList.list();
+            break;
+          case "/task/detail": 
+            taskList.detail();
+            break;  
+          case "/task/update":
+            taskList.update();
+            break; 
+          case "/task/delete":
+            taskList.delete();
+            break;
+          case "/board/add":
+            boardList.add();
+            break;
+          case "/board/list":
+            boardList.list();
+            break;
+          case "/board/detail":
+            boardList.detail();
+            break;  
+          case "/board/update":
+            boardList.update();
+            break; 
+          case "/board/delete":
+            boardList.delete();
             break;
           case "quit":
           case "exit":

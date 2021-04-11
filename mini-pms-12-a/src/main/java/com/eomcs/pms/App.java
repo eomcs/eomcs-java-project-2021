@@ -1,82 +1,98 @@
 package com.eomcs.pms;
 
 import com.eomcs.pms.handler.BoardHandler;
-import com.eomcs.pms.handler.BoardList;
 import com.eomcs.pms.handler.MemberHandler;
 import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
 import com.eomcs.util.Prompt;
+import com.eomcs.util.Stack;
 
 public class App {
 
-  public static void main(String[] args) {
+  // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
+  static Stack commandStack = new Stack();
 
-    // 각 게시판 데이터를 저장할 메모리 준비
-    BoardList boardList1 = new BoardList();
-    BoardList boardList2 = new BoardList();
-    BoardList boardList3 = new BoardList();
-    BoardList boardList4 = new BoardList();
-    BoardList boardList5 = new BoardList();
-    BoardList boardList6 = new BoardList();
+
+  public static void main(String[] args) throws CloneNotSupportedException {
+
+    BoardHandler boardHandler = new BoardHandler();
+    MemberHandler memberHandler = new MemberHandler();
+    ProjectHandler projectHandler = new ProjectHandler(memberHandler);
+    TaskHandler taskHandler = new TaskHandler(memberHandler);
 
     loop:
       while (true) {
         String command = com.eomcs.util.Prompt.inputString("명령> ");
 
+        if (command.length() == 0) // 사용자가 빈 문자열을 입력하면 다시 입력하도록 요구한다.
+          continue;
+
+        // 사용자가 입력한 명령을 보관해둔다.
+        commandStack.push(command);
+
         switch (command) {
           case "/member/add":
-            MemberHandler.add();
+            memberHandler.add();
             break;
           case "/member/list":
-            MemberHandler.list();
+            memberHandler.list();
+            break;
+          case "/member/detail":
+            memberHandler.detail();
+            break;  
+          case "/member/update":
+            memberHandler.update();
+            break; 
+          case "/member/delete":
+            memberHandler.delete();
             break;
           case "/project/add":
-            ProjectHandler.add();
+            projectHandler.add();
             break;
           case "/project/list":
-            ProjectHandler.list();
+            projectHandler.list();
+            break;
+          case "/project/detail": 
+            projectHandler.detail();
+            break;  
+          case "/project/update":
+            projectHandler.update();
+            break; 
+          case "/project/delete":
+            projectHandler.delete();
             break;
           case "/task/add":
-            TaskHandler.add();
+            taskHandler.add();
             break;
           case "/task/list":
-            TaskHandler.list();
+            taskHandler.list();
+            break;
+          case "/task/detail": 
+            taskHandler.detail();
+            break;  
+          case "/task/update":
+            taskHandler.update();
+            break; 
+          case "/task/delete":
+            taskHandler.delete();
             break;
           case "/board/add":
-            BoardHandler.add(boardList1);
+            boardHandler.add();
             break;
           case "/board/list":
-            BoardHandler.list(boardList1);
+            boardHandler.list();
             break;
-          case "/board2/add":
-            BoardHandler.add(boardList2);
+          case "/board/detail":
+            boardHandler.detail();
+            break;  
+          case "/board/update":
+            boardHandler.update();
+            break; 
+          case "/board/delete":
+            boardHandler.delete();
             break;
-          case "/board2/list":
-            BoardHandler.list(boardList2);
-            break;
-          case "/board3/add":
-            BoardHandler.add(boardList3);
-            break;
-          case "/board3/list":
-            BoardHandler.list(boardList3);
-            break;
-          case "/board4/add":
-            BoardHandler.add(boardList4);
-            break;
-          case "/board4/list":
-            BoardHandler.list(boardList4);
-            break;
-          case "/board5/add":
-            BoardHandler.add(boardList5);
-            break;
-          case "/board5/list":
-            BoardHandler.list(boardList5);
-            break;
-          case "/board6/add":
-            BoardHandler.add(boardList6);
-            break;
-          case "/board6/list":
-            BoardHandler.list(boardList6);
+          case "history":   // <== history 명령 추가
+            printCommandHistory();
             break;
           case "quit":
           case "exit":
@@ -89,5 +105,22 @@ public class App {
       }
 
     Prompt.close();
+  }
+
+  static void printCommandHistory() throws CloneNotSupportedException {
+
+    // 명령어가 들어 있는 스택을 복제한다.
+    Stack stack = commandStack.clone();
+
+    int count = 0;
+    while (stack.size() > 0) {
+      System.out.println(stack.pop());
+      if ((++count % 5) == 0) {
+        String input = Prompt.inputString(": ");
+        if (input.equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    }
   }
 }

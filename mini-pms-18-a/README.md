@@ -1,70 +1,102 @@
-# 18-a. 다형성 활용 : 다형적 변수와 형변환
+# 18-a. 바이트 스트림 다루기 : 바이너리 형식의 데이터 입출력(FileInputStream/FileOutputStream)
 
-이번 훈련에서는 **다형성(polymorphism)** 의 특징을 이용하는 사례를 다룰 것이다.
+지금까지,
+- 사용자가 입력한 데이터를 컬렉션 객체에 저장했다.
+- 즉 RAM에 데이터가 저장되어 있어서 프로그램을 종료하거나 컴퓨터를 끄면 데이터가 지워지는 문제가 있었다.
 
-**다형성** 이란?
-- 한 방식, 한 이름으로 다양한 타입의 데이터나 메서드를 다루는 기법이다.
-- 같은 이름의 변수를 사용하여 여러 타입의 데이터를 다루는 것 : 다형적 변수(polymorphic variable) 
-- 같은 이름의 메서드를 사용하여 여러 종류의 파라미터를 다루는 것 : 오버로딩(overloading)
-  - 메서드를 호출할 때 전달하는 아규먼트에 따라 호출될 메서드가 결정된다.
-- 부모 메서드와 같은 이름의 시그너처를 갖는 메서드를 정의하는 것 : 오버라이딩(overriding)
-  - 메서드를 호출하는 객체의 타입에 따라 호출될 메서드가 결정된다.
+프로그램을 종료하더라도 데이터가 지워지지 않게 하려면,
+- 외부 저장장치(예: 하드 디스크, SSD 등)에 저장해야 한다.
+- 즉 데이터를 파일로 출력해야 한다.
 
-다형성 문법을 잘 이용하면, 
-- 한 개의 변수로 다양한 종류의 값을 다룰 수 있어 편리하다.
-- 같은 기능을 하는 메서드에 대해 같은 이름을 사용할 수 있어 프로그래밍의 일관성을 유지할 수 있다.
-- 상속 받은 메서드를 서브 클래스의 역할에 맞게 재정의 할 수 있어, 또한 프로그래밍의 일관성을 제공한다.
+이번 훈련에서는,
+- **파일 입출력 API** 를 활용하여 데이터를 파일로 저장하고
+파일에서 데이터를 읽는 것을 연습할 것이다.
+- **바이너리(binary)** 형식으로 입출력하는 것을 연습할 것이다.
+
+**파일 입출력 API** 는,
+- 데이터를 파일로 입출력하는 다양한 도구(*클래스*, *인터페이스*)를 제공한다.
+
+**바이너리** 파일 포맷,
+- 해당 파일 포맷을 다루는 전용 프로그램을 사용해야만 편집할 수 있다.
+  - 예) 포토샵, 파워포인트, 워드, 엑셀, 동영상 편집기 등
+  - 예) .class, .hwp, .doc, .xls, .ppt, .pdf, .gif, .jpg, .avi, .wav, .mp3 등
+- 메모장 등 텍스트 편집기에서 직접 파일을 편집하지 못한다.
+- 만약 텍스트 편집기로 편집한 후에 저장하면 파일 형식이 깨져서 무효한 파일이 된다.
+- 같은 데이터를 저장하더라도 텍스트 포맷 보다는 파일의 크기가 작다.
+
+**텍스트** 파일 포맷,
+- 전용 프로그램의 도움 없이 텍스트 편집기로 직접 편집할 수 있다.
+  - 예) .txt, .csv, .html, .css, .js, .java, .xml, .rtf 등
+
+**FileInputStream** / **FileOutputStream** 은,
+
+- 바이너리 형식으로 데이터를 읽고 쓸 때 사용하는 도구다.
+- *byte stream class* 이다.
 
 ## 훈련 목표
 
-- 다형적 변수(polymorphic variables)를 활용하여 다양한 타입의 객체를 다루는 방법을 배운다.
-- 형변환을 연습한다.
+- 바이너리 입출력 스트림 클래스를 사용하여 객체의 필드 값을 바이너리 형식으로 읽고 쓰는 방법을 배운다.
+
 
 ## 훈련 내용
 
-- 다형적 변수를 이용하여 Board, Member, Project, Task 타입의 객체를 모두 다룰 수 있는 ArrayList 클래스를 정의한다. 
-- Board, Member, Project, Task 타입에 따라 개별적으로 만든 XxxList 클래스를 ArrayList로 교체한다.
-- 원래 타입의 객체를 다룰 때는 형변환을 이용한다. 
+- 사용자가 입력한 게시글, 회원, 프로젝트, 작업 데이터를 파일로 저장하고 파일에서 읽는다.
 
 
 ## 실습
 
-### 1단계 - `Board`, `Member`, `Project`, `Task` 타입의 객체를 모두 다룰 수 있는 `List` 클래스를 만든다.
 
-- `BoardList`, `MemberList`, `ProjectList`, `TaskList` 클래스를 합쳐 한 클래스(`List`)로 만든다.
+### 1단계 - 게시글 데이터를 파일에 보관한다.
+
+- App 클래스
+  - 애플리케이션을 종료할 때 게시글 데이터를 파일에 저장하는 `saveBoards()`를 정의한다.
+  - 애플리케이션을 실행했을 때 파일에서 게시글 데이터를 읽어오는 `loadBoards()`를 정의한다.
+  - 게시글 데이터를 저장할 List 객체는 위에서 만든 메서드에서 접근할 수 있도록 스태틱 필드로 전환한다.
 
 #### 작업 파일
 
-- com.eomcs.util.List 클래스 생성
+- com.eomcs.pms.App 변경
+  - 백업: App01.java - 메서드로 분리하기 전
+  - 백업: App02.java - 메서드로 분리한 후
 
+### 2단계 - 회원 데이터를 파일에 보관한다.
 
-### 2단계 - XxxHandler 에서 사용하던 XxxList 클래스를 `List` 로 교체한다.
+- App 클래스
+  - 애플리케이션을 종료할 때 회원 데이터를 파일에 저장하는 `saveMembers()`를 정의한다.
+  - 애플리케이션을 실행했을 때 파일에서 회원 데이터를 읽어오는 `loadMembers()`를 정의한다.
+  - 회원 데이터를 저장할 List 객체는 위에서 만든 메서드에서 접근할 수 있도록 스태틱 필드로 전환한다.
 
-- `BoardHandler` 에서 `Board` 인스턴스 목록을 다루기 위해 사용하던 `BoardList` 클래스를 `List` 클래스로 변경한다. 
-- `MemberHandler` 에서 `Member` 인스턴스 목록을 다루기 위해 사용하던 `MemberList` 클래스를 `List` 클래스로 변경한다. 
-- `ProjectHandler` 에서 `Project` 인스턴스 목록을 다루기 위해 사용하던 `ProjectList` 클래스를 `List` 클래스로 변경한다. 
-- `TaskHandler` 에서 `Task` 인스턴스 목록을 다루기 위해 사용하던 `TaskList` 클래스를 `List` 클래스로 변경한다. 
-  
 #### 작업 파일
 
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-- com.eomcs.pms.handler.MemberHandler 클래스 변경
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-- com.eomcs.pms.handler.TaskHandler 클래스 변경
-- com.eomcs.pms.handler.BoardList 클래스 삭제
-- com.eomcs.pms.handler.MemberList 클래스 삭제
-- com.eomcs.pms.handler.ProjectList 클래스 삭제
-- com.eomcs.pms.handler.TaskList 클래스 삭제
+- com.eomcs.pms.App 변경
+  - 백업: App03.java
+
+
+### 3단계 - 프로젝트 데이터를 파일에 보관한다.
+
+- App 클래스
+  - 애플리케이션을 종료할 때 프로젝트 데이터를 파일에 저장하는 `saveProjects()`를 정의한다.
+  - 애플리케이션을 실행했을 때 파일에서 프로젝트 데이터를 읽어오는 `loadProjects()`를 정의한다.
+  - 프로젝트 데이터를 저장할 List 객체는 위에서 만든 메서드에서 접근할 수 있도록 스태틱 필드로 전환한다.
+
+#### 작업 파일
+
+- com.eomcs.pms.App 변경
+  - 백업: App04.java
+
+
+### 4단계 - 작업 데이터를 파일에 보관한다.
+
+- App 클래스
+  - 애플리케이션을 종료할 때 작업 데이터를 파일에 저장하는 `saveTasks()`를 정의한다.
+  - 애플리케이션을 실행했을 때 파일에서 작업 데이터를 읽어오는 `loadTasks()`를 정의한다.
+  - 작업 데이터를 저장할 List 객체는 위에서 만든 메서드에서 접근할 수 있도록 스태틱 필드로 전환한다.
+
+#### 작업 파일
+
+- com.eomcs.pms.App 변경
 
 
 ## 실습 결과
 
-- src/main/java/com/eomcs/util/List.java 추가
-- src/main/java/com/eomcs/pms/handler/BoardHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/MemberHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/TaskHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/BoardList.java 삭제
-- src/main/java/com/eomcs/pms/handler/MemberList.java 삭제
-- src/main/java/com/eomcs/pms/handler/ProjectList.java 삭제
-- src/main/java/com/eomcs/pms/handler/TaskList.java 삭제
+- src/main/java/com/eomcs/pms/App.java 변경

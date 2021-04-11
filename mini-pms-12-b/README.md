@@ -1,51 +1,89 @@
-# 12-b. 인스턴스 필드와 인스턴스 메서드가 필요한 이유 : Information Expert 디자인 패턴
+# 12-b. 자료 구조 다루기 III : 큐 구현과 사용
 
-**인스턴스 필드(non-static field)** 는 new 명령을 통해 Heap 영역에 생성된다.
-개별적으로 다뤄야 할 값이라면 인스턴스 필드로 선언하라.
+이번 훈련에서는 **큐(queue)** 방식으로 데이터를 저장하는 자료 구조를 만들어보자.
 
-인스턴스 필드를 다루는 메서드는 **인스턴스 메서드(non-static method)** 로 선언한다.
-인스턴스 메서드는 호출할 때 반드시 유효한 레퍼런스(인스턴스 주소)가 있어야 한다.
-레퍼런스는 인스턴스 메서드의 내장(built-in) 로컬 변수인 this에 저장된다.
+**큐(queue)** 는
 
-이번 훈련에서는 클래스 필드/메서드 대신 인스턴스 필드/메서드를 사용하여
-여러 개의 게시글을 다루는 연습을 할 것이다.
-이를 통해 인스턴스 필드/메서드의 쓰임새를 확인한다. 
+- FIFO(First In First Out) 방식으로 데이터를 넣고 꺼낸다.
+- 데이터를 넣는 것을 `offer`라고 하고 목록의 맨 끝에 추가한다.
+- 데이터를 꺼내는 것을 `poll`이라 하고 목록의 맨 앞의 값을 꺼낸다.
+- 보통 입력한 순으로 데이터를 꺼내야 하는 상황에서 이 자료구조를 사용한다.
+- 예)
+  - 등록된 예약을 처리할 때
+  - 네트워킹에서 연결된 순서대로 소켓을 승인하고 처리할 때
+
 
 ## 훈련 목표
 
-- 인스턴스 필드와 인스턴스 메서드를 사용할 수 있다.
-- 스태틱 필드와 인스턴스 필드의 차이점과 용도를 이해한다.
-- 스태틱 메서드와 인스턴스 메서드의 차이점과 용도를 이해한다.
+- 큐(queue) 자료구조를 구현하고 구동 원리를 이해한다.
+- Object.clone() 메서드의 용도와 인스턴스를 복제하는 방법을 배운다.
+- 얕은 복제(shallow copy)와 깊은 복제(deep copy)의 차이점을 이해한다.
 
 ## 훈련 내용
 
-- 여러 개의 게시판을 다루기 위해 BoardHandler의 필드와 메서드를 인스턴스 멤버로 전환한다. 
-- 기존의 MemberHandler와 ProjectHandler, TaskHandler도 필드와 메서드를 인스턴스 멤버로 전환한다.
+- `java.util.Queue` 인터페이스의 메서드를 모방하여 `Queue` 클래스를 구현한다.
+- 큐를 이용하여 사용자가 입력한 명령을 보관한다.
+- 사용자가 입력한 명령을 순서대로 출력하는 `history2` 명령을 추가한다.
 
 ## 실습
 
-### 1단계 - 게시판 데이터 타입을 정의한 클래스와 그 인스턴스 변수를 다루는 클래스를 합친다. 
+### 1단계 - `java.util.Queue` 인터페이스의 메서드를 모방하여 `Queue` 클래스를 구현한다.
 
-- BoardList의 인스턴스 변수를 BoardHandler로 옮긴다.
-  - 필드와 그 필드를 다루는 메서드를 한 클래스에 두면 관리하기가 편하다. 
+**큐(queue)** 자료 구조를 직접 구현해본다.
+- 상속 기법을 이용하여 구현한다.
+- `com.eomcs.util.List` 를 상속 받아서 `Queue` 클래스를 작성한다.
+- `clone()` 메서드를 오버라이딩하여 **deep copy** 를 수행한다.
 
-#### 작업 파일 
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-  - `Board[] boards`와 `int size` 인스턴스 변수 선언
-  - add(), list() 메서드 변경
-- com.eomcs.pms.handler.BoardList 클래스 삭제
+#### 작업 파일
 
-### 2단계 - BoardList 대신 BoardHandler의 인스턴스를 사용하여 게시글을 보관하거나 조회한다.
+- com.eomcs.util.Queue 클래스 생성
 
-- App 클래스 변경
-  - 게시글을 저장할 인스턴스를 만들 때 BoardHandler를 사용한다.
 
-#### 작업 파일 
-- com.eomcs.pms.handler.App 클래스 변경
+### 2단계 - 사용자가 입력한 명령을 스택에 보관한다.
+
+- `Queue` 객체를 준비하여 사용자가 명령어를 입력할 때 마다 저장한다.
+
+#### 작업 파일
+
+- com.eomcs.pms.App 클래스 변경
+
+
+### 3단계 - 사용자가 입력한 명령을 최신순으로 출력하는 `history2` 명령을 추가한다.
+
+- 사용자가 입력한 명령을 최신순으로 출력하는 `printCommandHistory2()` 메서드를 정의한다.
+- `history2` 명령을 처리하는 분기문을 추가한다.
+
+```
+명령> history2
+/board/add
+/board/add
+/board/add
+/board/list
+/board/detail
+:
+/member/add
+/member/add
+/member/add
+/member/list
+/member/detail
+:
+/member/detail
+/project/add
+/project/list
+history
+history2
+:q
+
+명령>
+
+```
+
+#### 작업 파일
+
+- com.eomcs.pms.App 클래스 변경
 
 
 ## 실습 결과
 
-- src/main/java/com/eomcs/pms/handler/BoardList.java 삭제
-- src/main/java/com/eomcs/pms/handler/BoardHandler.java 변경
+- src/main/java/com/eomcs/util/Queue.java 추가
 - src/main/java/com/eomcs/pms/App.java 변경

@@ -1,216 +1,85 @@
-# 14. CRUD 구현
+# 14. 제네릭이 필요한 이유와 사용법
 
-이번 훈련에서는 게시글, 회원, 프로젝트, 작업 정보 각각에 대해 CRUD를 완성해보자.
+**제네릭(generic)** 문법을 이용하면,
 
-**CRUD** 는 데이터의 생성(Create), 조회(Read/Retrieve), 변경(Update), 삭제(Delete)을 가리키는 용어이다.
+- 같은 일을 하는 클래스를 정의할 때 타입 별로 중복해서 정의할 필요가 없기 때문에 코드의 재사용성을 높인다.
+- 지정된 타입의 객체만 다루도록 제한할 수 있어 코드의 안정성을 높인다.
+- 사용할 객체의 타입을 지정한 후 잘못된 타입의 객체를 사용할 때 컴파일 오류가 발생한다.
+- 컴파일 할 때 타입 검사를 진행하기 때문에 빠른 시점에 타입 안정성을 어긴 오류를 찾아 낼 수 있다.
+  - 가능한 실행할 때 발생된 오류 보다는 컴파일 할 때 발생된 오류를 잡는 것이 더 낫다.
+
 
 ## 훈련 목표
 
-- 관리 시스템에서 데이터 처리의 기본 기능인 CRUD를 연습한다.
-- 이를 통해 배열을 다루는 방법과 조건문, 반복문, 메서드 등 자바 기본 문법을 다루는 방법을 연습한다.
+- 제네릭 문법을 이용하여 타입 정보를 파라미터로 주고 받는 방법을 배운다.
+- 제네릭 문법으로 특정 타입의 값만 다루도록 제한하는 것을 연습한다.
 
 ## 훈련 내용
 
-- 게시글의 상세 조회, 변경, 삭제 기능을 추가한다.
-- 회원 정보의 상세 조회, 변경, 삭제 기능을 추가한다.
-- 프로젝트 정보의 상세 조회, 변경, 삭제 기능을 추가한다.
-- 작업 정보의 상세 조회, 변경, 삭제 기능을 추가한다.
-  
+- ArrayList 클래스에 특정 타입의 객체를 다룰 수 있도록 제네릭을 적용한다.
+- 기존의 XxxHandler 에 제네릭이 적용된 ArrayList을 사용하도록 코드를 변경한다.
+
+
 ## 실습
 
-### 0단계 - 여러 개의 게시판을 다루기 위해 작성했던 코드를 제거한다.
+### 1단계 - `List` 에 제네릭(generic) 문법을 적용한다.
 
-- 스태틱 필드와 인스턴스 필드와 차이점을 알아보기 위해 
-  여러 개의 게시판을 작성했다.
-- 이제 확인했으니, 제거한다.
+- `List` 클래스 변경
+  - 인스턴스 필드 변경
+  - 선언부에 타입 파라미터를 선언한다.
+  - add() 파라미터 타입 변경
+  - toArray(E[]]) 메서드 추가
+  - get() 리턴 타입 변경
+  - delete(E) 파라미터 타입 변경
+  - delete(int) 리턴 타입 변경
+  - indexOf(E) 파라미터 타입 변경
+  - iterator() 변경
+- `Node` 중첩 클래스 변경
+  - 선언부에 타입 파라미터 선언한다.
+  - 인스턴스 필드 변경
+- `Iterator` 인터페이스 변경
+  - 선언부에 타입 파라미터 선언한다.
+  - next() 메서드 변경
 
 #### 작업 파일
 
-- com.eomcs.pms.App 클래스 변경
+- com.eomcs.util.List 클래스 변경
+- com.eomcs.util.Iterator 클래스 변경
 
-### 1단계 - 게시글의 상세 조회 기능을 추가한다.
+### 2단계 - 제네릭을 적용한 `List` 의 사용법에 따라 XxxHandler 코드를 변경한다.
 
-- `BoardHandler`에 상세 조회 기능을 수행하는 `detail()` 메서드를 추가한다.
-- 호출될 때 마다 조회수 필드의 값을 1 증가시킨다.
-- `App` 클래스에 `/board/detail` 명령을 추가한다.
+- `BoardHandler` 에서 `List` 를 생성할 때 목록에서 다룰 항목의 타입을 `Board` 로 한정한다.  
+- `MemberHandler` 에서 `List` 를 생성할 때 목록에서 다룰 항목의 타입을 `Member` 로 한정한다.  
+- `ProjectHandler` 에서 `List` 를 생성할 때 목록에서 다룰 항목의 타입을 `Project` 로 한정한다.  
+- `TaskHandler` 에서 `List` 를 생성할 때 목록에서 다룰 항목의 타입을 `Task` 로 한정한다.  
 
-
-```
-명령> /board/add
-[새 게시글]
-번호? 1
-제목? 제목1
-내용? 내용입니다.
-작성자? 홍길동
-게시글을 등록하였습니다.
-
-명령> /board/list
-[게시글 목록]
-1, 제목1, 홍길동, 2020-01-10, 0
-2, 제목2, 임꺽정, 2020-01-20, 12
-3, 제목3, 유관순, 2020-01-30, 7
-
-명령> /board/detail
-[게시글 상세보기]
-번호? 1   <--- 사용자가 번호 입력
-제목: 제목1
-내용: 내용입니다.
-작성자: 홍길동
-등록일: 2020-01-10
-조회수: 1
-
-명령> /board/detail
-[게시글 상세보기]
-번호? 100
-해당 번호의 게시글이 없습니다.
-```
 
 #### 작업 파일
 
 - com.eomcs.pms.handler.BoardHandler 클래스 변경
-- com.eomcs.pms.App 클래스 변경
-
-
-### 2단계 - 게시글의 변경 기능을 추가한다.
-
-- `BoardHandler`에 변경 기능을 수행하는 `update()` 메서드를 추가한다.
-- `App` 클래스에 `/board/update` 명령을 추가한다.
-
-
-```
-명령> /board/update
-[게시글 변경]
-번호? 1    <--- 사용자가 번호를 입력
-제목(제목1)? 제목변경
-내용(내용입니다.)? 내용변경
-정말 변경하시겠습니까?(y/N) y
-게시글을 변경하였습니다.
-
-명령> /board/update
-[게시글 변경]
-번호? 1
-제목(제목1)? 제목변경
-내용(내용입니다.)? 내용변경
-정말 변경하시겠습니까?(y/N) n
-게시글 변경을 취소하였습니다.
-
-명령> /board/detail
-[게시글 상세보기]
-번호? 1
-제목: 제목변경
-내용: 내용변경
-작성자: 홍길순
-등록일: 2020-01-10
-조회수: 2
-
-명령> /board/update
-[게시글 변경]
-번호? 100
-해당 번호의 게시글이 없습니다.
-```
-
-#### 작업 파일
-
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-- com.eomcs.pms.App 클래스 변경
-  
-
-### 3단계 - 게시글의 삭제 기능을 추가한다.
-
-- `BoardHandler`에 변경 기능을 수행하는 `delete()` 메서드를 추가한다.
-- `App` 클래스에 `/board/delete` 명령을 추가한다.
-
-
-```
-명령> /board/delete
-[게시글 삭제]
-번호? 1  <--- 사용자가 번호 입력
-정말 삭제하시겠습니까?(y/N) y
-게시글을 삭제하였습니다.
-
-명령> /board/delete
-[게시글 삭제]
-번호? 1
-정말 변경하시겠습니까?(y/N) n
-게시글 삭제를 취소하였습니다.
-
-명령> /board/delete
-[게시글 삭제]
-번호? 100
-해당 번호의 게시글이 없습니다.
-```
-
-#### 작업 파일
-
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-  - 백업: BoardHandler_a.java
-- com.eomcs.pms.App 클래스 변경
-
-### 4단계 - 게시글의 삭제 후 목록 조회, 상세 조회, 변경할 때 발생하는 예외를 처리한다.
-
-- 게시글을 삭제할 때 해당 배열의 항목을 null 로 설정하였다.
-- 따라서 게시글을 출력할 때 인스턴스 주소가 없는 경우를 처리해야 한다. 
-
-#### 작업 파일
-
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-  - 배열에서 게시글 인스턴스의 주소가 삭제된 항목은 출력에서 제외한다.
-  - list(), detail(), update(), delete() 변경
-  - 백업: BoardHandler_b.java
-
-### 5단계 - 리팩토링
-
-- 게시글 번호를 비교하여 배열에서 게시글을 찾는 부분을 리팩토링 한다.
-- 즉 중복되는 코드를 별도의 메서드를 분리한다.
-
-#### 작업 파일
-
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-  - 게시글의 인덱스를 리턴하는 `indexOf(int)` 메서드를 추가한다.
-    - delete() 메서드에 적용
-  - 게시글을 리턴하는 `findByNo(int)` 메서드를 추가한다.
-    - detail(), update() 메서드에 적용 
-  - 백업: BoardHandler_c.java
-
-### 6단계 - 배열 항목 삭제할 때 메모리 절약하기
-
-- 기존 방식은 삭제한 항목의 주소를 null로 설정하였다.
-- 문제? 
-  - 삭제할 때 마다 배열에서 해당 항목을 사용할 수 없어 메모리가 낭비되는 문제가 있었다.
-- 해결책?
-  - 항목을 삭제하면 그 항목 뒤에 값을 앞으로 당긴다.
-
-#### 작업 파일
-
-- com.eomcs.pms.handler.BoardHandler 클래스 변경
-  - delete() 메서드 변경
-    - 항목을 삭제할 때 뒷 항목의 값을 앞으로 당긴다.
-  - indexOf() 메서드 변경
-    - 배열 중간에 비어있는 항목이 없기 때문에 조건 검사에서 제외한다.
-
-
-### 7단계 - 게시글 CRUD를 참고하여 회원, 프로젝트, 작업에 대해서도 CRUD를 완성한다.
-
-#### 작업 파일
-
 - com.eomcs.pms.handler.MemberHandler 클래스 변경
 - com.eomcs.pms.handler.ProjectHandler 클래스 변경
-  - 백업: ProjectHandler_a.java
 - com.eomcs.pms.handler.TaskHandler 클래스 변경
-  - 백업: TaskHandler_a.java
-- com.eomcs.pms.App 클래스 변경
 
-### 8단계 - 리팩토링 II
+### 3단계 - `Stack`, `Queue` 에 제네릭(generic) 문법을 적용한다.
 
-- 중복되는 코드를 메서드를 추출한다.
+- `Stack` 클래스 변경
+- `Queue` 클래스 변경
+- 스택과 큐를 사용하는 `App` 클래스 변경
 
 #### 작업 파일
 
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-- com.eomcs.pms.handler.TaskHandler 클래스 변경
+- com.eomcs.util.Stack 클래스 변경
+- com.eomcs.util.Queue 클래스 변경
+- com.eomcs.pms.App 클래스 변경
+
 
 ## 실습 결과
 
+- src/main/java/com/eomcs/util/List.java 변경
+- src/main/java/com/eomcs/util/Iterator.java 변경
+- src/main/java/com/eomcs/util/Stack.java 변경
+- src/main/java/com/eomcs/util/Queue.java 변경
 - src/main/java/com/eomcs/pms/handler/BoardHandler.java 변경
 - src/main/java/com/eomcs/pms/handler/MemberHandler.java 변경
 - src/main/java/com/eomcs/pms/handler/ProjectHandler.java 변경

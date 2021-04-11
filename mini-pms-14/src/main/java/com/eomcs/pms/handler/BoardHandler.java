@@ -2,50 +2,62 @@ package com.eomcs.pms.handler;
 
 import java.sql.Date;
 import com.eomcs.pms.domain.Board;
+import com.eomcs.util.Iterator;
+import com.eomcs.util.List;
 import com.eomcs.util.Prompt;
 
 public class BoardHandler {
 
-  // 공동으로 사용하는 값은 스태틱 필드로 선언한다.
-  static final int LENGTH = 100;
-
-  // 개별적으로 관리해야 하는 값은 인스턴스 필드로 선언한다.
-  Board[] boards = new Board[LENGTH];   
-  int size = 0;
+  private List<Board> boardList = new List<>();
 
   public void add() {
     System.out.println("[게시글 등록]");
 
     Board b = new Board();
 
-    b.no = Prompt.inputInt("번호? ");
-    b.title = Prompt.inputString("제목? ");
-    b.content = Prompt.inputString("내용? ");
-    b.writer = Prompt.inputString("작성자? ");
-    b.registeredDate = new Date(System.currentTimeMillis());
+    b.setNo(Prompt.inputInt("번호? "));
+    b.setTitle(Prompt.inputString("제목? "));
+    b.setContent(Prompt.inputString("내용? "));
+    b.setWriter(Prompt.inputString("작성자? "));
+    b.setRegisteredDate(new Date(System.currentTimeMillis()));
 
-    this.boards[this.size++] = b;
+    boardList.add(b);
 
     System.out.println("게시글을 등록하였습니다.");
   }
 
-  public void list() {
+  public void list() throws CloneNotSupportedException {
     System.out.println("[게시글 목록]");
 
-    for (int i = 0; i < this.size; i++) {
-      Board b = this.boards[i];
+    // 방법1) 
+    //    Board[] arr = new Board[boardList.size()];
+    //    boardList.toArray(arr);
 
-      if (b == null)
-        continue;
+    // 방법2)
+    //    Board[] arr = boardList.toArray(new Board[boardList.size()]);
+    //
+    //    for (Board b : arr) {
+    //      System.out.printf("%d, %s, %s, %s, %d, %d\n", 
+    //          b.getNo(), 
+    //          b.getTitle(), 
+    //          b.getRegisteredDate(), 
+    //          b.getWriter(), 
+    //          b.getViewCount(),
+    //          b.getLike());
+    //    }
 
-      // 번호, 제목, 등록일, 작성자, 조회수, 좋아요
+    // Iterator 사용하여 데이터 조회하기
+    Iterator<Board> iterator = boardList.iterator();
+
+    while (iterator.hasNext()) {
+      Board b = iterator.next();
       System.out.printf("%d, %s, %s, %s, %d, %d\n", 
-          b.no, 
-          b.title, 
-          b.registeredDate, 
-          b.writer, 
-          b.viewCount,
-          b.like);
+          b.getNo(), 
+          b.getTitle(), 
+          b.getRegisteredDate(), 
+          b.getWriter(), 
+          b.getViewCount(),
+          b.getLike());
     }
   }
 
@@ -60,12 +72,13 @@ public class BoardHandler {
       return;
     }
 
-    board.viewCount++;
-    System.out.printf("제목: %s\n", board.title);
-    System.out.printf("내용: %s\n", board.content);
-    System.out.printf("작성자: %s\n", board.writer);
-    System.out.printf("등록일: %s\n", board.registeredDate);
-    System.out.printf("조회수: %d\n", board.viewCount);
+    board.setViewCount(board.getViewCount() + 1);
+
+    System.out.printf("제목: %s\n", board.getTitle());
+    System.out.printf("내용: %s\n", board.getContent());
+    System.out.printf("작성자: %s\n", board.getWriter());
+    System.out.printf("등록일: %s\n", board.getRegisteredDate());
+    System.out.printf("조회수: %d\n", board.getViewCount());
 
   }
 
@@ -80,14 +93,14 @@ public class BoardHandler {
       return;
     }
 
-    String title = Prompt.inputString(String.format("제목(%s)? ", board.title));
-    String content = Prompt.inputString(String.format("내용(%s)? ", board.content));
+    String title = Prompt.inputString(String.format("제목(%s)? ", board.getTitle()));
+    String content = Prompt.inputString(String.format("내용(%s)? ", board.getContent()));
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      board.title = title;
-      board.content = content;
+      board.setTitle(title);
+      board.setContent(content);
       System.out.println("게시글을 변경하였습니다.");
 
     } else {
@@ -100,8 +113,8 @@ public class BoardHandler {
 
     int no = Prompt.inputInt("번호? ");
 
-    int i = indexOf(no);
-    if (i == -1) {
+    Board board = findByNo(no);
+    if (board == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
@@ -109,10 +122,7 @@ public class BoardHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      for (int x = i + 1; x < this.size; x++) {
-        this.boards[x-1] = this.boards[x];
-      }
-      boards[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
+      boardList.delete(board); // 오버로딩한 메서드를 사용하여 삭제한다.
 
       System.out.println("게시글을 삭제하였습니다.");
 
@@ -122,25 +132,16 @@ public class BoardHandler {
 
   }
 
-  // 게시글 번호에 해당하는 인스턴스를 배열에서 찾아 그 인덱스를 리턴한다. 
-  int indexOf(int boardNo) {
-    for (int i = 0; i < this.size; i++) {
-      Board board = this.boards[i];
-      if (board.no == boardNo) {
-        return i;
+  private Board findByNo(int boardNo) {
+    Board[] list = boardList.toArray(new Board[0]);
+    for (Board b : list) {
+      if (b.getNo() == boardNo) {
+        return b;
       }
     }
-    return -1;
+    return null;
   }
 
-  // 게시글 번호에 해당하는 인스턴스를 찾아 리턴한다.
-  Board findByNo(int boardNo) {
-    int i = indexOf(boardNo);
-    if (i == -1) 
-      return null;
-    else 
-      return this.boards[i];
-  }
 }
 
 
