@@ -1,15 +1,10 @@
 package com.eomcs.pms;
 
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Parameter;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -110,18 +105,6 @@ public class ClientApp {
     ProjectService projectService = new DefaultProjectService(sqlSession, projectDao, taskDao);
     TaskService taskService = new DefaultTaskService(sqlSession, taskDao);
 
-    MemberValidator memberValidator = new MemberValidator(memberService);
-
-    // Command 구현체가 사용할 의존 객체를 준비하여 보관해 둔다.
-    Map<String,Object> objMap = new HashMap<>();
-    objMap.put("boardService", boardService);
-    objMap.put("memberService", memberService);
-    objMap.put("projectService", projectService);
-    objMap.put("taskService", taskService);
-    objMap.put("memberValidator", memberValidator);
-
-    registerCommands(objMap);
-
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
 
@@ -138,7 +121,7 @@ public class ClientApp {
     commandMap.put("/member/update", new MemberUpdateHandler(memberService));
     commandMap.put("/member/delete", new MemberDeleteHandler(memberService));
 
-
+    MemberValidator memberValidator = new MemberValidator(memberService);
 
     commandMap.put("/project/add", new ProjectAddHandler(projectService, memberValidator));
     commandMap.put("/project/list", new ProjectListHandler(projectService));
@@ -206,32 +189,6 @@ public class ClientApp {
 
     sqlSession.close();
     Prompt.close();
-  }
-
-  private void registerCommands(Map<String, Object> objMap) throws Exception {
-    Properties commandProps = new Properties();
-    commandProps.load(Resources.getResourceAsStream("com/eomcs/pms/conf/commands.properties"));
-
-    Set<Object> keys = commandProps.keySet();
-    for (Object key : keys) {
-      // commands.properties 파일에서 클래스 이름을 한 개 가져온다.
-      String className = (String) commandProps.get(key);
-
-      // 클래스 이름을 사용하여 .class 파일을 로딩한다.
-      Class<?> clazz = Class.forName(className);
-
-      // 생성자 정보를 알아낸다. 첫 번째 생성자만 꺼낸다.
-      Constructor<?> constructor = clazz.getConstructors()[0];
-
-      // 생성자의 파라미터 정보를 알아낸다.
-      Parameter[] params = constructor.getParameters();
-
-      // 각 파라미터의 타입을 알아낸다.
-      System.out.println(className);
-      for (Parameter p : params) {
-        System.out.println("===> " + p.getType().getName());
-      }
-    }
   }
 
   private void printCommandHistory(Iterator<String> iterator) {
