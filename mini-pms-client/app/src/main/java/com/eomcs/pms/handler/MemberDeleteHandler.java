@@ -1,8 +1,10 @@
 package com.eomcs.pms.handler;
 
 import com.eomcs.pms.service.MemberService;
+import com.eomcs.stereotype.Component;
 import com.eomcs.util.Prompt;
 
+@Component(value="/member/delete")
 public class MemberDeleteHandler implements Command {
 
   MemberService memberService;

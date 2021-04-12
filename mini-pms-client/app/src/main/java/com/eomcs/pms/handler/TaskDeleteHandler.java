@@ -1,8 +1,10 @@
 package com.eomcs.pms.handler;
 
 import com.eomcs.pms.service.TaskService;
+import com.eomcs.stereotype.Component;
 import com.eomcs.util.Prompt;
 
+@Component(value="/task/delete")
 public class TaskDeleteHandler implements Command {
 
   TaskService taskService;

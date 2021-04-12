@@ -3,7 +3,9 @@ package com.eomcs.pms.handler;
 import java.util.List;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
+import com.eomcs.stereotype.Component;
 
+@Component(value="/member/list")
 public class MemberListHandler implements Command {
 
   MemberService memberService;

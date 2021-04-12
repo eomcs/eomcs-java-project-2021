@@ -2,8 +2,10 @@ package com.eomcs.pms.handler;
 
 import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.service.ProjectService;
+import com.eomcs.stereotype.Component;
 import com.eomcs.util.Prompt;
 
+@Component(value="/project/add")
 public class ProjectAddHandler implements Command {
 
   ProjectService projectService;

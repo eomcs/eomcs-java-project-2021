@@ -2,8 +2,10 @@ package com.eomcs.pms.handler;
 
 import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.service.TaskService;
+import com.eomcs.stereotype.Component;
 import com.eomcs.util.Prompt;
 
+@Component(value="/task/detail")
 public class TaskDetailHandler implements Command {
 
   TaskService taskService;

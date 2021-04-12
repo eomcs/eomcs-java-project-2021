@@ -3,8 +3,10 @@ package com.eomcs.pms.handler;
 import java.util.List;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.service.BoardService;
+import com.eomcs.stereotype.Component;
 import com.eomcs.util.Prompt;
 
+@Component(value="/board/search")
 public class BoardSearchHandler implements Command {
 
   BoardService boardService;

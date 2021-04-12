@@ -1,5 +1,6 @@
 package com.eomcs.pms;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
@@ -10,8 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -155,24 +154,58 @@ public class ClientApp {
   }
 
   private void registerCommands() throws Exception {
-    Properties commandProps = new Properties();
-    commandProps.load(Resources.getResourceAsStream("com/eomcs/pms/conf/commands.properties"));
 
-    Set<Object> keys = commandProps.keySet();
-    for (Object key : keys) {
-      // commands.properties 파일에서 클래스 이름을 한 개 가져온다.
-      String className = (String) commandProps.get(key);
+    // 패키지에 소속된 모든 클래스의 타입 정보를 알아낸다.
+    ArrayList<Class<?>> classes = new ArrayList<>();
+    loadClasses("com.eomcs.pms.handler", classes);
 
-      // 클래스 이름을 사용하여 .class 파일을 로딩한다.
-      Class<?> clazz = Class.forName(className);
 
-      // 클래스 정보를 이용하여 객체를 생성한다.
-      Object command = createCommand(clazz);
+    //    Properties commandProps = new Properties();
+    //    commandProps.load(Resources.getResourceAsStream("com/eomcs/pms/conf/commands.properties"));
+    //
+    //    Set<Object> keys = commandProps.keySet();
+    //    for (Object key : keys) {
+    //      // commands.properties 파일에서 클래스 이름을 한 개 가져온다.
+    //      String className = (String) commandProps.get(key);
+    //
+    //      // 클래스 이름을 사용하여 .class 파일을 로딩한다.
+    //      Class<?> clazz = Class.forName(className);
+    //
+    //      // 클래스 정보를 이용하여 객체를 생성한다.
+    //      Object command = createCommand(clazz);
+    //
+    //      // 생성된 객체를 객체 맵에 보관한다.
+    //      objMap.put((String)key, command);
+    //
+    //      System.out.println("인스턴스 생성 ===> " + command.getClass().getName());
+    //    }
+  }
 
-      // 생성된 객체를 객체 맵에 보관한다.
-      objMap.put((String)key, command);
+  private void loadClasses(String packageName, ArrayList<Class<?>> classes) throws Exception {
 
-      System.out.println("인스턴스 생성 ===> " + command.getClass().getName());
+    // 패키지의 '파일 시스템 경로'를 알아낸다.
+    File dir = Resources.getResourceAsFile(packageName.replaceAll("\\.", "/"));
+
+    if (!dir.isDirectory()) {
+      throw new Exception("유효한 패키지가 아닙니다.");
+    }
+
+    File[] files = dir.listFiles(f -> {
+      if (f.isDirectory())
+        return true;
+
+      if (f.getName().endsWith(".class"))
+        return true;
+
+      return false;
+    });
+
+    for (File file : files) {
+      if (file.isDirectory()) {
+        loadClasses(packageName + "." + file.getName(), classes);
+      } else {
+        System.out.println(packageName + "." + file.getName().replace(".class", ""));
+      }
     }
   }
 

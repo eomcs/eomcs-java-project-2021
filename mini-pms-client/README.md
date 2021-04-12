@@ -1,4 +1,4 @@
-# 26-b. 객체 생성을 자동화하기 : .propertis 파일을 이용한 Command 구현체 자동 생성
+# 26-c. 객체 생성을 자동화하기 : 애노테이션을 이용한 Command 구현체 자동 생성
 
 
 ## 훈련 목표
@@ -9,18 +9,22 @@
 
 ## 실습
 
-### 1단계: Command 구현체 정보를 담은 .properties 파일을 생성한다.
+### 1단계: Command 구현체의 정보를 담을 애노테이션을 정의한다.
 
-- src/main/resources/com/eomcs/pms/conf/commands.properties 생성
-  - 커맨드 구현체의 정보를 저장한다.
-    - key : 사용자가 입력하는 명령어
-    - value : 명령을 처리할 Command 구현체의 전체 이름
+- src/main/resources/com/eomcs/stereotype/Component 애노테이션 정의 
 
-### 2단계: Command 구현체를 자동 생성한다.
+### 2단계: Command 구현체에 `@Componennt` 애노테이션을 붙인다.
+
+- com.eomcs.pms.handler.XxxHandler 클래스 변경
+  - 클래스 선언부에 `@Component` 애노테이션을 붙인다.
+  - `@Component` 애노테이션의 value 프로퍼티에 명령을 지정한다.
+- src/main/resources/com/eomcs/pms/conf/commands.properties 파일 삭제
+  - 이 프로퍼티 파일에 적어 두었던 내용은 `@Component` 애노테이션으로 대체했기 때문이 이제 더이상 필요없다.
+
+### 3단계: 특정 패키지에 들어 있는 클래스 이름을 알아낸 후 Command 구현체를 생성한다.
 
 - com.eomcs.ClientApp 클래스 변경
-  - `commands.properties` 파일에 등록된 정보를 읽어서 `Command` 객체를 생성하여 객체 맵에 보관한다.
-  - 사용자가 입력한 명령을 처리할 때 객체 맵에서 `Command` 구현체를 찾아 실행한다.
+  - 
 
 ## 실습 결과
 - src/main/resources/com/eomcs/pms/conf/commands.properties 추가

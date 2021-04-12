@@ -1,8 +1,10 @@
 package com.eomcs.pms.handler;
 
 import com.eomcs.pms.service.BoardService;
+import com.eomcs.stereotype.Component;
 import com.eomcs.util.Prompt;
 
+@Component(value="/board/delete")
 public class BoardDeleteHandler implements Command {
 
   BoardService boardService;
