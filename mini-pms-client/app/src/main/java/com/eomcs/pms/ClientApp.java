@@ -91,7 +91,7 @@ public class ClientApp {
     SqlSession sqlSession = sqlSessionFactory.openSession(false);
 
     // DAO 구현체를 만들어주는 공장 객체를 준비한다.
-    MybatisDaoFactory daoFactory = new MybatisDaoFactory();
+    MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSession);
 
 
     // 핸들러가 사용할 DAO 객체 준비
@@ -177,6 +177,7 @@ public class ClientApp {
         } catch (Exception e) {
           System.out.println("------------------------------------------");
           System.out.printf("명령어 실행 중 오류 발생: %s\n", e.getMessage());
+          e.printStackTrace();
           System.out.println("------------------------------------------");
         }
         System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
