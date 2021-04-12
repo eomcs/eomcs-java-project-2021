@@ -1,6 +1,7 @@
 package com.eomcs.pms.dao;
 
 import java.util.List;
+import java.util.Map;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
 
@@ -8,9 +9,9 @@ public interface ProjectDao {
 
   int insert(Project project) throws Exception;
 
-  List<Project> findByKeyword(String item, String keyword) throws Exception;
+  List<Project> findByKeyword(Map<String,Object> params) throws Exception;
 
-  List<Project> findByKeywords(String title, String owner, String member) throws Exception;
+  List<Project> findByKeywords(Map<String,Object> params) throws Exception;
 
   Project findByNo(int no) throws Exception;
 
@@ -18,9 +19,9 @@ public interface ProjectDao {
 
   int delete(int no) throws Exception;
 
-  int insertMember(int projectNo, int memberNo) throws Exception;
+  int insertMember(Map<String,Object> params) throws Exception;
 
-  int insertMembers(int projectNo, List<Member> members) throws Exception;
+  int insertMembers(Map<String,Object> params) throws Exception;
 
   List<Member> findAllMembers(int projectNo) throws Exception;
 

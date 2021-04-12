@@ -28,7 +28,15 @@
 - src/main/resources/com/eomcs/pms/mapper/XxxMapper.xml 변경
   - namespace 값을 인터페이스 전체 이름(fully-qualified name)과 일치시킨다.
   - 메서드에서 사용할 SQL은 메서드 이름과 일치시킨다.
+- com.eomcs.pms.dao.ProjectDao 인터페이스 변경
+  - 메서드의 파라미터 개수가 여러 개일 경우 Map 타입으로 변경한다.
+  - SqlSession의 `selectList()`, `selectOne()` 메서드와 사용 규칙을 맞추기 위함이다.
+- com.eomcs.pms.service.impl.DefaultProjectService 클래스 변경
+  - DAO 구현체의 메서드를 호출할 때 파라미터가 여러 개인 경우 맵 객체에 담아서 넘긴다.
 
+### 4단계: DAO 인터페이스 구현체를 삭제한다.
+
+- com.eomcs.pms.dao.mariadb 패키지 삭제
 
 
 ### 3단계: MybatisDaoFactory 클래스를 구현한다.
