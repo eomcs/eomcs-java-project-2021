@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,33 +21,8 @@ import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.dao.TaskDao;
-import com.eomcs.pms.handler.BoardAddHandler;
-import com.eomcs.pms.handler.BoardDeleteHandler;
-import com.eomcs.pms.handler.BoardDetailHandler;
-import com.eomcs.pms.handler.BoardListHandler;
-import com.eomcs.pms.handler.BoardSearchHandler;
-import com.eomcs.pms.handler.BoardUpdateHandler;
 import com.eomcs.pms.handler.Command;
-import com.eomcs.pms.handler.MemberAddHandler;
-import com.eomcs.pms.handler.MemberDeleteHandler;
-import com.eomcs.pms.handler.MemberDetailHandler;
-import com.eomcs.pms.handler.MemberListHandler;
-import com.eomcs.pms.handler.MemberUpdateHandler;
 import com.eomcs.pms.handler.MemberValidator;
-import com.eomcs.pms.handler.ProjectAddHandler;
-import com.eomcs.pms.handler.ProjectDeleteHandler;
-import com.eomcs.pms.handler.ProjectDetailHandler;
-import com.eomcs.pms.handler.ProjectDetailSearchHandler;
-import com.eomcs.pms.handler.ProjectListHandler;
-import com.eomcs.pms.handler.ProjectMemberDeleteHandler;
-import com.eomcs.pms.handler.ProjectMemberUpdateHandler;
-import com.eomcs.pms.handler.ProjectSearchHandler;
-import com.eomcs.pms.handler.ProjectUpdateHandler;
-import com.eomcs.pms.handler.TaskAddHandler;
-import com.eomcs.pms.handler.TaskDeleteHandler;
-import com.eomcs.pms.handler.TaskDetailHandler;
-import com.eomcs.pms.handler.TaskListHandler;
-import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.pms.service.BoardService;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
@@ -64,6 +41,9 @@ public class ClientApp {
 
   String serverAddress;
   int port;
+
+  // 객체를 보관할 컨테이너 준비
+  Map<String,Object> objMap = new HashMap<>();
 
   public static void main(String[] args) {
     ClientApp app = new ClientApp("localhost", 8888);
@@ -98,13 +78,13 @@ public class ClientApp {
     // DAO 구현체를 만들어주는 공장 객체를 준비한다.
     MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSession);
 
-
-    // 핸들러가 사용할 DAO 객체 준비
+    // 서비스 객체가 사용할 DAO 객체 준비
     BoardDao boardDao = daoFactory.createDao(BoardDao.class);
     MemberDao memberDao = daoFactory.createDao(MemberDao.class);
     ProjectDao projectDao = daoFactory.createDao(ProjectDao.class);
     TaskDao taskDao = daoFactory.createDao(TaskDao.class);
 
+    // Command 구현체가 사용할 의존 객체 준비
     BoardService boardService = new DefaultBoardService(sqlSession, boardDao);
     MemberService memberService = new DefaultMemberService(sqlSession, memberDao);
     ProjectService projectService = new DefaultProjectService(sqlSession, projectDao, taskDao);
@@ -112,49 +92,15 @@ public class ClientApp {
 
     MemberValidator memberValidator = new MemberValidator(memberService);
 
-    // Command 구현체가 사용할 의존 객체를 준비하여 보관해 둔다.
-    Map<String,Object> objMap = new HashMap<>();
+    // Command 구현체가 사용할 의존 객체를 보관
     objMap.put("boardService", boardService);
     objMap.put("memberService", memberService);
     objMap.put("projectService", projectService);
     objMap.put("taskService", taskService);
     objMap.put("memberValidator", memberValidator);
 
-    registerCommands(objMap);
-
-    // 사용자 명령을 처리하는 객체를 맵에 보관한다.
-    HashMap<String,Command> commandMap = new HashMap<>();
-
-    commandMap.put("/board/add", new BoardAddHandler(boardService));
-    commandMap.put("/board/list", new BoardListHandler(boardService));
-    commandMap.put("/board/detail", new BoardDetailHandler(boardService));
-    commandMap.put("/board/update", new BoardUpdateHandler(boardService));
-    commandMap.put("/board/delete", new BoardDeleteHandler(boardService));
-    commandMap.put("/board/search", new BoardSearchHandler(boardService));
-
-    commandMap.put("/member/add", new MemberAddHandler(memberService));
-    commandMap.put("/member/list", new MemberListHandler(memberService));
-    commandMap.put("/member/detail", new MemberDetailHandler(memberService));
-    commandMap.put("/member/update", new MemberUpdateHandler(memberService));
-    commandMap.put("/member/delete", new MemberDeleteHandler(memberService));
-
-
-
-    commandMap.put("/project/add", new ProjectAddHandler(projectService, memberValidator));
-    commandMap.put("/project/list", new ProjectListHandler(projectService));
-    commandMap.put("/project/detail", new ProjectDetailHandler(projectService));
-    commandMap.put("/project/update", new ProjectUpdateHandler(projectService, memberValidator));
-    commandMap.put("/project/delete", new ProjectDeleteHandler(projectService));
-    commandMap.put("/project/search", new ProjectSearchHandler(projectService));
-    commandMap.put("/project/detailSearch", new ProjectDetailSearchHandler(projectService));
-    commandMap.put("/project/memberUpdate", new ProjectMemberUpdateHandler(projectService, memberValidator));
-    commandMap.put("/project/memberDelete", new ProjectMemberDeleteHandler(projectService));
-
-    commandMap.put("/task/add", new TaskAddHandler(taskService, projectService, memberValidator));
-    commandMap.put("/task/list", new TaskListHandler(taskService));
-    commandMap.put("/task/detail", new TaskDetailHandler(taskService));
-    commandMap.put("/task/update", new TaskUpdateHandler(taskService, projectService, memberValidator));
-    commandMap.put("/task/delete", new TaskDeleteHandler(taskService));
+    // Command 구현체를 자동 생성하여 맵에 등록
+    registerCommands();
 
     try {
 
@@ -183,7 +129,7 @@ public class ClientApp {
               System.out.println("안녕!");
               return;
             default:
-              Command commandHandler = commandMap.get(command);
+              Command commandHandler = (Command) objMap.get(command);
 
               if (commandHandler == null) {
                 System.out.println("실행할 수 없는 명령입니다.");
@@ -208,7 +154,7 @@ public class ClientApp {
     Prompt.close();
   }
 
-  private void registerCommands(Map<String, Object> objMap) throws Exception {
+  private void registerCommands() throws Exception {
     Properties commandProps = new Properties();
     commandProps.load(Resources.getResourceAsStream("com/eomcs/pms/conf/commands.properties"));
 
@@ -220,18 +166,46 @@ public class ClientApp {
       // 클래스 이름을 사용하여 .class 파일을 로딩한다.
       Class<?> clazz = Class.forName(className);
 
-      // 생성자 정보를 알아낸다. 첫 번째 생성자만 꺼낸다.
-      Constructor<?> constructor = clazz.getConstructors()[0];
+      // 클래스 정보를 이용하여 객체를 생성한다.
+      Object command = createCommand(clazz);
 
-      // 생성자의 파라미터 정보를 알아낸다.
-      Parameter[] params = constructor.getParameters();
+      // 생성된 객체를 객체 맵에 보관한다.
+      objMap.put((String)key, command);
 
-      // 각 파라미터의 타입을 알아낸다.
-      System.out.println(className);
-      for (Parameter p : params) {
-        System.out.println("===> " + p.getType().getName());
+      System.out.println("인스턴스 생성 ===> " + command.getClass().getName());
+    }
+  }
+
+  private Object createCommand(Class<?> clazz) throws Exception {
+    // 생성자 정보를 알아낸다. 첫 번째 생성자만 꺼낸다.
+    Constructor<?> constructor = clazz.getConstructors()[0];
+
+    // 생성자의 파라미터 정보를 알아낸다.
+    Parameter[] params = constructor.getParameters();
+
+    // 생성자를 호출할 때 넘겨 줄 값을 담을 컬렉션을 준비한다.
+    ArrayList<Object> args = new ArrayList<>();
+
+    // 각 파라미터의 타입을 알아낸 후 objMap에서 찾는다.
+    for (Parameter p : params) {
+      Class<?> paramType = p.getType();
+      args.add(findDependency(paramType));
+    }
+
+    // 생성자를 호출하여 인스턴스를 생성한다.
+    return constructor.newInstance(args.toArray());
+  }
+
+  private Object findDependency(Class<?> type) {
+    // 맵에서 값 목록을 꺼낸다.
+    Collection<?> values = objMap.values();
+
+    for (Object obj : values) {
+      if (type.isInstance(obj)) {
+        return obj;
       }
     }
+    return null;
   }
 
   private void printCommandHistory(Iterator<String> iterator) {

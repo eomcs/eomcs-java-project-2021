@@ -20,13 +20,9 @@
 
 - com.eomcs.ClientApp 클래스 변경
   - `commands.properties` 파일에 등록된 정보를 읽어서 `Command` 객체를 생성하여 객체 맵에 보관한다.
-  - 사용자가 입력한 명령을 처리할 때 객체 맵에서 `Command` 구현체를 찾는다.
+  - 사용자가 입력한 명령을 처리할 때 객체 맵에서 `Command` 구현체를 찾아 실행한다.
 
 ## 실습 결과
-- src/main/java/com/eomcs/mybatis/MybatisDaoFactory.java 추가
-- src/main/java/com/eomcs/mybatis/DaoWorker.java 추가
-- src/main/resources/com/eomcs/pms/mapper/XxxMapper.xml 변경
-- src/main/java/com/eomcs/pms/dao/ProjectDao.java 변경
-- src/main/java/com/eomcs/pms/service/impl/DefaultProjectService.java 변경
+- src/main/resources/com/eomcs/pms/conf/commands.properties 추가
 - src/main/java/com/eomcs/pms/ClientApp.java 변경
-- src/main/java/com/eomcs/pms/dao/mariadb 패키지 삭제
+
