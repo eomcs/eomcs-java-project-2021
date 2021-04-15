@@ -5,8 +5,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import com.eomcs.pms.table.DataTable;
-import com.oracle.truffle.api.impl.TruffleLocator.Response;
 
 public class ServerApp {
 
@@ -45,49 +43,37 @@ public class ServerApp {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
         ) {
 
-      loop: while (true) {
-        String line = null;
-        while (true) {
-          line = in.readLine();
+      while (true) {
+        // 클라이언트가 보낸 요청을 읽는다.
+        String requestLine = in.readLine();
 
-          // 클라이언트에서 보낸 것을 서버 창에 출력해 보자.
-          System.out.println(line);
-
-          if (line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {
-            in.readLine();
-            out.println("Goodbye!");
-            out.println();
-            out.flush();
-            break loop;
-          }
-        }
-
-        if (request.getCommand().equals("quit")) {
-          sendResponse(out, "success");
+        if (requestLine.equalsIgnoreCase("exit") || requestLine.equalsIgnoreCase("quit")) {
+          in.readLine(); // 요청의 끝을 의미하는 빈 줄을 읽는다.
+          out.println("Goodbye!");
+          out.println();
+          out.flush();
           break;
         }
 
-        DataTable dataTable = findDataTable(request.getCommand());
+        // 클라이언트 보낸 명령을 서버 창에 출력한다.
+        System.out.println(requestLine);
 
-        if (dataTable != null) {
-          Response response = new Response();
-          try {
-            dataTable.service(request, response);          
-            sendResponse(
-                out, 
-                "success", 
-                response.getDataList().toArray(new String[response.getDataList().size()]));
-
-          } catch (Exception e) {
-            sendResponse(
-                out, 
-                "error", 
-                e.getMessage() != null ? e.getMessage() : e.getClass().getName());
+        // 클라이언트가 보낸 데이터를 읽는다.
+        while (true) {
+          String line = in.readLine();
+          if (line.length() == 0) {
+            break;
           }
-
-        } else {
-          sendResponse(out, "error", "해당 요청을 처리할 수 없습니다!");
+          // 클라이언트에서 보낸 데이터를 서버 창에 출력해 보자.
+          System.out.println(line);
         }
+        System.out.println("------------------------------------");
+
+        // 클라이언트에게 응답한다.
+        out.println("OK");
+        out.printf("====> %s\n", requestLine);   
+        out.println();
+        out.flush();
       }
 
     } catch (Exception e) {

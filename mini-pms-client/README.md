@@ -68,11 +68,13 @@ CRLF                  -------------->
 
 - mini-pms-client
   - com.eomcs.pms.ClientApp 클래스 작성
-
+- mini-pms-server
+  - com.eomcs.pms.ServerApp 클래스 작성
 
 ## 실습 결과
-- src/main/resources/com/eomcs/pms/conf/commands.properties 삭제
-- src/main/java/com/eomcs/stereotype/Component.java 추가
-- src/main/java/com/eomcs/pms/handler/XxxHandler.java 변경
-- src/main/java/com/eomcs/pms/ClientApp.java 변경
+
+- mini-pms-client 
+  - src/main/java/com/eomcs/pms/ClientApp.java 추가
+- mini-pms-server 
+  - src/main/java/com/eomcs/pms/ServerApp.java 추가
 
