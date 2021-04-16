@@ -29,10 +29,9 @@
 
 ## 실습
 
-### 1단계: 클라이언트 프로젝트를 준비한다.
+### 1단계: 서버 프로젝트를 준비한다.
 
-- mini-pms-client 프로젝트를 만들고 준비한다.
-
+- mini-pms-server 프로젝트를 만들고 준비한다.
 
 ### 2단계: 클라이언트/서버 사이에 간단한 메시지를 주고 받는 기능을 구현한다.
 
@@ -64,12 +63,13 @@ CRLF                  -------------->
 받은 내용을 출력한다.
 ```
 
-- com.eomcs.pms.ClientApp 클래스 작성
+- com.eomcs.pms.ServerApp 클래스 작성
 - com.eomcs.util.Prompt 추가
-  - '26-c' 단계의 소스를 가져온다. 
+
+
 
 ## 실습 결과
 
-- src/main/java/com/eomcs/pms/ClientApp.java 추가
-- src/main/java/com/eomcs/util/Prompt.java 추가
+- src/main/java/com/eomcs/pms/ServerApp.java 추가 
+
 

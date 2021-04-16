@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import com.eomcs.util.concurrent.ThreadPool;
 
 public class ServerApp {
 
@@ -21,10 +20,6 @@ public class ServerApp {
   }
 
   public void service() {
-
-    // 스레드풀 준비
-    ThreadPool threadPool = new ThreadPool();
-
     // 클라이언트 연결을 기다리는 서버 소켓 생성
     try (ServerSocket serverSocket = new ServerSocket(this.port)) {
 
@@ -32,12 +27,7 @@ public class ServerApp {
 
       while (true) {
         Socket socket = serverSocket.accept();
-
-        // 예전 방식: 직접 스레드를 만들어 작업을 실행시킴
-        //new Thread(() -> processRequest(socket)).start();
-
-        // 새 방식: 작업 실행을 스레드풀에 맡긴다.
-        threadPool.execute(() -> processRequest(socket));
+        new Thread(() -> processRequest(socket)).start();
       }
 
     } catch (Exception e) {
