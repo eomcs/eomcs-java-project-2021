@@ -60,7 +60,9 @@ public class ClientApp {
         }
         System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
 
-        if (command.equalsIgnoreCase("quit") || command.equalsIgnoreCase("exit")) {
+        if (command.equalsIgnoreCase("quit") || 
+            command.equalsIgnoreCase("exit") ||
+            command.equalsIgnoreCase("serverstop")) {
           System.out.println("안녕!");
           break;
         }

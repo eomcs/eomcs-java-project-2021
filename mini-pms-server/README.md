@@ -31,18 +31,27 @@
 
 - `com.eomcs.pms.ServerApp` 변경
   - 백업: ServerApp01.java
-  - `stop` 명령을 수행했을 때 서버가 완전히 종료하지 못한다.
+
+### 3단계 - 서버 종료 기능을 추가한다.
+
+- `com.eomcs.pms.ServerApp` 변경
+  - `serverstop` 명령이 들어왔을 때 서버를 종료한다.
+  - main 스레드를 종료했으나 JVM을 완전히 종료하지 못했다.
   - 왜냐하면 스레드풀에 실행 중인 스레드가 있기 때문이다. 
+  - 한 개의 스레드라도 실행 중인 상태라면 JVM은 종료되지 못한다.
+  - 백업: ServerApp02.java
 
-### 3단계 - 스레드풀 종료 기능을 추가한다.
+### 4단계 - 스레드풀의 모든 스레드를 종료시키는 기능을 추가한다.
 
+- `com.eomcs.pms.ServerApp` 변경
+  - `serverstop` 명령을 받았을 때 스레드풀을 종료시킨다.
 - `com.eomcs.util.concurrent.ThreadPool` 변경
   - 스레드풀이 관리하는 스레드들을 종료하는 `shutdown()` 메서드를 추가한다.
-- `com.eomcs.pms.ServerApp` 변경
-  - `stop` 명령이 들어오면 `ThreadPool.shutdown()` 을 통해 스레드를 종료시킨다.
+- `com.eomcs.util.concurrent.ThreadPool$Executor` 변경
+  - `isStop` 값이 `true` 일 때 run() 메서드를 종료한다.
 
 ## 실습 결과
-- src/main/java/com/eomcs/util/concurrent/ThreadPool.java 추가
+- src/main/java/com/eomcs/util/concurrent/ThreadPool.java 변경
 - src/main/java/com/eomcs/pms/ServerApp.java 변경
 
 

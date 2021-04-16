@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import com.eomcs.util.concurrent.ThreadPool;
 
-public class ServerApp {
+public class ServerApp02 {
 
   int port;
 
@@ -15,11 +15,11 @@ public class ServerApp {
   boolean isStop;
 
   public static void main(String[] args) {
-    ServerApp app = new ServerApp(8888);
+    ServerApp02 app = new ServerApp02(8888);
     app.service();
   }
 
-  public ServerApp(int port) {
+  public ServerApp02(int port) {
     this.port = port;
   }
 
@@ -46,11 +46,6 @@ public class ServerApp {
       System.out.println("서버 실행 중 오류 발생!");
       e.printStackTrace();
     }
-
-    // 스레드풀의 모든 스레드를 종료시킨다.
-    // => 단 현재 접속 중인 스레드에 대해서는 작업을 완료할 때까지 기다린다.
-    threadPool.shutdown();
-
     System.out.println("서버 종료!");
   }
 

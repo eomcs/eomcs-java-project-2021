@@ -7,12 +7,9 @@ import java.util.List;
 // - 스레드를 생성하고 유지한다.
 // - 스레드의 재사용을 관리한다.
 // 
-public class ThreadPool {
+public class ThreadPool01 {
 
   int threadCount;
-
-  // 스레드의 상태를 설정한다.
-  boolean isStop;
 
   // 스레드에게 작업을 주면 실행을 하도록 기존 스레드를 '입맛에 맞게 변경(customizing)'한다.
   class Executor extends Thread {
@@ -37,10 +34,6 @@ public class ThreadPool {
           try {
             // `작업하라`는 알림이 올 때까지 이 스레드는 기다린다.
             this.wait();
-
-            if (isStop) {
-              break; // 반복문을 나가고, run() 메서드를 종료하면 스레드는 멈춘다!
-            }
           } catch (Exception e) {
             System.out.println("스레드를 대기시키는 중에 오류 발생!");
             break;
@@ -49,18 +42,10 @@ public class ThreadPool {
           // 작업을 실행한다.
           this.task.run();
 
-          // 스레드의 작업이 끝난 후 스레드를 종료하라는 상태라면,
-          // 즉시 run() 메서드를 나간다.
-          if (isStop) {
-            break;
-          }
-
           // 작업이 끝난 후 자신을 스레드풀로 돌려 보낸다.
           returnExecutor(this);
         }
       }
-
-      System.out.println(this.getName() + " 스레드 종료!");
     }
   }
 
@@ -100,18 +85,6 @@ public class ThreadPool {
 
   private void returnExecutor(Executor executor) {
     executors.add(executor);
-  }
-
-  public void shutdown() {
-    // 스레드의 실행 상태를 종료 상태로 설정한다.
-    isStop = true;
-
-    // 스레드 목록에 들어 있는 모든 스레드를 깨운다.
-    // => 스레드가 깨어나면 제일 먼저 isStop 변수의 값을 검사하여 
-    //    true이면 스레드를 멈출 것이다.
-    for (Executor executor : executors) {
-      executor.setTask(null); // 터치!!
-    }
   }
 }
 
