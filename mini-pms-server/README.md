@@ -71,8 +71,8 @@
   - 클라이언트 응답 정보를 다루는 객체를 정의한다.
 - `com.eomcs.pms.handler.Command` 인터페이스 변경
   - `service()` 를 `service(CommandRequest, CommandResponse)` 로 변경한다.
-  
 - `com.eomcs.pms.ServerApp` 클래스 변경
+  - 클라이언트 요청이 들어 왔을 때 해당 요청을 처리할 Command 객체를 찾아 실행한다.
 
 
 ## 실습 결과
