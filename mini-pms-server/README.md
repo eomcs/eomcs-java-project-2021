@@ -12,7 +12,7 @@
 
 ## 실습
 
-- **mini-pms-26-c-server** 프로젝트의 소스 파일을 가지고 작업한다.
+- **mini-pms-26-c-client** 프로젝트의 소스 파일을 가지고 작업한다.
 
 
 ### 1단계 - 프로젝트에 라이브러리 추가하기   
@@ -73,6 +73,13 @@
   - `service()` 를 `service(CommandRequest, CommandResponse)` 로 변경한다.
 - `com.eomcs.pms.ServerApp` 클래스 변경
   - 클라이언트 요청이 들어 왔을 때 해당 요청을 처리할 Command 객체를 찾아 실행한다.
+- `com.eomcs.pms.handler.HelloHandler` 클래스 복사
+  - 기존 프로젝트에서 HelloHandler 클래스 가져와서 새 인터페이스에 맞게 변경한다.
+
+### 11단계 - 게시글 관련 Command 구현체를 새 아키텍처에 맞게 변경한다.
+
+- `com.eomcs.pms.handler.BoardListHandler` 클래스 복사 및 변경
+
 
 
 ## 실습 결과
