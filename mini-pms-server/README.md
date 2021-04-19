@@ -63,6 +63,17 @@
   - Service 객체를 생성하는 코드를 옮긴다.
   - Command 구현체를 자동 생성하는 코드를 옮긴다.
 
+### 10단계 - 클라이언트 요청에 대해 Command 구현체를 실행하도록 코드를 변경한다.
+
+- `com.eomcs.util.CommandRequest` 클래스 생성
+  - 클라이언트 요청 정보를 다루는 객체를 정의한다.
+- `com.eomcs.util.CommandResponse` 클래스 생성
+  - 클라이언트 응답 정보를 다루는 객체를 정의한다.
+- `com.eomcs.pms.handler.Command` 인터페이스 변경
+  - `service()` 를 `service(CommandRequest, CommandResponse)` 로 변경한다.
+  
+- `com.eomcs.pms.ServerApp` 클래스 변경
+
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/ServerApp.java 변경
