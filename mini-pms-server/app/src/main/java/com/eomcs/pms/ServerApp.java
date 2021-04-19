@@ -1,13 +1,34 @@
 package com.eomcs.pms;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import com.eomcs.mybatis.MybatisDaoFactory;
+import com.eomcs.pms.dao.BoardDao;
+import com.eomcs.pms.dao.MemberDao;
+import com.eomcs.pms.dao.ProjectDao;
+import com.eomcs.pms.dao.TaskDao;
+import com.eomcs.pms.handler.MemberValidator;
+import com.eomcs.pms.service.BoardService;
+import com.eomcs.pms.service.MemberService;
+import com.eomcs.pms.service.ProjectService;
+import com.eomcs.pms.service.TaskService;
+import com.eomcs.pms.service.impl.DefaultBoardService;
+import com.eomcs.pms.service.impl.DefaultMemberService;
+import com.eomcs.pms.service.impl.DefaultProjectService;
+import com.eomcs.pms.service.impl.DefaultTaskService;
 
 public class ServerApp {
 
@@ -16,19 +37,71 @@ public class ServerApp {
   // 서버의 상태를 설정
   boolean isStop;
 
+  // 객체를 보관할 컨테이너 준비
+  Map<String,Object> objMap = new HashMap<>();
+
   public static void main(String[] args) {
-    ServerApp app = new ServerApp(8888);
-    app.service();
+
+    try {
+      ServerApp app = new ServerApp(8888);
+      app.service();
+
+    } catch (Exception e) {
+      System.out.println("서버를 시작하는 중에 오류 발생!");
+      e.printStackTrace();
+    }
   }
 
   public ServerApp(int port) {
     this.port = port;
   }
 
-  public void service() {
+  public void service() throws Exception {
 
     // 스레드풀 준비
     ExecutorService threadPool = Executors.newCachedThreadPool();
+
+    // 1) Mybatis 프레임워크 관련 객체 준비
+    // => Mybatis 설정 파일을 읽을 입력 스트림 객체 준비
+    InputStream mybatisConfigStream = Resources.getResourceAsStream(
+        "com/eomcs/pms/conf/mybatis-config.xml");
+
+    // => SqlSessionFactory 객체 준비
+    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatisConfigStream);
+
+    // => DAO가 사용할 SqlSession 객체 준비
+    //    - 수동 commit 으로 동작하는 SqlSession 객체를 준비한다.
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
+
+    // 2) DAO 구현체를 자동으로 만들어주는 공장 객체를 준비한다.
+    MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSession);
+
+    // 3) 서비스 객체가 사용할 DAO 객체 준비
+    BoardDao boardDao = daoFactory.createDao(BoardDao.class);
+    MemberDao memberDao = daoFactory.createDao(MemberDao.class);
+    ProjectDao projectDao = daoFactory.createDao(ProjectDao.class);
+    TaskDao taskDao = daoFactory.createDao(TaskDao.class);
+
+    // 4) Command 구현체가 사용할 의존 객체(서비스 객체 + 도우미 객체) 준비
+    // => 서비스 객체 생성
+    BoardService boardService = new DefaultBoardService(sqlSession, boardDao);
+    MemberService memberService = new DefaultMemberService(sqlSession, memberDao);
+    ProjectService projectService = new DefaultProjectService(sqlSession, projectDao, taskDao);
+    TaskService taskService = new DefaultTaskService(sqlSession, taskDao);
+
+    // => 도우미 객체 생성
+    MemberValidator memberValidator = new MemberValidator(memberService);
+
+    // => Command 구현체가 사용할 의존 객체 보관
+    objMap.put("boardService", boardService);
+    objMap.put("memberService", memberService);
+    objMap.put("projectService", projectService);
+    objMap.put("taskService", taskService);
+    objMap.put("memberValidator", memberValidator);
+
+    // Command 구현체를 자동 생성하여 맵에 등록
+    registerCommands();
+
 
     // 클라이언트 연결을 기다리는 서버 소켓 생성
     try (ServerSocket serverSocket = new ServerSocket(this.port)) {
@@ -62,6 +135,7 @@ public class ServerApp {
 
         // 종료를 재시도 한다.
         // => 대기 중인 작업도 취소한다.
+        // => 실행 중인 스레드 중에서 Not Runnable 상태에 있을 경우에도 강제로 종료시킨다.
         threadPool.shutdownNow();
 
         while (!threadPool.awaitTermination(10, TimeUnit.SECONDS)) {
