@@ -12,7 +12,11 @@ public class ClientApp {
   int port;
 
   public static void main(String[] args) {
-    ClientApp app = new ClientApp("localhost", 8888);
+
+    String serverAddress = Prompt.inputString("서버 주소? ");
+    int port = Prompt.inputInt("서버 포트? ");
+
+    ClientApp app = new ClientApp(serverAddress, port);
 
     try {
       app.execute();
