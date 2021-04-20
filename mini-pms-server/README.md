@@ -67,6 +67,7 @@
 
 - `com.eomcs.util.CommandRequest` 클래스 생성
   - 클라이언트 요청 정보를 다루는 객체를 정의한다.
+  - 백업: CommandRequest01.java
 - `com.eomcs.util.CommandResponse` 클래스 생성
   - 클라이언트 응답 정보를 다루는 객체를 정의한다.
 - `com.eomcs.pms.handler.Command` 인터페이스 변경
@@ -76,11 +77,45 @@
 - `com.eomcs.pms.handler.HelloHandler` 클래스 복사
   - 기존 프로젝트에서 HelloHandler 클래스 가져와서 새 인터페이스에 맞게 변경한다.
 
-### 11단계 - 게시글 관련 Command 구현체를 새 아키텍처에 맞게 변경한다.
+### 11단계 - 목록 조회 Command 구현체를 새 아키텍처에 맞게 변경한다.
 
 - `com.eomcs.pms.handler.BoardListHandler` 클래스 복사 및 변경
+- `com.eomcs.pms.handler.MemberListHandler` 클래스 복사 및 변경
+- `com.eomcs.pms.handler.ProjectListHandler` 클래스 복사 및 변경
 
+### 12단계 - 입력/변경/삭제 Command 구현체를 새 아키텍처에 맞게 변경한다.
 
+#### 프로토콜 변경
+- 클라이언트에게 입력 값을 요구할 수 있도록 프로토콜을 변경한다.
+
+```
+[클라이언트]              [서버]
+명령         -----------> 작업 수행
+예) /board/detail (CRLF)
+    CRLF
+출력         <----------- 출력 문자열
+                          예) 번호?
+사용자 입력  <----------- 입력을 요구하는 명령
+                          예) !{}!
+입력값       -----------> 작업 수행
+예) 1
+출력         <----------- 출력 문자열
+                          예) 제목: 하하하
+출력         <----------- 출력 문자열
+                          예) 내용: ㅋㅋㅋ
+출력         <----------- 출력 문자열
+                          예) 작성자: 홍길동
+완료         <----------- 빈 문자열
+                          예) CRLF
+```
+
+- `com.eomcs.util.Prompt` 클래스 복사 및 변경
+  - 클라이언트 소켓을 통해 값을 입력 받는 기능을 추가한다.
+  - Command 구현체가 사용할 수 있도록 `CommandRequest` 에 보관한다. 
+- `com.eomcs.util.CommandRequest` 클래스 변경
+  - `Prompt` 필드와 게터를 추가한다.
+- `com.eomcs.pms.handler.BoardAddHandler` 클래스 복사 및 변경
+- `com.eomcs.pms.handler.BoardDetailHandler` 클래스 복사 및 변경
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/ServerApp.java 변경

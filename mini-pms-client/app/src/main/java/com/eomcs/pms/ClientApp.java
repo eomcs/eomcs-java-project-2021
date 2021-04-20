@@ -49,18 +49,31 @@ public class ClientApp {
           continue;
         }
 
-        // 서버에 명령을 보낸 후 그 결과를 받아 출력한다.
+        // 서버에게 명령을 보낸다.
         out.println(command);
         out.println();
         out.flush();
 
+        // 서버가 보낸 데이터를 출력한다.
         String line = null;
         while (true) {
           line = in.readLine();
+
           if (line.length() == 0) {
             break;
+
+          } else if (line.equals("!{}!")) {
+            // 서버에서 입력을 요구한다면
+            // - 사용자로부터 입력을 받는다.
+            String input = Prompt.inputString("입력> ");
+
+            // - 입력 받은 내용을 서버에게 보낸다.
+            out.println(input);
+            out.flush();
+
+          } else {
+            System.out.println(line);
           }
-          System.out.println(line);
         }
         System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
 

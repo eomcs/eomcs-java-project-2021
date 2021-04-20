@@ -38,6 +38,7 @@ import com.eomcs.pms.service.impl.DefaultTaskService;
 import com.eomcs.stereotype.Component;
 import com.eomcs.util.CommandRequest;
 import com.eomcs.util.CommandResponse;
+import com.eomcs.util.Prompt;
 
 public class ServerApp {
 
@@ -169,6 +170,9 @@ public class ServerApp {
       // 클라이언트가 보낸 명령을 Command 구현체에게 전달하기 쉽도록 객체에 담는다.
       InetSocketAddress remoteAddr = (InetSocketAddress) clientSocket.getRemoteSocketAddress();
 
+      // 클라이언트로부터 값을 입력 받을 때 사용할 객체를 준비한다.
+      Prompt prompt = new Prompt(in, out);
+
       while (true) {
         // 클라이언트가 보낸 요청을 읽는다.
         String requestLine = in.readLine();
@@ -214,7 +218,8 @@ public class ServerApp {
         CommandRequest request = new CommandRequest(
             requestLine, 
             remoteAddr.getHostString(),
-            remoteAddr.getPort());
+            remoteAddr.getPort(), 
+            prompt);
 
         CommandResponse response = new CommandResponse(out);
 
