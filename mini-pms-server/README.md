@@ -85,25 +85,38 @@ x1 님 환영합니다.
 
 다음과 같이 동작하도록 구현한다.
 ```
-명령> /whoami
+명령> /userInfo
 사용자번호: 12
 이름: aaa
 이메일: aaa@test.com
 사진: aaa.gif
-전화: 1111
-등록일: 2020-1-1
 
-명령> /whoami
+명령> /userInfo
 로그인 하지 않았습니다!
 ```
 
-- com.eomcs.pms.handler.WhoamiCommand 생성
+- com.eomcs.pms.handler.UserInfoHandler 생성
   - 현재 로그인 사용자 정보를 출력한다.
-- com.eomcs.pms.App 변경
-  - 커맨드 객체를 등록한다.
 
+### 4단계 - 로그아웃을 구현한다.
 
-### 4단계 - 게시글이나 프로젝트를 등록, 변경할 때 로그인 정보를 사용한다.
+다음과 같이 동작하도록 구현한다.
+```
+명령> /logout
+aa 님 안녕히 가세요!
+
+명령> /userInfo
+로그인 하지 않았습니다!
+
+명령> /logout
+로그인 하지 않았습니다!
+
+```
+
+- com.eomcs.pms.handler.LogoutHandler 생성
+  - 현재 세션을 초기화시킨다.
+
+### 6단계 - 게시글이나 프로젝트를 등록, 변경할 때 로그인 정보를 사용한다.
 
 - com.eomcs.pms.handler.BoardAddCommand 변경
   - 게시글 작성자 정보를 입력 받지 않고 로그인 정보를 사용하도록 변경한다.
