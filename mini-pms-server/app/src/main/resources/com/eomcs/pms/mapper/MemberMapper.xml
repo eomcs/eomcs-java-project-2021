@@ -59,9 +59,7 @@
       no,
       name,
       email,
-      photo,
-      tel,
-      cdt 
+      photo
     from pms_member 
     where email = #{email} and password = password(#{password})
   </select>

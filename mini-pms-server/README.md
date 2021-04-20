@@ -51,6 +51,7 @@ x1 님 환영합니다.
 
 - com.eomcs.pms.handler.LoginHandler 생성
   - 사용자 이메일과 암호를 받아 인증을 수행한다.
+  - 백업: LoginHandler01.java
 - com.eomcs.pms.service.MemberService 변경
   - `get(email, password)` 메서드를 추가한다.
 - com.eomcs.pms.service.impl.DefaultMemberService 변경
@@ -60,6 +61,24 @@ x1 님 환영합니다.
 - src/main/resources/com/eomcs/pms/mapper/MemberMapper.xml 변경
   - `findByEmailPassword` select 문을 추가한다.
 
+### 2단계 - 세션 객체를 이용하여 로그인 사용자 정보를 보관한다.
+
+세션(Session) 
+- 특정 기간 동안 사용하는 객체를 가리킨다.
+  - 예) `로그인 중인 기간` 동안 사용하는 객체
+  - 예) 한 작업을 여러 단계에 거치는 사용하는 객체
+
+
+- com.eomcs.util.Session 추가
+  - 클라이언트가 접속하는 동안 보관소로 사용할 객체를 정의한다.
+- com.eomcs.uitl.CommandRequest 변경
+  - 세션 객체를 저장할 필드를 추가하고 생성자를 변경한다.
+  - 세터를 추가한다.
+- com.eomcs.pms.ServerApp 변경
+  - 접속한 클라이언트와 통신하는 동안 사용할 세션 객체를 준비한다.
+  - 세션 객체를 `CommandRequest` 에 보관하여 `Command` 구현체의 `service()`를 호출할 때 전달한다.
+- com.eomcs.pms.handler.LoginHandler 변경
+  - 로그인 한 사용자의 정보를 다른 Command 구현체(핸들러)가 사용할 수 있도록 세션 객체에 보관한다.
 
 
 ### 3단계 - 로그인 사용자 정보를 조회한다.
