@@ -39,7 +39,7 @@ public class ProjectMemberDeleteHandler implements Command {
     for (Member m : project.getMembers()) {
       out.printf("  %s(%d)\n", m.getName(), m.getNo());
     }
-    out.println();
+    out.println("---------------------------");
 
     String input = prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
     if (!input.equalsIgnoreCase("Y")) {
