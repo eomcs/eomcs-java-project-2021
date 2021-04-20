@@ -1,133 +1,169 @@
-# 27-d. 애플리케이션을 클라이언트/서버 구조로 변경하기 : PMS 코드를 C/S로 분리
+# 28. 사용자 인증(authentication)하기 : 로그인/로그아웃 구현
 
 이번 훈련에서는,
-- 기존의 **PMS 코드** 를 클라이언트/서버로 분리할 것이다.
-
+- **로그인/로그아웃** 을 다루는 방법을 연습한다.
 
 ## 훈련 목표
-- 
+- **로그인/로그아웃** 의 구현을 연습한다.
+- 커맨드 객체 간에 작업 결과를 공유하는 방법을 배운다.
 
 ## 훈련 내용
-- 
+- 커맨드 객체 간에 작업 결과를 공유하기 위해 `Command` 인터페이스의 규칙을 변경한다.
+- `Command` 의 변경에 맞춰 커맨드 구현체를 모두 변경한다.
+- *로그인* , *로그아웃*, *로그인 사용자 정보 조회* 를 처리할 커맨드 클래스를 작성한다.
+- *로그인* 에 필요한 데이터 처리 작업을 DAO에 추가한다.
+- 게시글을 입력하거나 프로젝트를 입력할 때 로그인 정보를 사용한다.
 
 ## 실습
 
-- **mini-pms-26-c-client** 프로젝트의 소스 파일을 가지고 작업한다.
+### 1단계 - 커맨드 객체 간의 작업 결과를 공유하기 위해 `Command` 인터페이스의 규칙을 변경한다.
+
+- com.eomcs.pms.handler.Command 인터페이스 변경
+  - `execute()` 에 context 맵 객체를 받는 파라미터를 추가한다.
+- com.eomcs.pms.handler.XxxCommand 클래스 변경
+  - `Command` 의 변경에 맞춰 메서드 시그너처(signature)를 변경한다.
 
 
-### 1단계 - 프로젝트에 라이브러리 추가하기   
+### 1단계 - 로그인을 처리하는 `LoginHandler` 클래스를 작성한다.
 
-- build.gradle 변경
-  - MariaDB JDBC 드라이버 추가 
-  - Mybatis 라이브러리 추가
-  - `$ gradle eclipse` 실행
-  - 이클립스에서 프로젝트 갱신
+다음과 같이 동작하도록 로그인을 구현한다.
+```
+명령> /login
+[로그인]
+이메일? 
+입력> x1@test.com
+암호? 
+입력> 2222
+사용자 정보가 맞지 않습니다.
 
-### 2단계 - Mybatis 설정 파일 및 SQL 매퍼 파일을 가져온다.  
+명령> /login
+[로그인]
+이메일? 
+입력> x1@test.com
+암호? 
+입력> 2222
+x1 님 환영합니다.
 
-- `mini-pms-26-c-client/app/src/main/resources` 폴더를 가져온다.
-  - `src/main/resoures/com/eomcs/pms/conf/*` 폴더 및 파일 복사.
-  - `src/main/resoures/com/eomcs/pms/mapper/*` 폴더 및 파일 복사.
-
-### 3단계 - 도메인 클래스를 가져온다.
-
-- `mini-pms-26-c-client/app/src/main/com/eomcs/pms/domain` 패키지를 가져온다.
-
-### 4단계 - DAO 인터페이스를 가져온다.
-
-- `mini-pms-26-c-client/app/src/main/com/eomcs/pms/dao` 패키지를 가져온다.
-
-### 5단계 - 서비스 인터페이스와 구현체를 가져온다.
-
-- `mini-pms-26-c-client/app/src/main/com/eomcs/pms/service` 패키지를 가져온다.
-
-### 6단계 - DAO 인터페이스 자동 생성과 관련된 클래스나 패키지를 가져온다.
-
-- `mini-pms-26-c-client/app/src/main/com/eomcs/mybatis` 패키지를 가져온다.
-
-### 7단계 - @Component 애노테이션 관련 클래스나 패키지를 가져온다.
-
-- `mini-pms-26-c-client/app/src/main/com/eomcs/stereotype` 패키지를 가져온다.
-
-### 8단계 - 기존의 `ClientApp` 클래스에 있는 코드를 `ServerApp` 으로 옮긴다.
-
-- `com.eomcs.pms.ServerApp` 클래스 변경
-  - `mini-pms-26-c-client/app/src/main/com/eomcs/pms/ClientApp` 클래스의 코드를 가져온다.
-  - Mybatis 프레임워크와 관련된 코드를 옮긴다.
-  - DAO 구현체를 자동으로 만들어주는 공장 객체 생성 코드를 옮긴다.
-  - DAO 공장 객체를 사용해서 DAO 객체를 생성하는 코드를 옮긴다.
-  - Service 객체를 생성하는 코드를 옮긴다.
-  - Command 구현체를 자동 생성하는 코드를 옮긴다.
-
-### 9단계 - 클라이언트 요청에 대해 Command 구현체를 실행하도록 코드를 변경한다.
-
-- `com.eomcs.util.CommandRequest` 클래스 생성
-  - 클라이언트 요청 정보를 다루는 객체를 정의한다.
-  - 백업: CommandRequest01.java
-- `com.eomcs.util.CommandResponse` 클래스 생성
-  - 클라이언트 응답 정보를 다루는 객체를 정의한다.
-- `com.eomcs.pms.handler.Command` 인터페이스 복사 및 변경
-  - `service()` 를 `service(CommandRequest, CommandResponse)` 로 변경한다.
-- `com.eomcs.pms.ServerApp` 클래스 변경
-  - 클라이언트 요청이 들어 왔을 때 해당 요청을 처리할 Command 객체를 찾아 실행한다.
-- `com.eomcs.pms.handler.HelloHandler` 클래스 복사 및 변경
-  - 기존 프로젝트에서 HelloHandler 클래스 가져와서 새 인터페이스에 맞게 변경한다.
-
-### 10단계 - 목록 조회 Command 구현체를 새 아키텍처에 맞게 변경한다.
-
-- `com.eomcs.pms.handler.BoardListHandler` 클래스 복사 및 변경
-- `com.eomcs.pms.handler.MemberListHandler` 클래스 복사 및 변경
-- `com.eomcs.pms.handler.ProjectListHandler` 클래스 복사 및 변경
-
-### 11단계 - 입력/변경/삭제 Command 구현체를 새 아키텍처에 맞게 변경한다.
-
-#### 프로토콜 변경
-- 클라이언트에게 입력 값을 요구할 수 있도록 프로토콜을 변경한다.
+명령> /login
+로그인 되어 있습니다!
 
 ```
-[클라이언트]              [서버]
-명령         -----------> 작업 수행
-예) /board/detail (CRLF)
-    CRLF
-출력         <----------- 출력 문자열
-                          예) 번호?
-사용자 입력  <----------- 입력을 요구하는 명령
-                          예) !{}!
-입력값       -----------> 작업 수행
-예) 1
-출력         <----------- 출력 문자열
-                          예) 제목: 하하하
-출력         <----------- 출력 문자열
-                          예) 내용: ㅋㅋㅋ
-출력         <----------- 출력 문자열
-                          예) 작성자: 홍길동
-완료         <----------- 빈 문자열
-                          예) CRLF
+
+- com.eomcs.pms.handler.LoginHandler 생성
+  - 사용자 이메일과 암호를 받아 인증을 수행한다.
+- com.eomcs.pms.service.MemberService 변경
+  - `get(email, password)` 메서드를 추가한다.
+- com.eomcs.pms.service.impl.DefaultMemberService 변경
+  - `get(email, password)` 메서드를 구현한다.  
+- com.eomcs.pms.dao.MemberDao 인터페이스 변경  
+  - `findByEmailPassword()` 메서드를 추가한다.
+- src/main/resources/com/eomcs/pms/mapper/MemberMapper.xml 변경
+  - `findByEmailPassword` select 문을 추가한다.
+
+
+
+### 3단계 - 로그인 사용자 정보를 조회한다.
+
+다음과 같이 동작하도록 구현한다.
+```
+명령> /whoami
+사용자번호: 12
+이름: aaa
+이메일: aaa@test.com
+사진: aaa.gif
+전화: 1111
+등록일: 2020-1-1
+
+명령> /whoami
+로그인 하지 않았습니다!
 ```
 
-- `com.eomcs.util.Prompt` 클래스 복사 및 변경
-  - 클라이언트 소켓을 통해 값을 입력 받는 기능을 추가한다.
-  - Command 구현체가 사용할 수 있도록 `CommandRequest` 에 보관한다. 
-- `com.eomcs.util.CommandRequest` 클래스 변경
-  - `Prompt` 필드와 게터를 추가한다.
-- `com.eomcs.pms.handler.BoardXxxHandler` 클래스 복사 및 변경
-- `com.eomcs.pms.handler.ProjectXxxHandler` 클래스 복사 및 변경
-- `com.eomcs.pms.handler.MemberXxxHandler` 클래스 복사 및 변경
-- `com.eomcs.pms.handler.TaskXxxHandler` 클래스 복사 및 변경
+- com.eomcs.pms.handler.WhoamiCommand 생성
+  - 현재 로그인 사용자 정보를 출력한다.
+- com.eomcs.pms.App 변경
+  - 커맨드 객체를 등록한다.
+
+
+### 4단계 - 게시글이나 프로젝트를 등록, 변경할 때 로그인 정보를 사용한다.
+
+- com.eomcs.pms.handler.BoardAddCommand 변경
+  - 게시글 작성자 정보를 입력 받지 않고 로그인 정보를 사용하도록 변경한다.
+```
+명령> /board/add
+[게시물 등록]
+제목? test
+내용? okok
+게시글을 등록하였습니다.
+
+명령>
+```
+
+- com.eomcs.pms.handler.ProjectAddCommand 변경
+  - 프로젝트 정보를 등록할 때 관리자는 로그인 사용자로 지정한다.
+```
+명령> /project/add
+[프로젝트 등록]
+프로젝트명? projectA
+내용? test..ok
+시작일? 2020-1-1
+종료일? 2020-2-2
+팀원?(완료: 빈 문자열) bbb
+팀원?(완료: 빈 문자열) ccc
+팀원?(완료: 빈 문자열) x1
+팀원?(완료: 빈 문자열)
+
+명령>
+```
+
+- com.eomcs.pms.handler.ProjectUpdateCommand 변경
+  - 프로젝트 정보를 변경할 때 관리자는 변경하지 않는다.
+```
+명령> /project/update
+[프로젝트 변경]
+번호? 5
+프로젝트명(xxx)? okok
+내용(xxxxxxxx)? nono
+시작일(2020-02-02)? 2020-3-3
+종료일(2020-03-03)? 2020-4-4
+팀원?(완료: 빈 문자열) aaa
+팀원?(완료: 빈 문자열) bbb
+팀원?(완료: 빈 문자열) ddd
+팀원?(완료: 빈 문자열)
+정말 변경하시겠습니까?(y/N) y
+프로젝트를 변경하였습니다.
+
+명령>
+```
+
+### 5단계 - 로그아웃을 처리한다.
+
+다음과 같이 동작하게 구현한다.
+```
+명령> /logout
+aaa 님 안녕히 가세요!   <--- 로그인 상태일 경우
+
+명령> /logout
+로그인 된 상태가 아닙니다!   <--- 로그인 상태가 아닐 경우
+
+명령> /whoami
+로그인 하지 않았습니다!
+```
+
+- com.eomcs.pms.handler.LogoutCommand 생성
+  - context 맵 객체에 보관된 로그인 회원 정보를 제거한다.
+- com.eomcs.pms.App 변경
+  - 커맨드 객체를 등록한다.
+
 
 ## 실습 결과
-- build.gradle 변경
-- src/main/resoures/com/eomcs/pms/conf/Xxx 추가
-- src/main/resoures/com/eomcs/pms/mapper/Xxx 추가
-- src/main/resoures/com/eomcs/mybatis/Xxx 추가
-- src/main/resoures/com/eomcs/stereotype/Xxx 추가
-- src/main/java/com/eomcs/pms/domain/Xxx.java 추가
-- src/main/java/com/eomcs/pms/dao/Xxx.java 추가
-- src/main/java/com/eomcs/pms/service/Xxx.java 추가
-- src/main/java/com/eomcs/util/CommandRequest.java 추가
-- src/main/java/com/eomcs/util/CommandResponse.java 추가
-- src/main/java/com/eomcs/util/Prompt.java 추가
-- src/main/java/com/eomcs/pms/handler/Xxx.java 추가
-- src/main/java/com/eomcs/pms/ServerApp.java 변경
-
-
+- src/main/java/com/eomcs/pms/handler/Command.java 변경
+- src/main/java/com/eomcs/pms/handler/XxxCommand.java 변경
+- src/main/java/com/eomcs/pms/dao/MemberDao.java 변경
+- src/main/java/com/eomcs/pms/dao/mariadb/MemberDaoImpl.java 변경
+- src/main/java/com/eomcs/pms/handler/LoginCommand.java 생성
+- src/main/java/com/eomcs/pms/handler/WhoamiCommand.java 생성
+- src/main/java/com/eomcs/pms/handler/LogoutCommand.java 생성
+- src/main/java/com/eomcs/pms/handler/BoardAddCommand.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectAddCommand.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectUpdateCommand.java 변경
+- src/main/java/com/eomcs/pms/App.java 변경
