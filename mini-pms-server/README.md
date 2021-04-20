@@ -1,4 +1,4 @@
-# 28. 사용자 인증(authentication)하기 : 로그인/로그아웃 구현
+# 28-a. 사용자 인증(authentication)하기 : 로그인/로그아웃 구현 + 세션 도입
 
 이번 훈련에서는,
 - **로그인/로그아웃** 을 다루는 방법을 연습한다.
@@ -116,9 +116,9 @@ aa 님 안녕히 가세요!
 - com.eomcs.pms.handler.LogoutHandler 생성
   - 현재 세션을 초기화시킨다.
 
-### 6단계 - 게시글이나 프로젝트를 등록, 변경할 때 로그인 정보를 사용한다.
+### 6단계 - 게시글 등록이나 변경, 삭제할 때 로그인 정보를 사용한다.
 
-- com.eomcs.pms.handler.BoardAddCommand 변경
+- com.eomcs.pms.handler.BoardAddHandler 변경
   - 게시글 작성자 정보를 입력 받지 않고 로그인 정보를 사용하도록 변경한다.
 ```
 명령> /board/add
@@ -127,10 +127,59 @@ aa 님 안녕히 가세요!
 내용? okok
 게시글을 등록하였습니다.
 
-명령>
+명령> /board/add
+[게시물 등록]
+로그인 하지 않았습니다!
 ```
 
-- com.eomcs.pms.handler.ProjectAddCommand 변경
+- com.eomcs.pms.handler.BoardUpdateHandler 변경
+  - 로그인 사용자가 게시글을 작성한 사용자일 때만 게시글을 변경할 수 있다.
+```
+명령> /board/update
+[게시물 변경]
+번호?
+입력> 20
+제목(haha)? 
+입력> test
+내용(hoho)? 
+입력> okok
+게시글을 변경하였습니다.
+
+명령> /board/update
+[게시물 변경]
+번호?
+입력> 20
+변경 권한이 없습니다!
+
+명령> /board/update
+[게시물 변경]
+로그인 하지 않았습니다!
+```
+
+- com.eomcs.pms.handler.BoardDeleteHandler 변경
+  - 로그인 사용자가 게시글 작성자일 때만 게시글을 삭제할 수 있다.
+```
+명령> /board/delete
+[게시물 삭제]
+번호? 
+입력> 20
+정말 삭제하시겠습니까?(y/N) y
+게시글을 삭제하였습니다.
+
+명령> /board/delete
+[게시물 삭제]
+번호? 
+입력> 20
+삭제 권한이 없습니다!
+
+명령> /board/delete
+[게시물 삭제]
+로그인 하지 않았습니다!
+```
+
+### 7단계 - 프로젝트를 등록, 변경, 삭제할 때 로그인 정보를 사용한다.
+
+- com.eomcs.pms.handler.ProjectAddHandler 변경
   - 프로젝트 정보를 등록할 때 관리자는 로그인 사용자로 지정한다.
 ```
 명령> /project/add
@@ -147,7 +196,7 @@ aa 님 안녕히 가세요!
 명령>
 ```
 
-- com.eomcs.pms.handler.ProjectUpdateCommand 변경
+- com.eomcs.pms.handler.ProjectUpdateHandler 변경
   - 프로젝트 정보를 변경할 때 관리자는 변경하지 않는다.
 ```
 명령> /project/update
@@ -166,26 +215,6 @@ aa 님 안녕히 가세요!
 
 명령>
 ```
-
-### 5단계 - 로그아웃을 처리한다.
-
-다음과 같이 동작하게 구현한다.
-```
-명령> /logout
-aaa 님 안녕히 가세요!   <--- 로그인 상태일 경우
-
-명령> /logout
-로그인 된 상태가 아닙니다!   <--- 로그인 상태가 아닐 경우
-
-명령> /whoami
-로그인 하지 않았습니다!
-```
-
-- com.eomcs.pms.handler.LogoutCommand 생성
-  - context 맵 객체에 보관된 로그인 회원 정보를 제거한다.
-- com.eomcs.pms.App 변경
-  - 커맨드 객체를 등록한다.
-
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/handler/Command.java 변경
