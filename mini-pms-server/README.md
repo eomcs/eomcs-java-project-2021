@@ -52,8 +52,37 @@
   - `SqlSession` 을 사용할 때마다 `SqlSessionFactory`에서 만들어 쓴다.
 - com.eomcs.pms.ServerApp 변경
   - `MybatisDaoFactory`를 생성할 때 `SqlSessionFactory`를 주입한다.
+  - 백업: ServerApp01.java 
 
+### 3단계 - 같은 스레드에서 같은 SqlSession 객체를 사용하도록 `SqlSessionFactory`를 커스터마이징 한다.
 
+- 2단계까지는 DAO(`DaoWorker`)가 작업을 할 때마다 매번 새 `SqlSession` 객체를 사용하기 때문에 
+  여러 개의 작업을 하나로 묶어 처리할 수 없었다.
+- 즉 트랜잭션 제어가 불가능하였다.
+- 이번 단계에서는 서비스에서 트랜잭션 제어를 할 수 있도록 `SqlSessionFactory`의 기능을 바꿀 것이다.
+
+- com.eomcs.mybatis.SqlSessionFactoryProxy 추가
+  - Mybatis가 제공하는 `SqlSessionFactory`의 소스 코드를 직접 변경할 수는 없다.
+  - 대신에 **프록시 패턴** 기법을 이용하여 기존 클래스의 기능을 변경할 것이다.
+    - 기존 클래스의 코드를 바꾸지 않고 기능을 변경할 때 많이 사용하는 설계 기법이 **프록시 패턴**이다.
+    - 프록시 패턴의 핵심은 실제 객체를 대행할 클래스 또한 실제 객체와 같은 인터페이스를 구현해야 한다는 것이다.
+    - 바꾸고 싶은 기능이 있다면 해당 메서드를 재정의하라.
+    - 기타 메서드는 원래 객체에게 그대로 위임하면 된다.
+- com.eomcs.mybatis.SqlSessionProxy 추가
+  - 트랜잭션에 포함된 작업을 실행할 때는 트랜잭션을 종료할 때까지 SqlSession을 닫아서는 안된다.
+  - 즉 SqlSession 객체에 대해 close()를 호출하더라도 무시해야 한다.
+  - 트랜잭션이 완료되어 더이상 SqlSession을 사용할 필요가 없을 때 진짜로 close 해야 한다.
+  - 이렇게 SqlSession의 기존 기능을 변경하기 위해 **프록시 패턴** 을 사용하여 오리지널 객체를 커스터마이징 할 것이다.
+- com.eomcs.mybatis.TransactionManager 추가
+  - 트랜잭션을 시작하고 종료하는 일을 한다.
+  - 스레드에 보관된 SqlSessionProxy 객체를 이용하여 commit/rollback 을 수행한다.
+  - 또한 SqlSessionProxy 를 이용해 SqlSession 객체의 자원을 완전히 해제한다.
+- com.eomcs.pms.ServerApp 변경
+  - 트랜잭션을 관리할 객체를 준비한다.
+  - 서비스 객체에 주입한다.
+- com.eomcs.pms.service.impl.DefaultXxxService 변경
+  - `SqlSessionFactory`를 주입 받는 대신에 `TransactionManager`를 주입받는다.
+  - 트랜잭션을 제어할 때 `TransactionManager` 를 사용한다.
 
 ## 실습 결과
 - src/main/java/com/eomcs/ServerApp.java 변경

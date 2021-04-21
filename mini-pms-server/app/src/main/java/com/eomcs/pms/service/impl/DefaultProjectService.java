@@ -3,7 +3,7 @@ package com.eomcs.pms.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
+import com.eomcs.mybatis.TransactionManager;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.dao.TaskDao;
 import com.eomcs.pms.domain.Member;
@@ -17,13 +17,13 @@ import com.eomcs.pms.service.ProjectService;
 //
 public class DefaultProjectService implements ProjectService {
 
-  SqlSessionFactory sqlSessionFactory;
+  TransactionManager txManager;
 
   ProjectDao projectDao;
   TaskDao taskDao;
 
-  public DefaultProjectService(SqlSessionFactory sqlSessionFactory, ProjectDao projectDao, TaskDao taskDao) {
-    this.sqlSessionFactory = sqlSessionFactory;
+  public DefaultProjectService(TransactionManager txManager, ProjectDao projectDao, TaskDao taskDao) {
+    this.txManager = txManager;
     this.projectDao = projectDao;
     this.taskDao = taskDao;
   }
@@ -31,7 +31,7 @@ public class DefaultProjectService implements ProjectService {
   // 등록 업무 
   @Override
   public int add(Project project) throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(false);
+    txManager.beginTransaction();
     try {
       // 1) 프로젝트 정보를 입력한다.
       int count = projectDao.insert(project);
@@ -43,11 +43,11 @@ public class DefaultProjectService implements ProjectService {
 
       projectDao.insertMembers(params);
 
-      sqlSession.commit();
+      txManager.commit();
       return count;
 
     } catch (Exception e) {
-      sqlSession.rollback();
+      txManager.rollback();
       throw e;
     }
   }
