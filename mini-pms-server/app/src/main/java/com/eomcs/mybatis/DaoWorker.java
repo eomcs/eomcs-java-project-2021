@@ -4,18 +4,22 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 public class DaoWorker implements InvocationHandler {
 
-  SqlSession sqlSession;
+  SqlSessionFactory sqlSessionFactory;
 
-  public DaoWorker(SqlSession sqlSession) {
-    this.sqlSession = sqlSession;
+  public DaoWorker(SqlSessionFactory sqlSessionFactory) {
+    this.sqlSessionFactory = sqlSessionFactory;
   }
 
   @Override
   public Object invoke(Object daoProxy, Method method, Object[] args) throws Throwable {
     // Proxy 가 만들어준 DAO 구현체가 호출하는 메서드다.
+
+    // SQL을 실행할 SqlSession 객체를 생성한다.
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
 
     // 1) SqlSession의 메서드를 호출할 때 넘겨 줄 SQL ID를 준비한다.
     // => SQL ID는 인터페이스의 fully-qualified name 과 같다고 가정하자.

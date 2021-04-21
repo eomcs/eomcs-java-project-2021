@@ -2,24 +2,26 @@ package com.eomcs.pms.service.impl;
 
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.service.BoardService;
 
 public class DefaultBoardService implements BoardService {
 
-  SqlSession sqlSession;
+  SqlSessionFactory sqlSessionFactory;
 
   BoardDao boardDao; 
 
-  public DefaultBoardService(SqlSession sqlSession, BoardDao boardDao) {
-    this.sqlSession = sqlSession;
+  public DefaultBoardService(SqlSessionFactory sqlSessionFactory, BoardDao boardDao) {
+    this.sqlSessionFactory = sqlSessionFactory;
     this.boardDao = boardDao;
   }
 
   // 게시글 등록 업무
   @Override
   public int add(Board board) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     int count = boardDao.insert(board);
     sqlSession.commit();
     return count;
@@ -34,6 +36,7 @@ public class DefaultBoardService implements BoardService {
   // 게시글 상세 조회 업무
   @Override
   public Board get(int no) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     Board board = boardDao.findByNo(no);
     if (board != null) {
       boardDao.updateViewCount(no);
@@ -45,6 +48,7 @@ public class DefaultBoardService implements BoardService {
   // 게시글 변경 업무
   @Override
   public int update(Board board) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     int count = boardDao.update(board);
     sqlSession.commit();
     return count;
@@ -53,6 +57,7 @@ public class DefaultBoardService implements BoardService {
   // 게시글 삭제 업무
   @Override
   public int delete(int no) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     int count = boardDao.delete(no);
     sqlSession.commit();
     return count;

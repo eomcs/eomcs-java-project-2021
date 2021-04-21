@@ -18,7 +18,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import com.eomcs.mybatis.MybatisDaoFactory;
@@ -40,7 +39,6 @@ import com.eomcs.stereotype.Component;
 import com.eomcs.util.CommandRequest;
 import com.eomcs.util.CommandResponse;
 import com.eomcs.util.Prompt;
-import com.eomcs.util.Session;
 
 public class ServerApp {
 
@@ -81,12 +79,8 @@ public class ServerApp {
     // => SqlSessionFactory 객체 준비
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatisConfigStream);
 
-    // => DAO가 사용할 SqlSession 객체 준비
-    //    - 수동 commit 으로 동작하는 SqlSession 객체를 준비한다.
-    SqlSession sqlSession = sqlSessionFactory.openSession(false);
-
     // 2) DAO 구현체를 자동으로 만들어주는 공장 객체를 준비한다.
-    MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSession);
+    MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSessionFactory);
 
     // 3) 서비스 객체가 사용할 DAO 객체 준비
     BoardDao boardDao = daoFactory.createDao(BoardDao.class);
@@ -96,10 +90,10 @@ public class ServerApp {
 
     // 4) Command 구현체가 사용할 의존 객체(서비스 객체 + 도우미 객체) 준비
     // => 서비스 객체 생성
-    BoardService boardService = new DefaultBoardService(sqlSession, boardDao);
-    MemberService memberService = new DefaultMemberService(sqlSession, memberDao);
-    ProjectService projectService = new DefaultProjectService(sqlSession, projectDao, taskDao);
-    TaskService taskService = new DefaultTaskService(sqlSession, taskDao);
+    BoardService boardService = new DefaultBoardService(sqlSessionFactory, boardDao);
+    MemberService memberService = new DefaultMemberService(sqlSessionFactory, memberDao);
+    ProjectService projectService = new DefaultProjectService(sqlSessionFactory, projectDao, taskDao);
+    TaskService taskService = new DefaultTaskService(sqlSessionFactory, taskDao);
 
     // => 도우미 객체 생성
     MemberValidator memberValidator = new MemberValidator(memberService);
@@ -162,7 +156,6 @@ public class ServerApp {
     System.out.println("서버 종료!");
   }
 
-  // 클라이언트가 접속했을 때 스레드가 호출하는 메서드
   public void processRequest(Socket socket) {
     try (
         Socket clientSocket = socket;
@@ -175,9 +168,6 @@ public class ServerApp {
 
       // 클라이언트로부터 값을 입력 받을 때 사용할 객체를 준비한다.
       Prompt prompt = new Prompt(in, out);
-
-      // 클라이언트가 접속해 있는 동안 사용할 저장소를 준비한다.
-      Session session = new Session();
 
       while (true) {
         // 클라이언트가 보낸 요청을 읽는다.
@@ -225,8 +215,7 @@ public class ServerApp {
             requestLine, 
             remoteAddr.getHostString(),
             remoteAddr.getPort(), 
-            prompt,
-            session);
+            prompt);
 
         CommandResponse response = new CommandResponse(out);
 

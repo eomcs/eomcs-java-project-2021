@@ -3,6 +3,7 @@ package com.eomcs.pms.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.dao.TaskDao;
 import com.eomcs.pms.domain.Member;
@@ -16,16 +17,13 @@ import com.eomcs.pms.service.ProjectService;
 //
 public class DefaultProjectService implements ProjectService {
 
-  // 서비스 객체는 트랜잭션을 제어해야 하기 때문에
-  // DAO가 사용하는 SqlSession 객체를 주입 받아야 한다.
-  SqlSession sqlSession; 
+  SqlSessionFactory sqlSessionFactory;
 
-  // 비즈니스 로직을 수행하는 동안 데이터 처리를 위해 사용할 DAO 를 주입 받아야 한다.
   ProjectDao projectDao;
   TaskDao taskDao;
 
-  public DefaultProjectService(SqlSession sqlSession, ProjectDao projectDao, TaskDao taskDao) {
-    this.sqlSession = sqlSession;
+  public DefaultProjectService(SqlSessionFactory sqlSessionFactory, ProjectDao projectDao, TaskDao taskDao) {
+    this.sqlSessionFactory = sqlSessionFactory;
     this.projectDao = projectDao;
     this.taskDao = taskDao;
   }
@@ -33,6 +31,7 @@ public class DefaultProjectService implements ProjectService {
   // 등록 업무 
   @Override
   public int add(Project project) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     try {
       // 1) 프로젝트 정보를 입력한다.
       int count = projectDao.insert(project);
@@ -68,6 +67,7 @@ public class DefaultProjectService implements ProjectService {
   // 변경 업무
   @Override
   public int update(Project project) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     try {
       int count = projectDao.update(project);
       projectDao.deleteMembers(project.getNo());
@@ -77,6 +77,9 @@ public class DefaultProjectService implements ProjectService {
       params.put("members", project.getMembers());
 
       projectDao.insertMembers(params);
+
+      // 다른 스레드가 rollback 할 수 있도록 잠시 대기한다.
+      Thread.sleep(30000);
 
       sqlSession.commit();
       return count;
@@ -90,12 +93,18 @@ public class DefaultProjectService implements ProjectService {
   // 삭제 업무
   @Override
   public int delete(int no) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     try {
       // 1) 프로젝트의 모든 작업 삭제
       taskDao.deleteByProjectNo(no);
 
       // 2) 프로젝트 멤버 삭제
       projectDao.deleteMembers(no);
+
+      // 롤백하기 위해 일부러 예외 발생!
+      if (no != 1000) {
+        throw new Exception("프로젝트 삭제 중 오류 발생!");
+      }
 
       // 3) 프로젝트 삭제
       int count = projectDao.delete(no);
@@ -130,6 +139,7 @@ public class DefaultProjectService implements ProjectService {
 
   @Override
   public int deleteMembers(int projectNo) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     int count = projectDao.deleteMembers(projectNo);
     sqlSession.commit();
     return count;
@@ -137,6 +147,7 @@ public class DefaultProjectService implements ProjectService {
 
   @Override
   public int updateMembers(int projectNo, List<Member> members) throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
     try {
       projectDao.deleteMembers(projectNo);
 

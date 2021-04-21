@@ -7,20 +7,12 @@ public class CommandRequest {
   private String remoteAddr;
   private int remotePort;
   private Prompt prompt;
-  private Session session;
 
-  public CommandRequest(
-      String commandPath, 
-      String remoteAddr, 
-      int remotePort, 
-      Prompt prompt, 
-      Session session) {
-
+  public CommandRequest(String commandPath, String remoteAddr, int remotePort, Prompt prompt) {
     this.commandPath = commandPath;
     this.remoteAddr = remoteAddr;
     this.remotePort = remotePort;
     this.prompt = prompt;
-    this.session = session;
   }
 
   public String getCommandPath() {
@@ -37,9 +29,5 @@ public class CommandRequest {
 
   public Prompt getPrompt() {
     return prompt;
-  }
-
-  public Session getSession() {
-    return session;
   }
 }

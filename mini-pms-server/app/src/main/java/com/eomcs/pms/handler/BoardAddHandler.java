@@ -28,19 +28,14 @@ public class BoardAddHandler implements Command {
 
     out.println("[게시글 등록]");
 
-    Member loginUser = (Member) request.getSession().getAttribute("loginUser");
-    if (loginUser == null) {
-      out.println("로그인 하지 않았습니다!");
-      return;
-    }
-
     Board b = new Board();
 
     b.setTitle(prompt.inputString("제목? "));
     b.setContent(prompt.inputString("내용? "));
 
-    // 작성자는 로그인 사용자이다.
-    b.setWriter(loginUser);
+    Member writer = new Member();
+    writer.setNo(prompt.inputInt("작성자 번호? "));
+    b.setWriter(writer);
 
     boardService.add(b);
     out.println("게시글을 등록하였습니다.");
