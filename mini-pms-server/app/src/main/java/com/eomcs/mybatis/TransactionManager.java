@@ -19,7 +19,7 @@ public class TransactionManager {
     // 스레드 보관소에 저장된 SqlSessionProxy 객체를 꺼내서 commit()을 호출한다.
     SqlSessionProxy sqlSessionProxy = (SqlSessionProxy) sqlSessionFactoryProxy.openSession(false);
     sqlSessionProxy.commit();
-    sqlSessionProxy.realClose();
+    sqlSessionFactoryProxy.closeSession();
   }
 
   public void rollback() {
@@ -27,7 +27,7 @@ public class TransactionManager {
     // 물론 스레드 보관소에 저장된 SqlSessionProxy 를 통해서 수행한다.
     SqlSessionProxy sqlSessionProxy = (SqlSessionProxy) sqlSessionFactoryProxy.openSession(false);
     sqlSessionProxy.rollback();
-    sqlSessionProxy.realClose();
+    sqlSessionFactoryProxy.closeSession();
   }
 
 }

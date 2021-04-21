@@ -105,7 +105,7 @@ public class ServerApp {
     BoardService boardService = new DefaultBoardService(boardDao);
     MemberService memberService = new DefaultMemberService(memberDao);
     ProjectService projectService = new DefaultProjectService(txManager, projectDao, taskDao);
-    TaskService taskService = new DefaultTaskService(txManager, taskDao);
+    TaskService taskService = new DefaultTaskService(taskDao);
 
     // => 도우미 객체 생성
     MemberValidator memberValidator = new MemberValidator(memberService);

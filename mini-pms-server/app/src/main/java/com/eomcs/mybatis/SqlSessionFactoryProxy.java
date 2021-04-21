@@ -39,7 +39,7 @@ public class SqlSessionFactoryProxy implements SqlSessionFactory {
   // => 트랜잭션을 완료한 후에 더이상 SqlSession 을 사용할 일이 없다면 
   //    해당 스레드는 스레드 보관소에 저장된 SqlSession 객체를 제거해야 한다.
   // => 그래야 해당 스레드가 다음 작업을 처리할 때 초기 상태에서 작업을 수행할 수 있다. 
-  public void closeSqlSession() {
+  public void closeSession() {
     // 1) 스레드 보관소에 들어 있는 SqlSessionProxy 객체를 꺼낸다.
     SqlSessionProxy sqlSessionProxy = threadLocal.get();
     if (sqlSessionProxy != null) {

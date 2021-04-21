@@ -2,7 +2,6 @@ package com.eomcs.pms.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
-import org.apache.ibatis.session.SqlSession;
 import com.eomcs.mybatis.TransactionManager;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.dao.TaskDao;
@@ -67,7 +66,7 @@ public class DefaultProjectService implements ProjectService {
   // 변경 업무
   @Override
   public int update(Project project) throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(false);
+    txManager.beginTransaction();
     try {
       int count = projectDao.update(project);
       projectDao.deleteMembers(project.getNo());
@@ -81,11 +80,11 @@ public class DefaultProjectService implements ProjectService {
       // 다른 스레드가 rollback 할 수 있도록 잠시 대기한다.
       Thread.sleep(30000);
 
-      sqlSession.commit();
+      txManager.commit();
       return count;
 
     } catch (Exception e) {
-      sqlSession.rollback();
+      txManager.rollback();
       throw e;
     }
   }
@@ -93,7 +92,7 @@ public class DefaultProjectService implements ProjectService {
   // 삭제 업무
   @Override
   public int delete(int no) throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(false);
+    txManager.beginTransaction();
     try {
       // 1) 프로젝트의 모든 작업 삭제
       taskDao.deleteByProjectNo(no);
@@ -108,11 +107,11 @@ public class DefaultProjectService implements ProjectService {
 
       // 3) 프로젝트 삭제
       int count = projectDao.delete(no);
-      sqlSession.commit();
+      txManager.commit();
       return count;
 
     } catch (Exception e) {
-      sqlSession.rollback();
+      txManager.rollback();
       throw e;
     }
   }
@@ -139,15 +138,12 @@ public class DefaultProjectService implements ProjectService {
 
   @Override
   public int deleteMembers(int projectNo) throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(false);
-    int count = projectDao.deleteMembers(projectNo);
-    sqlSession.commit();
-    return count;
+    return projectDao.deleteMembers(projectNo);
   }
 
   @Override
   public int updateMembers(int projectNo, List<Member> members) throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(false);
+    txManager.beginTransaction();
     try {
       projectDao.deleteMembers(projectNo);
 
@@ -156,11 +152,11 @@ public class DefaultProjectService implements ProjectService {
       params.put("members", members);
 
       int count = projectDao.insertMembers(params);
-      sqlSession.commit();
+      txManager.commit();
       return count;
 
     } catch (Exception e) {
-      sqlSession.rollback();
+      txManager.rollback();
       throw e;
     }
   }
