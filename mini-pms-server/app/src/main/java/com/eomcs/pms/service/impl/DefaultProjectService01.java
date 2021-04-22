@@ -2,9 +2,7 @@ package com.eomcs.pms.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
-import com.eomcs.mybatis.TransactionCallback;
 import com.eomcs.mybatis.TransactionManager;
-import com.eomcs.mybatis.TransactionTemplate;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.dao.TaskDao;
 import com.eomcs.pms.domain.Member;
@@ -16,15 +14,15 @@ import com.eomcs.pms.service.ProjectService;
 // - 업무에 따라 트랜잭션을 제어하는 일을 한다.
 // - 서비스 객체의 메서드는 가능한 업무 관련 용어를 사용하여 메서드를 정의한다.
 //
-public class DefaultProjectService implements ProjectService {
+public class DefaultProjectService01 implements ProjectService {
 
-  TransactionTemplate transactionTemplate;
+  TransactionManager txManager;
 
   ProjectDao projectDao;
   TaskDao taskDao;
 
-  public DefaultProjectService(TransactionManager txManager, ProjectDao projectDao, TaskDao taskDao) {
-    this.transactionTemplate = new TransactionTemplate(txManager);
+  public DefaultProjectService01(TransactionManager txManager, ProjectDao projectDao, TaskDao taskDao) {
+    this.txManager = txManager;
     this.projectDao = projectDao;
     this.taskDao = taskDao;
   }
@@ -32,22 +30,25 @@ public class DefaultProjectService implements ProjectService {
   // 등록 업무 
   @Override
   public int add(Project project) throws Exception {
-    return (int) transactionTemplate.execute(new TransactionCallback() {
-      @Override
-      public Object doInTransaction() throws Exception {
-        // 트랜잭션으로 묶어서 실행할 작업을 기술한다.
-        // 1) 프로젝트 정보를 입력한다.
-        int count = projectDao.insert(project); 
+    txManager.beginTransaction();
+    try {
+      // 1) 프로젝트 정보를 입력한다.
+      int count = projectDao.insert(project);
 
-        // 2) 멤버를 입력한다.
-        HashMap<String,Object> params = new HashMap<>();
-        params.put("projectNo", project.getNo());
-        params.put("members", project.getMembers());
+      // 2) 멤버를 입력한다.
+      HashMap<String,Object> params = new HashMap<>();
+      params.put("projectNo", project.getNo());
+      params.put("members", project.getMembers());
 
-        projectDao.insertMembers(params);
-        return count;
-      }
-    });
+      projectDao.insertMembers(params);
+
+      txManager.commit();
+      return count;
+
+    } catch (Exception e) {
+      txManager.rollback();
+      throw e;
+    }
   }
 
   // 조회 업무
@@ -65,39 +66,54 @@ public class DefaultProjectService implements ProjectService {
   // 변경 업무
   @Override
   public int update(Project project) throws Exception {
-    return (int) transactionTemplate.execute(new TransactionCallback() {
-      @Override
-      public Object doInTransaction() throws Exception {
-        int count = projectDao.update(project);
-        projectDao.deleteMembers(project.getNo());
+    txManager.beginTransaction();
+    try {
+      int count = projectDao.update(project);
+      projectDao.deleteMembers(project.getNo());
 
-        HashMap<String,Object> params = new HashMap<>();
-        params.put("projectNo", project.getNo());
-        params.put("members", project.getMembers());
+      HashMap<String,Object> params = new HashMap<>();
+      params.put("projectNo", project.getNo());
+      params.put("members", project.getMembers());
 
-        projectDao.insertMembers(params);
-        return count;
-      }
-    });
+      projectDao.insertMembers(params);
+
+      // 다른 스레드가 rollback 할 수 있도록 잠시 대기한다.
+      Thread.sleep(30000);
+
+      txManager.commit();
+      return count;
+
+    } catch (Exception e) {
+      txManager.rollback();
+      throw e;
+    }
   }
 
   // 삭제 업무
   @Override
   public int delete(int no) throws Exception {
-    return (int) transactionTemplate.execute(new TransactionCallback() {
-      @Override
-      public Object doInTransaction() throws Exception {
-        // 트랜잭션으로 묶어서 실행할 작업을 기술한다.
-        // 1) 프로젝트의 모든 작업 삭제
-        taskDao.deleteByProjectNo(no);
+    txManager.beginTransaction();
+    try {
+      // 1) 프로젝트의 모든 작업 삭제
+      taskDao.deleteByProjectNo(no);
 
-        // 2) 프로젝트 멤버 삭제
-        projectDao.deleteMembers(no);
+      // 2) 프로젝트 멤버 삭제
+      projectDao.deleteMembers(no);
 
-        // 3) 프로젝트 삭제
-        return  projectDao.delete(no);
+      // 롤백하기 위해 일부러 예외 발생!
+      if (no != 1000) {
+        throw new Exception("프로젝트 삭제 중 오류 발생!");
       }
-    });
+
+      // 3) 프로젝트 삭제
+      int count = projectDao.delete(no);
+      txManager.commit();
+      return count;
+
+    } catch (Exception e) {
+      txManager.rollback();
+      throw e;
+    }
   }
 
   // 찾기

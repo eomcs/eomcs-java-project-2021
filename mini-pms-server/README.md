@@ -73,6 +73,9 @@
   - 즉 SqlSession 객체에 대해 close()를 호출하더라도 무시해야 한다.
   - 트랜잭션이 완료되어 더이상 SqlSession을 사용할 필요가 없을 때 진짜로 close 해야 한다.
   - 이렇게 SqlSession의 기존 기능을 변경하기 위해 **프록시 패턴** 을 사용하여 오리지널 객체를 커스터마이징 할 것이다.
+
+### 4단계 - 멀티스레드 환경에서 트랜잭션을 다룰 때 사용할 객체를 정의한다.
+
 - com.eomcs.mybatis.TransactionManager 추가
   - 트랜잭션을 시작하고 종료하는 일을 한다.
   - 스레드에 보관된 SqlSessionProxy 객체를 이용하여 commit/rollback 을 수행한다.
@@ -83,21 +86,23 @@
 - com.eomcs.pms.service.impl.DefaultXxxService 변경
   - `SqlSessionFactory`를 주입 받는 대신에 `TransactionManager`를 주입받는다.
   - 트랜잭션을 제어할 때 `TransactionManager` 를 사용한다.
+  - 백업: DefaultProjectService01.java
+
+### 5단계 - `TransactionManager` 를 이용한 트랜잭션 제어 코드를 캡슐화 한다.
+
+- com.eomcs.mybatis.TransactionCallback 인터페이스 추가
+  - 트랜잭션으로 묶어 수행할 작업을 정의하는 객체 
+  - `TransactionTemplate`은 이 인터페이스 규칙에 따라 작업을 실행할 것이다.
+- com.eomcs.mybatis.TransactionTemplate 클래스 추가
+  - 트랜잭션 상태에서 작업을 실행하는 일을 한다.
+  - 작업을 정상적으로 완료한다면 commit()을 자동으로 호출한다.
+  - 작업에 실패한다면 rollback()을 호출한다.
 
 ## 실습 결과
+- src/main/java/com/eomcs/mybatis/SqlSessionFactoryProxy.java 추가
+- src/main/java/com/eomcs/mybatis/SqlSessionProxy.java 추가
+- src/main/java/com/eomcs/mybatis/TransactionManager.java 추가
+- src/main/java/com/eomcs/mybatis/MybatisDaoFactory.java 변경
+- src/main/java/com/eomcs/mybatis/DaoWorker.java 변경
+- src/main/java/com/eomcs/pms/service/impl/DefaultXxxService.java 변경
 - src/main/java/com/eomcs/ServerApp.java 변경
-- src/main/java/com/eomcs/pms/handler/LoginHandler.java 추가
-- src/main/java/com/eomcs/pms/handler/UserInfoHandler.java 추가
-- src/main/java/com/eomcs/pms/handler/LogoutHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/BoardAddHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/BoardUpdateHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/BoardDeleteHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectAddHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectUpdateHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectDeleteHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectMemberUpdateHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectMemberDeleteHandler.java 변경
-- src/main/java/com/eomcs/pms/service/MemberService.java 변경
-- src/main/java/com/eomcs/pms/service/impl/DefaultMemberService.java 변경
-- src/main/java/com/eomcs/pms/dao/MemberDao.java 변경
-- src/main/java/com/eomcs/pms/mapper/MemberMapper.xml 변경
