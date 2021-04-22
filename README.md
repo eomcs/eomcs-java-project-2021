@@ -179,7 +179,7 @@
 
 ### 28-a. 세션(Session) 다루기 : 로그인/로그아웃 구현 + 세션 도입
 ### 28-b. 세션(Session) 다루기 : Stateless 통신 구현
-### 28-c. 세션(Session) 다루기 : Stateless 통신에서 세션 구분
+### 28-c. 세션(Session) 다루기 : Stateless 통신에서 세션 유지 방법
 
 
 ### 35-b. 애플리케이션을 클라이언트/서버 구조로 변경하기 : Stateless 방식 통신
