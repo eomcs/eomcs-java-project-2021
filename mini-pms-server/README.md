@@ -97,11 +97,15 @@
   - 트랜잭션 상태에서 작업을 실행하는 일을 한다.
   - 작업을 정상적으로 완료한다면 commit()을 자동으로 호출한다.
   - 작업에 실패한다면 rollback()을 호출한다.
+- com.eomcs.pms.service.impl.DefaultProjectService 변경
+  - `TransactionManager` 대신에 `TransactionTemplate` 을 사용하여 트랜잭션을 제어한다.
 
 ## 실습 결과
 - src/main/java/com/eomcs/mybatis/SqlSessionFactoryProxy.java 추가
 - src/main/java/com/eomcs/mybatis/SqlSessionProxy.java 추가
 - src/main/java/com/eomcs/mybatis/TransactionManager.java 추가
+- src/main/java/com/eomcs/mybatis/TransactionTemplate.java 추가
+- src/main/java/com/eomcs/mybatis/TransactionCallback.java 추가
 - src/main/java/com/eomcs/mybatis/MybatisDaoFactory.java 변경
 - src/main/java/com/eomcs/mybatis/DaoWorker.java 변경
 - src/main/java/com/eomcs/pms/service/impl/DefaultXxxService.java 변경

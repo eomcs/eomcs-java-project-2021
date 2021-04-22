@@ -127,22 +127,18 @@ public class DefaultProjectService implements ProjectService {
 
   @Override
   public int updateMembers(int projectNo, List<Member> members) throws Exception {
-    txManager.beginTransaction();
-    try {
-      projectDao.deleteMembers(projectNo);
+    return (int) transactionTemplate.execute(new TransactionCallback() {
+      @Override
+      public Object doInTransaction() throws Exception {
+        projectDao.deleteMembers(projectNo);
 
-      HashMap<String,Object> params = new HashMap<>();
-      params.put("projectNo", projectNo);
-      params.put("members", members);
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("projectNo", projectNo);
+        params.put("members", members);
 
-      int count = projectDao.insertMembers(params);
-      txManager.commit();
-      return count;
-
-    } catch (Exception e) {
-      txManager.rollback();
-      throw e;
-    }
+        return projectDao.insertMembers(params);
+      }
+    });
   }
 }
 
