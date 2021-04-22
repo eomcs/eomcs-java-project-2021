@@ -33,62 +33,58 @@ public class ClientApp {
   }
 
   public void execute() throws Exception {
-    // Stateful 통신 방식
-    try (
-        // 1) 서버와 연결하기
-        Socket socket = new Socket(serverAddress, port);
+    // Stateless 통신 방식
+    while (true) {
+      String command = com.eomcs.util.Prompt.inputString("명령> ");
+      if (command.length() == 0) {
+        continue;
+      }
 
-        // 2) 데이터 입출력 스트림 객체를 준비
+      if (command.equalsIgnoreCase("quit") || command.equalsIgnoreCase("exit")) {
+        break;
+      }
+
+      requestService(command);
+
+      if (command.equalsIgnoreCase("serverstop")) {
+        break;
+      }
+
+      System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
+    }
+
+    System.out.println("안녕!");
+    Prompt.close();
+  }
+
+  private void requestService(String command) {
+    try (Socket socket = new Socket(serverAddress, port);
         PrintWriter out = new PrintWriter(socket.getOutputStream());
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         ) {
 
+      // 서버에게 명령을 보낸다.
+      out.println(command);
+      out.println();
+      out.flush();
+
+      // 서버가 응답한 데이터를 출력한다.
+      String line = null;
       while (true) {
-        String command = com.eomcs.util.Prompt.inputString("명령> ");
-        if (command.length() == 0) {
-          continue;
-        }
+        line = in.readLine();
 
-        // 서버에게 명령을 보낸다.
-        out.println(command);
-        out.println();
-        out.flush();
-
-        // 서버가 보낸 데이터를 출력한다.
-        String line = null;
-        while (true) {
-          line = in.readLine();
-
-          if (line.length() == 0) {
-            break;
-
-          } else if (line.equals("!{}!")) {
-            // 서버에서 입력을 요구한다면
-            // - 사용자로부터 입력을 받는다.
-            String input = Prompt.inputString("입력> ");
-
-            // - 입력 받은 내용을 서버에게 보낸다.
-            out.println(input);
-            out.flush();
-
-          } else {
-            System.out.println(line);
-          }
-        }
-        System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
-
-        if (command.equalsIgnoreCase("quit") || 
-            command.equalsIgnoreCase("exit") ||
-            command.equalsIgnoreCase("serverstop")) {
-          System.out.println("안녕!");
+        if (line.length() == 0) {
           break;
+        } else if (line.equals("!{}!")) {
+          String input = Prompt.inputString("입력> ");
+          out.println(input);
+          out.flush();
+        } else {
+          System.out.println(line);
         }
       }
-
     } catch (Exception e) {
       System.out.println("통신 오류 발생!");
     }
-
-    Prompt.close();
   }
 }
