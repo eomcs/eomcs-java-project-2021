@@ -54,6 +54,16 @@
     where no = #{value}
   </select>
   
+  <select id="findByEmailPassword" resultMap="memberMap" parameterType="map">
+    select 
+      no,
+      name,
+      email,
+      photo
+    from pms_member 
+    where email = #{email} and password = password(#{password})
+  </select>
+  
   <update id="update" parameterType="member">
     update pms_member 
     <set> 

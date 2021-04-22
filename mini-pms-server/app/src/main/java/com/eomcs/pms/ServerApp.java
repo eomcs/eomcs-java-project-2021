@@ -41,6 +41,7 @@ import com.eomcs.stereotype.Component;
 import com.eomcs.util.CommandRequest;
 import com.eomcs.util.CommandResponse;
 import com.eomcs.util.Prompt;
+import com.eomcs.util.Session;
 
 public class ServerApp {
 
@@ -181,6 +182,9 @@ public class ServerApp {
       // 클라이언트로부터 값을 입력 받을 때 사용할 객체를 준비한다.
       Prompt prompt = new Prompt(in, out);
 
+      // 클라이언트가 접속해 있는 동안 사용할 저장소를 준비한다.
+      Session session = new Session();
+
       while (true) {
         // 클라이언트가 보낸 요청을 읽는다.
         String requestLine = in.readLine();
@@ -227,7 +231,8 @@ public class ServerApp {
             requestLine, 
             remoteAddr.getHostString(),
             remoteAddr.getPort(), 
-            prompt);
+            prompt,
+            session);
 
         CommandResponse response = new CommandResponse(out);
 

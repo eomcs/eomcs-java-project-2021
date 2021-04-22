@@ -3,27 +3,22 @@ package com.eomcs.pms.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.ibatis.session.SqlSession;
 import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
 
 public class DefaultMemberService implements MemberService {
 
-  SqlSession sqlSession;
   MemberDao memberDao;
 
-  public DefaultMemberService(SqlSession sqlSession, MemberDao memberDao) {
-    this.sqlSession = sqlSession;
+  public DefaultMemberService(MemberDao memberDao) {
     this.memberDao = memberDao;
   }  
 
   // 등록 업무
   @Override
   public int add(Member member) throws Exception {
-    int count = memberDao.insert(member);
-    sqlSession.commit();
-    return count;
+    return memberDao.insert(member);
   }
 
   // 조회 업무
@@ -51,17 +46,13 @@ public class DefaultMemberService implements MemberService {
   // 변경 업무
   @Override
   public int update(Member member) throws Exception {
-    int count = memberDao.update(member);
-    sqlSession.commit();
-    return count;
+    return memberDao.update(member);
   }
 
   // 삭제 업무
   @Override
   public int delete(int no) throws Exception {
-    int count = memberDao.delete(no);
-    sqlSession.commit();
-    return count;
+    return memberDao.delete(no);
   }
 
   // 이름으로 찾기

@@ -1,14 +1,14 @@
 package com.eomcs.mybatis;
 
 import java.lang.reflect.Proxy;
-import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 public class MybatisDaoFactory {
 
   DaoWorker daoWorker;
 
-  public MybatisDaoFactory(SqlSession sqlSession) {
-    this.daoWorker = new DaoWorker(sqlSession);
+  public MybatisDaoFactory(SqlSessionFactory sqlSessionFactory) {
+    this.daoWorker = new DaoWorker(sqlSessionFactory);
   }
 
   // DAO 인터페이스를 구현한 객체를 만들어준다.

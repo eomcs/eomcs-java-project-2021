@@ -79,7 +79,7 @@ public class DefaultProjectService implements ProjectService {
 
         // 다른 스레드가 작업할 시간을 준다.
         // => 즉 다른 스레드가 현재 스레드의 트랜잭션 작업을 간섭할 수 있는지 확인하기 위함이다.
-        Thread.sleep(30000);
+        //        Thread.sleep(30000);
 
         return count;
       }
@@ -99,10 +99,10 @@ public class DefaultProjectService implements ProjectService {
         // 2) 프로젝트 멤버 삭제
         projectDao.deleteMembers(no);
 
-        if ("test".length() == 4) {
-          // 현재 스레드의 트랜잭션 rollback()이 다른 스레드의 트랜잭션에 영향을 끼치는지 확인한다.
-          throw new Exception("일부러 예외 발생!"); 
-        }
+        //        if ("test".length() == 4) {
+        //          // 현재 스레드의 트랜잭션 rollback()이 다른 스레드의 트랜잭션에 영향을 끼치는지 확인한다.
+        //          throw new Exception("일부러 예외 발생!"); 
+        //        }
 
         // 3) 프로젝트 삭제
         return  projectDao.delete(no);

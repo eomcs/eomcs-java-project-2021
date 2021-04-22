@@ -1,112 +1,365 @@
-# 27-e. 애플리케이션을 클라이언트/서버 구조로 변경하기 : 멀티스레드 환경에서 트랜잭션 제어
+# 28-a. 세션(Session) 다루기 : 로그인/로그아웃 구현 + 세션 도입
 
 이번 훈련에서는,
-- *멀티 스레드* 환경에서 *Mybatis* 의 *트랜잭션* 을 다루는 방법을 배울 것이다.
-- 기존 클래스의 코드를 손대지 않고 일부 기능을 변경하는 **프록시 패턴** 설계 기법을 배운다.
-
-**프록시(proxy) 디자인 패턴** 은,
-
+- **세션** 을 이용하여 **로그인/로그아웃** 을 다루는 방법을 연습한다.
 
 ## 훈련 목표
-- `SqlSession` 객체를 통해 트랜잭션을 다루는 방법을 연습한다.
-- **프록시 패턴** 의 용도와 동작 원리를 이해한다.
-- **프록시 패턴** 을 적용하는 방법을 연습한다.
+- **로그인/로그아웃** 의 구현을 연습한다.
+- 커맨드 객체 간에 작업 결과를 공유하는 방법을 배운다.
 
 ## 훈련 내용
-- 프로젝트의 상세 정보를 출력할 때 작업 목록을 추가한다.
-- DAO의 메서드에서 트랜잭션을 다룰 때 문제가 되는 상황을 경험한다.
-- 트랜잭션의 통제를 *DAO* 대신 *Command* 객체가 수행한다.
-- `SqlSession` 객체의 트랜잭션 통제를 위해 프록시 패턴을 적용한다.
+- 커맨드 객체 간에 작업 결과를 공유하기 위해 `Command` 인터페이스의 규칙을 변경한다.
+- `Command` 의 변경에 맞춰 커맨드 구현체를 모두 변경한다.
+- *로그인* , *로그아웃*, *로그인 사용자 정보 조회* 를 처리할 커맨드 클래스를 작성한다.
+- *로그인* 에 필요한 데이터 처리 작업을 DAO에 추가한다.
+- 게시글을 입력하거나 프로젝트를 입력할 때 로그인 정보를 사용한다.
 
 ## 실습
 
-### 1단계 - 멀티 스레드 환경에서 `SqlClient` 객체를 공유할 때 발생하는 문제점을 이해한다.
+### 1단계 - 로그인을 처리하는 `LoginHandler` 클래스를 작성한다.
 
-- com.eomcs.pms.service.impl.DefaultProjectService 변경
-  - `delete()` 메서드를 변경한다.
-- 테스트
-  - A 클라이언트에서 프로젝트 변경을 시도한다.
-    - 프로젝트 변경, 기존 멤버의 삭제, 변경한 멤버를 새로 등록한다.
-    - 다른 클라이언트가 프로젝트를 삭제할 수 있도록 30초 동안 대기 상태로 만든다.
-    - 30초 후에 깨어나서 현재까지 수행했던 변경 작업들을 승인한다.
-  - B 클라이언트에서 프로젝트 삭제를 시도한다.
-    - A 클라이언트의 작업이 멈춰있는 동안 프로젝트 삭제 작업을 수행한다.
-    - 프로젝트의 작업을 삭제하고, 멤버를 삭제한다.
-    - 프로젝트를 삭제할 때 예외를 발생시킨다.
-    - 기존의 수행했던 프로젝트의 작업 삭제와 멤버 삭제를 취소한다.
-  - B 클라이언트 작업이 완료된 후 A 클라이언트 작업이 정상적으로 승인되었는지 확인한다.
-    - A 클라이언트의 프로젝트 변경 작업이 승인되지 않았음을 확인한다. 
-    - 왜? 
-      - B 클라이언트의 요청을 처리하는 중에 예외가 발생하여 임시 데이터베이스에 보관된 모든 변경 결과가 취소됐기 때문이다.
-  
-### 2단계 - DAO 객체를 생성할 때 `SqlSession` 대신 `SqlSessionFactory` 객체를 주입한다.
+다음과 같이 동작하도록 로그인을 구현한다.
+```
+명령> /login
+[로그인]
+이메일? 
+입력> x1@test.com
+암호? 
+입력> 2222
+사용자 정보가 맞지 않습니다.
 
-- com.eomcs.mybatis.MybatisDaoFactory 변경
-  - 생성자에서 `SqlSessionFactory`를 받는다.
-  - `DaoWorker` 객체를 생성할 때 `SqlSessionFactory`를 주입한다.
-- com.eomcs.mybatis.DaoWorker 변경
-  - 생성자에서 `SqlSessionFactory`를 받는다.
-  - DAO의 작업을 수행할 때마다 `SqlSessionFactory` 로 `SqlSession` 객체를 만들어 사용한다.
-- com.eomcs.pms.service.impl.DefaultXxxService 변경
-  - 서비스 객체 생성자에서 `SqlSession` 객체 대신 `SqlSessionFactory`를 주입받는다.
-  - `SqlSession` 을 사용할 때마다 `SqlSessionFactory`에서 만들어 쓴다.
+명령> /login
+[로그인]
+이메일? 
+입력> x1@test.com
+암호? 
+입력> 2222
+x1 님 환영합니다.
+
+명령> /login
+로그인 되어 있습니다!
+
+```
+
+- com.eomcs.pms.handler.LoginHandler 생성
+  - 사용자 이메일과 암호를 받아 인증을 수행한다.
+  - 백업: LoginHandler01.java
+- com.eomcs.pms.service.MemberService 변경
+  - `get(email, password)` 메서드를 추가한다.
+- com.eomcs.pms.service.impl.DefaultMemberService 변경
+  - `get(email, password)` 메서드를 구현한다.  
+- com.eomcs.pms.dao.MemberDao 인터페이스 변경  
+  - `findByEmailPassword()` 메서드를 추가한다.
+- src/main/resources/com/eomcs/pms/mapper/MemberMapper.xml 변경
+  - `findByEmailPassword` select 문을 추가한다.
+
+### 2단계 - 세션 객체를 이용하여 로그인 사용자 정보를 보관한다.
+
+세션(Session) 
+- 특정 기간 동안 사용하는 객체를 가리킨다.
+  - 예) `로그인 중인 기간` 동안 사용하는 객체
+  - 예) 한 작업을 여러 단계에 거치는 사용하는 객체
+
+
+- com.eomcs.util.Session 추가
+  - 클라이언트가 접속하는 동안 보관소로 사용할 객체를 정의한다.
+- com.eomcs.uitl.CommandRequest 변경
+  - 세션 객체를 저장할 필드를 추가하고 생성자를 변경한다.
+  - 세터를 추가한다.
 - com.eomcs.pms.ServerApp 변경
-  - `MybatisDaoFactory`를 생성할 때 `SqlSessionFactory`를 주입한다.
-  - 백업: ServerApp01.java 
+  - 접속한 클라이언트와 통신하는 동안 사용할 세션 객체를 준비한다.
+  - 세션 객체를 `CommandRequest` 에 보관하여 `Command` 구현체의 `service()`를 호출할 때 전달한다.
+- com.eomcs.pms.handler.LoginHandler 변경
+  - 로그인 한 사용자의 정보를 다른 Command 구현체(핸들러)가 사용할 수 있도록 세션 객체에 보관한다.
 
-### 3단계 - 같은 스레드에서 같은 SqlSession 객체를 사용하도록 `SqlSessionFactory`를 커스터마이징 한다.
 
-- 2단계까지는 DAO(`DaoWorker`)가 작업을 할 때마다 매번 새 `SqlSession` 객체를 사용하기 때문에 
-  여러 개의 작업을 하나로 묶어 처리할 수 없었다.
-- 즉 트랜잭션 제어가 불가능하였다.
-- 이번 단계에서는 서비스에서 트랜잭션 제어를 할 수 있도록 `SqlSessionFactory`의 기능을 바꿀 것이다.
+### 3단계 - 로그인 사용자 정보를 조회한다.
 
-- com.eomcs.mybatis.SqlSessionFactoryProxy 추가
-  - Mybatis가 제공하는 `SqlSessionFactory`의 소스 코드를 직접 변경할 수는 없다.
-  - 대신에 **프록시 패턴** 기법을 이용하여 기존 클래스의 기능을 변경할 것이다.
-    - 기존 클래스의 코드를 바꾸지 않고 기능을 변경할 때 많이 사용하는 설계 기법이 **프록시 패턴**이다.
-    - 프록시 패턴의 핵심은 실제 객체를 대행할 클래스 또한 실제 객체와 같은 인터페이스를 구현해야 한다는 것이다.
-    - 바꾸고 싶은 기능이 있다면 해당 메서드를 재정의하라.
-    - 기타 메서드는 원래 객체에게 그대로 위임하면 된다.
-- com.eomcs.mybatis.SqlSessionProxy 추가
-  - 트랜잭션에 포함된 작업을 실행할 때는 트랜잭션을 종료할 때까지 SqlSession을 닫아서는 안된다.
-  - 즉 SqlSession 객체에 대해 close()를 호출하더라도 무시해야 한다.
-  - 트랜잭션이 완료되어 더이상 SqlSession을 사용할 필요가 없을 때 진짜로 close 해야 한다.
-  - 이렇게 SqlSession의 기존 기능을 변경하기 위해 **프록시 패턴** 을 사용하여 오리지널 객체를 커스터마이징 할 것이다.
+다음과 같이 동작하도록 구현한다.
+```
+명령> /userInfo
+사용자번호: 12
+이름: aaa
+이메일: aaa@test.com
+사진: aaa.gif
 
-### 4단계 - 멀티스레드 환경에서 트랜잭션을 다룰 때 사용할 객체를 정의한다.
+명령> /userInfo
+로그인 하지 않았습니다!
+```
 
-- com.eomcs.mybatis.TransactionManager 추가
-  - 트랜잭션을 시작하고 종료하는 일을 한다.
-  - 스레드에 보관된 SqlSessionProxy 객체를 이용하여 commit/rollback 을 수행한다.
-  - 또한 SqlSessionProxy 를 이용해 SqlSession 객체의 자원을 완전히 해제한다.
-- com.eomcs.pms.ServerApp 변경
-  - 트랜잭션을 관리할 객체를 준비한다.
-  - 서비스 객체에 주입한다.
-- com.eomcs.pms.service.impl.DefaultXxxService 변경
-  - `SqlSessionFactory`를 주입 받는 대신에 `TransactionManager`를 주입받는다.
-  - 트랜잭션을 제어할 때 `TransactionManager` 를 사용한다.
-  - 백업: DefaultProjectService01.java
+- com.eomcs.pms.handler.UserInfoHandler 생성
+  - 현재 로그인 사용자 정보를 출력한다.
 
-### 5단계 - `TransactionManager` 를 이용한 트랜잭션 제어 코드를 캡슐화 한다.
+### 4단계 - 로그아웃을 구현한다.
 
-- com.eomcs.mybatis.TransactionCallback 인터페이스 추가
-  - 트랜잭션으로 묶어 수행할 작업을 정의하는 객체 
-  - `TransactionTemplate`은 이 인터페이스 규칙에 따라 작업을 실행할 것이다.
-- com.eomcs.mybatis.TransactionTemplate 클래스 추가
-  - 트랜잭션 상태에서 작업을 실행하는 일을 한다.
-  - 작업을 정상적으로 완료한다면 commit()을 자동으로 호출한다.
-  - 작업에 실패한다면 rollback()을 호출한다.
-- com.eomcs.pms.service.impl.DefaultProjectService 변경
-  - `TransactionManager` 대신에 `TransactionTemplate` 을 사용하여 트랜잭션을 제어한다.
+다음과 같이 동작하도록 구현한다.
+```
+명령> /logout
+aa 님 안녕히 가세요!
+
+명령> /userInfo
+로그인 하지 않았습니다!
+
+명령> /logout
+로그인 하지 않았습니다!
+
+```
+
+- com.eomcs.pms.handler.LogoutHandler 생성
+  - 현재 세션을 초기화시킨다.
+
+### 5단계 - 게시글 등록이나 변경, 삭제할 때 로그인 정보를 사용한다.
+
+- com.eomcs.pms.handler.BoardAddHandler 변경
+  - 게시글 작성자 정보를 입력 받지 않고 로그인 정보를 사용하도록 변경한다.
+```
+명령> /board/add
+[게시물 등록]
+제목? test
+내용? okok
+게시글을 등록하였습니다.
+
+명령> /board/add
+[게시물 등록]
+로그인 하지 않았습니다!
+```
+
+- com.eomcs.pms.handler.BoardUpdateHandler 변경
+  - 로그인 사용자가 게시글을 작성한 사용자일 때만 게시글을 변경할 수 있다.
+```
+명령> /board/update
+[게시물 변경]
+번호?
+입력> 20
+제목(haha)? 
+입력> test
+내용(hoho)? 
+입력> okok
+게시글을 변경하였습니다.
+
+명령> /board/update
+[게시물 변경]
+번호?
+입력> 20
+변경 권한이 없습니다!
+
+명령> /board/update
+[게시물 변경]
+로그인 하지 않았습니다!
+```
+
+- com.eomcs.pms.handler.BoardDeleteHandler 변경
+  - 로그인 사용자가 게시글 작성자일 때만 게시글을 삭제할 수 있다.
+```
+명령> /board/delete
+[게시물 삭제]
+번호? 
+입력> 20
+정말 삭제하시겠습니까?(y/N) y
+게시글을 삭제하였습니다.
+
+명령> /board/delete
+[게시물 삭제]
+번호? 
+입력> 20
+삭제 권한이 없습니다!
+
+명령> /board/delete
+[게시물 삭제]
+로그인 하지 않았습니다!
+```
+
+### 6단계 - 프로젝트를 등록, 변경, 삭제할 때 로그인 정보를 사용한다.
+
+- com.eomcs.pms.handler.ProjectAddHandler 변경
+  - 프로젝트 정보를 등록할 때 관리자는 로그인 사용자로 지정한다.
+```
+명령> /project/add
+[프로젝트 등록]
+로그인 하지 않았습니다!
+
+명령> /project/add
+[프로젝트 등록]
+프로젝트명? 
+입력> projectA
+내용? 
+입력> test..ok
+시작일? 
+입력> 2020-1-1
+종료일? 
+입력> 2020-2-2
+팀원?(완료: 빈 문자열) 
+입력> bbb
+팀원?(완료: 빈 문자열) 
+입력> ccc
+팀원?(완료: 빈 문자열) 
+입력> x1
+팀원?(완료: 빈 문자열)
+
+명령>
+```
+
+- com.eomcs.pms.handler.ProjectUpdateHandler 변경
+  - 로그인 사용자가 프로젝트 관리자일 때만 변경할 수 있다.
+```
+명령> /project/update
+[프로젝트 변경]
+로그인 하지 않았습니다!
+
+명령> /project/update
+[프로젝트 변경]
+번호? 
+입력> 15
+변경 권한이 없습니다!
+
+명령> /project/update
+[프로젝트 변경]
+번호? 
+입력> 150
+해당 번호의 프로젝트가 없습니다.
+
+명령> /project/update
+[프로젝트 변경]
+번호? 
+입력> 14
+프로젝트명(pp5)? 
+입력> pp5x
+내용(pp5pp5)? 
+입력> pp5xpp5x
+시작일(2021-01-01)? 
+입력> 2021-1-1
+종료일(2021-02-02)? 
+입력> 2021-4-4
+팀원()?(완료: 빈 문자열) 
+입력> ee
+팀원()?(완료: 빈 문자열) 
+입력> ii
+팀원()?(완료: 빈 문자열) 
+입력> 
+정말 변경하시겠습니까?(y/N) 
+입력> y
+프로젝트을 변경하였습니다.
+
+명령>
+```
+
+- com.eomcs.pms.handler.ProjectDeleteHandler 변경
+  - 로그인 사용자가 프로젝트 관리자일 때만 삭제할 수 있다.
+```
+명령> /project/delete
+[프로젝트 삭제]
+로그인 하지 않았습니다!
+
+명령> /project/delete
+[프로젝트 삭제]
+번호? 
+입력> 140
+해당 번호의 프로젝트가 없습니다.
+
+명령> /project/delete
+[프로젝트 삭제]
+번호? 
+입력> 15
+삭제 권한이 없습니다!
+
+명령> /project/delete
+[프로젝트 삭제]
+번호? 
+입력> 14
+정말 삭제하시겠습니까?(y/N) 
+입력> y
+프로젝트를 삭제하였습니다.
+
+```
+
+### 7단계 - 프로젝트 멤버를 변경, 삭제할 때 로그인 정보를 사용한다.
+
+- com.eomcs.pms.handler.ProjectMemberUpdateHandler 변경
+  - 프로젝트 멤버를 변경할 때 관리자는 로그인 사용자로 지정한다.
+```
+명령> /project/memberUpdate
+[프로젝트 멤버 변경]
+로그인 하지 않았습니다!
+
+명령> /project/memberUpdate
+[프로젝트 멤버 변경]
+프로젝트 번호? 
+입력> 25
+해당 번호의 프로젝트가 없습니다.
+
+명령> /project/update
+[프로젝트 변경]
+번호? 
+입력> 11
+변경 권한이 없습니다!
+
+명령> /project/memberUpdate
+[프로젝트 멤버 변경]
+프로젝트 번호? 
+입력> 24
+프로젝트 명: bb1
+멤버:
+  cc(3)
+  dd(4)
+  ii(15)
+---------------------------
+프로젝트의 멤버를 새로 등록하세요.
+팀원?(완료: 빈 문자열) 
+입력> aa
+팀원?(완료: 빈 문자열) 
+입력> ii
+팀원?(완료: 빈 문자열) 
+입력> 
+정말 변경하시겠습니까?(y/N) 
+입력> y
+프로젝트 멤버를 변경하였습니다.
+
+```
+
+- com.eomcs.pms.handler.ProjectMemberDeleteHandler 변경
+  - 프로젝트 멤버를 삭제할 때 관리자는 로그인 사용자로 지정한다.
+```
+명령> /project/memberUpdate
+[프로젝트 멤버 삭제]
+로그인 하지 않았습니다!
+
+명령> /project/memberUpdate
+[프로젝트 멤버 삭제]
+프로젝트 번호? 
+입력> 25
+해당 번호의 프로젝트가 없습니다.
+
+명령> /project/update
+[프로젝트 삭제]
+번호? 
+입력> 11
+삭제 권한이 없습니다!
+
+명령> /project/delete
+[프로젝트 삭제]
+번호? 
+입력> 24
+정말 삭제하시겠습니까?(y/N) 
+입력> y
+프로젝트를 삭제하였습니다.
+```
 
 ## 실습 결과
-- src/main/java/com/eomcs/mybatis/SqlSessionFactoryProxy.java 추가
-- src/main/java/com/eomcs/mybatis/SqlSessionProxy.java 추가
-- src/main/java/com/eomcs/mybatis/TransactionManager.java 추가
-- src/main/java/com/eomcs/mybatis/TransactionTemplate.java 추가
-- src/main/java/com/eomcs/mybatis/TransactionCallback.java 추가
-- src/main/java/com/eomcs/mybatis/MybatisDaoFactory.java 변경
-- src/main/java/com/eomcs/mybatis/DaoWorker.java 변경
-- src/main/java/com/eomcs/pms/service/impl/DefaultXxxService.java 변경
+- src/main/java/com/eomcs/util/Session.java 추가
+- src/main/java/com/eomcs/util/CommandRequest.java 변경
 - src/main/java/com/eomcs/ServerApp.java 변경
+- src/main/java/com/eomcs/pms/handler/LoginHandler.java 추가
+- src/main/java/com/eomcs/pms/handler/UserInfoHandler.java 추가
+- src/main/java/com/eomcs/pms/handler/LogoutHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/BoardAddHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/BoardUpdateHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/BoardDeleteHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectAddHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectUpdateHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectDeleteHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectMemberUpdateHandler.java 변경
+- src/main/java/com/eomcs/pms/handler/ProjectMemberDeleteHandler.java 변경
+- src/main/java/com/eomcs/pms/service/MemberService.java 변경
+- src/main/java/com/eomcs/pms/service/impl/DefaultMemberService.java 변경
+- src/main/java/com/eomcs/pms/dao/MemberDao.java 변경
+- src/main/java/com/eomcs/pms/mapper/MemberMapper.xml 변경

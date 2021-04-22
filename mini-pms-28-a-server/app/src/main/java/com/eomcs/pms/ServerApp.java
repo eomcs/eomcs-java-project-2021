@@ -18,10 +18,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import com.eomcs.mybatis.MybatisDaoFactory;
+import com.eomcs.mybatis.SqlSessionFactoryProxy;
+import com.eomcs.mybatis.TransactionManager;
 import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.pms.dao.ProjectDao;
@@ -81,25 +82,31 @@ public class ServerApp {
     // => SqlSessionFactory 객체 준비
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatisConfigStream);
 
-    // => DAO가 사용할 SqlSession 객체 준비
-    //    - 수동 commit 으로 동작하는 SqlSession 객체를 준비한다.
-    SqlSession sqlSession = sqlSessionFactory.openSession(false);
+    // => 트랜잭션 상태에 따라 SqlSession 객체를 만들어주는 SqlSessionFactory 대행자를 준비한다.
+    SqlSessionFactoryProxy sqlSessionFactoryProxy = new SqlSessionFactoryProxy(sqlSessionFactory);
 
     // 2) DAO 구현체를 자동으로 만들어주는 공장 객체를 준비한다.
-    MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSession);
+    // => 오리지널 SqlSessionFactory 대신에 트랜잭션 상태에 따라 SqlSession 객체를 만들어주는
+    //    SqlSessionFactory 대행자를 주입한다.
+    MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSessionFactoryProxy);
 
     // 3) 서비스 객체가 사용할 DAO 객체 준비
+    // => DAO 객체는 SqlSession 객체가 필요할 때마다 SqlSessionFactory 대행자에게 요구할 것이다.
     BoardDao boardDao = daoFactory.createDao(BoardDao.class);
     MemberDao memberDao = daoFactory.createDao(MemberDao.class);
     ProjectDao projectDao = daoFactory.createDao(ProjectDao.class);
     TaskDao taskDao = daoFactory.createDao(TaskDao.class);
 
+    // => 서비스 객체가 사용할 트랜잭션 관리자를 준비한다.
+    TransactionManager txManager = new TransactionManager(sqlSessionFactoryProxy);
+
     // 4) Command 구현체가 사용할 의존 객체(서비스 객체 + 도우미 객체) 준비
     // => 서비스 객체 생성
-    BoardService boardService = new DefaultBoardService(sqlSession, boardDao);
-    MemberService memberService = new DefaultMemberService(sqlSession, memberDao);
-    ProjectService projectService = new DefaultProjectService(sqlSession, projectDao, taskDao);
-    TaskService taskService = new DefaultTaskService(sqlSession, taskDao);
+    // => 기존에 주입하던 SqlSessionFactory 대신 TransactionManager를 주입한다. 
+    BoardService boardService = new DefaultBoardService(boardDao);
+    MemberService memberService = new DefaultMemberService(memberDao);
+    ProjectService projectService = new DefaultProjectService(txManager, projectDao, taskDao);
+    TaskService taskService = new DefaultTaskService(taskDao);
 
     // => 도우미 객체 생성
     MemberValidator memberValidator = new MemberValidator(memberService);
@@ -162,7 +169,6 @@ public class ServerApp {
     System.out.println("서버 종료!");
   }
 
-  // 클라이언트가 접속했을 때 스레드가 호출하는 메서드
   public void processRequest(Socket socket) {
     try (
         Socket clientSocket = socket;

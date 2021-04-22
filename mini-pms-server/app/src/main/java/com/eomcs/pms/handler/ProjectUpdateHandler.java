@@ -28,12 +28,23 @@ public class ProjectUpdateHandler implements Command {
 
     out.println("[프로젝트 변경]");
 
+    Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+    if (loginUser == null) {
+      out.println("로그인 하지 않았습니다!");
+      return;
+    }
+
     int no = prompt.inputInt("번호? ");
 
     Project oldProject = projectService.get(no);
 
     if (oldProject == null) {
       out.println("해당 번호의 프로젝트가 없습니다.");
+      return;
+    }
+
+    if (oldProject.getOwner().getNo() != loginUser.getNo()) {
+      out.println("변경 권한이 없습니다!");
       return;
     }
 
@@ -48,13 +59,7 @@ public class ProjectUpdateHandler implements Command {
         String.format("시작일(%s)? ", oldProject.getStartDate())));
     project.setEndDate(prompt.inputDate(
         String.format("종료일(%s)? ", oldProject.getEndDate())));
-    project.setOwner(memberValidator.inputMember(
-        String.format("만든이(%s)?(취소: 빈 문자열) ", oldProject.getOwner().getName()), request, response));
-
-    if (project.getOwner() == null) {
-      out.println("프로젝트 변경을 취소합니다.");
-      return;
-    }
+    project.setOwner(loginUser);
 
     // 프로젝트 팀원 정보를 입력 받는다.
     StringBuilder strBuilder = new StringBuilder();
@@ -77,7 +82,6 @@ public class ProjectUpdateHandler implements Command {
 
     // DBMS에게 프로젝트 변경을 요청한다.
     projectService.update(project);
-
     out.println("프로젝트을 변경하였습니다.");
   }
 }
