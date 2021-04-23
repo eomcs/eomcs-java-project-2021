@@ -1,58 +1,70 @@
-# 28-c. 세션(Session) 다루기 : Stateless 통신에서 세션 유지 방법
+# 29-a. `Chain of Responsibility` 디자인 패턴 : 프로젝트에 적용
 
 이번 훈련에서는,
-- **Stateless** 방식으로 통신을 할 때 같은 클라이언트에 대해 같은 세션을 유지하는 방법을 배울 것이다.
+- **Chain of Responsibility 디자인 패턴** 을 응용하는 방법을 배울 것이다.
+
+**Chain of Responsibility 패턴** 은,
+- 작업 요청을 받은 객체(sender)가 실제 작업자(receiver)에게 그 책임을 위임하는 구조에서 사용하는 설계 기법이다.
+- 작업자 간에 연결 고리를 구축하여 작업을 나누어 처리할 수 있다.
+- 체인 방식이기 때문에 작업에 참여하는 모든 객체가 서로 알 필요가 없다.
+- 오직 자신과 연결된 다음 작업자만 알면 되기 때문에 객체 간에 결합도를 낮추는 효과가 있다.
+- 런타임에서 연결 고리를 변경하거나 추가할 수 있어, 상황에 따라 실시간으로 기능을 추가하거나 삭제할 수 있다.
+- 보통 필터링을 구현할 때 이 설계 기법을 많이 사용한다.
 
 ## 훈련 목표
-- 
+- **Chain of Responsibility 패턴** 을 구현하는 것을 연습한다.
+- **Chain of Responsibility 패턴** 을 적용한 후의 이점을 이해한다.
 
 ## 훈련 내용
-- 
-
+- **Chain of Responsibility 패턴** 을 프로젝트에 적용한다.
+- **Chain of Responsibility 패턴** 을 적용한 후에 새 기능을 추가하는 것을 체험한다.
 
 ## 실습
 
-### 1단계 - 클라이언트와 서버 사이에 세션을 구분하기 위한 값을 주고 받을 수 있도록 프로토콜을 변경한다.
+### 1단계 - 커맨드 실행 전/후에 삽입될 필터의 호출 규칙을 정의한다.
 
-클라이언트 요청 프로토콜
-```
-명령 (CRLF)
-요청 헤더(부가정보) (CRLF)
-빈 줄
+- com.eomcs.util.FilterChain 인터페이스 생성
+  - 필터 체인이 보관하고 있는 필터를 실행시킬 때 호출할 메서드의 규칙을 정의한다.
+- com.eomcs.util.Filter 인터페이스 생성
+  - 필터 체인이 보관할 객체가 반드시 구현해야 할 인터페이스이다.
+  - 필터 체인이 호출하는 메서드이다.
+- com.eomcs.util.DefaultFilterChain 클래스 생성
+  - FilterChain 인터페이스를 구현한다.
+  - 다음 체인의 주소를 보관한다.
+  - 필터를 보관한다.
+- com.eomcs.util.FilterList 클래스 생성
+  - 필터 체인을 이용하여 필터 목록을 관리한다.
 
-예)
-/board/list (CRLF)
-SESSION_ID:세션번호 (CRLF)
-CRLF
-```
 
-서버 응답 프로토콜
-```
-응답상태 (CRLF)
-응답헤더 (CRLF)
-빈줄
-응답내용
-빈줄
+### 3단계 - 필터 관리자를 App 클래스에 적용한다.
 
-예)
-OK (CRLF)
-SESSION_ID:세션번호 (CRLF)
-CRLF
-[회원 목록] (CRLF)
-1, aa, aa@test.com, aa.gif, 11111 (CRLF)
-2, bb, bb@test.com, bb.gif, 22222 (CRLF)
-11, cc, cc@test.com, cc.gif, ttcc (CRLF)
-5, dd1, dd1@test.com, dd1.gif, teldd (CRLF)
-CRLF
-```
+- com.eomcs.pms.App 변경
+  - 필터 관리자를 준비하고 호출하는 코드를 추가한다.
+  - 기존에 커맨드 객체를 실행하는 코드를 주석으로 막는다.
+  - 백업: App02.java
 
-- `com.eomcs.pms.ServerApp` 변경
-  - 클라이언트에서 세션 아이디를 보내지 않았다면 새로 세션 객체를 만든다.
-  - 클라이언트에서 세션 아이디를 보냈다면,
-    - 그 아이디에 해당하는 세션이 있다면 그 세션 객체를 사용한다.
-    - 그 아이디에 해당하는 세션이 없다면 새로 세션 객체를 만든다.
-  - 새로 세션 객체를 만든 경우 응답할 때 세션 아이디를 보낸다.
+### 4단계 - 사용자가 입력한 명령을 처리할 커맨드를 찾아 실행시키는 부분을 필터로 처리한다.
 
+- com.eomcs.pms.filter.DefaultCommandFilter 생성
+  - `App` 클래스에서 커맨드를 실행하는 코드를 뜯어 온다.
+- com.eomcs.pms.App 변경
+  - 필터 관리자에 DefaultCommandFilter를 등록한다.
+  - 백업: App03.java
+
+### 5단계 - 로그인 여부를 검사하는 필터를 만들어 등록한다.
+
+- com.eomcs.pms.filter.AuthCommandFilter 생성
+  - `DefaultCommandFilter` 클래스에서 로그인 여부를 검사하는 코드를 뜯어 온다.
+- com.eomcs.pms.App 변경
+  - 필터 관리자에 `AuthCommandFilter`를 등록한다.
+  - 백업: App04.java
+  -
+### 6단계 - 사용자가 입력한 명령어를 로그 파일에 기록하는 필터 만들기
+
+- com.eomcs.pms.filter.LogCommandFilter 생성
+  - `App` 클래스에서 파일에 로그를 남기는 코드를 뜯어 온다.
+- com.eomcs.pms.App 변경
+  - 필터 관리자에 `LogCommandFilter`를 등록한다.
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/ServerApp.java 변경

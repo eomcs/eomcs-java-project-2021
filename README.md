@@ -181,10 +181,10 @@
 ### 28-b. 세션(Session) 다루기 : Stateless 통신 구현
 ### 28-c. 세션(Session) 다루기 : Stateless 통신에서 세션 유지 방법
 
+### 29-a. `Chain of Responsibility` 디자인 패턴 : 프로젝트에 적용
+### 29-b. `Chain of Responsibility` 디자인 패턴 : 필터로 사용자 인증 제어
 
-### 35-b. 애플리케이션을 클라이언트/서버 구조로 변경하기 : Stateless 방식 통신
-### 35-c. 애플리케이션을 클라이언트/서버 구조로 변경하기 : 멀티스레드 적용
-### 35-f. 애플리케이션을 클라이언트/서버 구조로 변경하기 : 멀티스레드 환경에서 Mybatis를 다루는 방법
+
 
 
 ### 36-b. 사용자 인증(authentication)하기 : 세션으로 사용자 구분
