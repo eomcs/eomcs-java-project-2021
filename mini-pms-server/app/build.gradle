@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     // 웹 애플리케이션을 제작할 때 사용하는 Servlet/JSP 라이브러리
-    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
 
     // MariaDB JDBC 드라이버
     implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
