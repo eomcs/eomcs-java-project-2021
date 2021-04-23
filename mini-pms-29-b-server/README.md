@@ -47,5 +47,5 @@
 
 
 ## 실습 결과
-- src/main/java/com/eomcs/pms/RequestLogFilter.java 추가
+- src/main/java/com/eomcs/pms/filter/RequestLogFilter.java 추가
 - src/main/java/com/eomcs/pms/ServerApp.java 변경

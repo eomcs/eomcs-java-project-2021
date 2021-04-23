@@ -185,14 +185,7 @@
 ### 29-b. `Chain of Responsibility` 디자인 패턴 : 필터 객체 자동 로딩 및 실행
 ### 29-c. `Chain of Responsibility` 디자인 패턴 : 로그인 검사를 필터로 분리
 
-
-### 36-b. 사용자 인증(authentication)하기 : 세션으로 사용자 구분
-
-### 40-a. 커맨드 실행 전/후에 기능 추가하기: 디자인 패턴 적용 전
-## 용
-### 40-c. 커맨드 실행 전/후에 기능 추가하기: init() 와 destroy()의 필요성
-
-### 44. 웹 애플리케이션 서버(Web Application Server: WAS) 아키텍처로 전환하기 : Servlet 기술 도입
+### 30-a. 웹 애플리케이션 서버 아키텍처로 전환하기 : Servlet 기술 도입
 
  
 ### 37 - 애플리케이션 서버가 등장한 이유!
