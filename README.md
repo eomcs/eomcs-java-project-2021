@@ -183,8 +183,7 @@
 
 ### 29-a. `Chain of Responsibility` 디자인 패턴 : 프로젝트에 적용
 ### 29-b. `Chain of Responsibility` 디자인 패턴 : 필터 객체 자동 로딩 및 실행
-
-
+### 29-c. `Chain of Responsibility` 디자인 패턴 : 로그인 검사를 필터로 분리
 
 
 ### 36-b. 사용자 인증(authentication)하기 : 세션으로 사용자 구분
