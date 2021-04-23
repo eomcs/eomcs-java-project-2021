@@ -10,6 +10,7 @@ import com.eomcs.util.FilterChain;
 // => 누가? FilterChain 목록을 통해 체인을 따라가면서 실행할 것이다.
 // => 필터는 Filter 규칙에 따라 만들어야 한다.
 // 
+//@Component // ServerApp 에서 자동 생성할 객체를 찾을 때 이 애노테이션이 붙은 클래스를 찾는다.
 public class RequestLogFilter implements Filter {
   @Override
   public void doFilter(CommandRequest request, CommandResponse response, FilterChain nextChain)

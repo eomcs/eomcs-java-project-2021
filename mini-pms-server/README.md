@@ -31,8 +31,19 @@
   - com.eomcs.pms.filter.RequestLogFilter 클래스 생성
     - 클라이언트 요청 정보를 서버 콘솔로 출력한다.
   - com.eomcs.pms.ServerApp 클래스 변경
-    - `RequestLogFilter`
+    - `RequestLogFilter` 를 필터 목록에 등록한 후 실행한다.
 
+### 2단계 - `Filter` 구현체를 자동으로 로딩하여 필터 목록에 등록한다.
+
+- com.eomcs.pms.filter.RequestLogFilter 변경
+  - 자동 생성하려면 `@Component` 애노테이션을 붙여야 한다.
+- com.eomcs.pms.ServerApp 클래스 변경
+  - `Command` 구현체를 찾을 때 `Filter` 구현체도 함께 찾아서 객체를 생성한다.
+  - `registerCommands()`를 `registerCommandAndFilter()` 로 변경한다.
+  - `isCommand()` 를 `isType()` 로 변경한다. 
+  - `createCommand()` 를 `createObject()` 로 변경한다.
+  - 자동 생성한 필터 객체를 저장할 컬렉션을 추가한다.
+  - 필터 체인을 구성할 때마다 개발자가 만든 필터를 등록한다.
 
 
 
