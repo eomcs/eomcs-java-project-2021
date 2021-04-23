@@ -28,6 +28,7 @@ import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.dao.TaskDao;
+import com.eomcs.pms.filter.RequestLogFilter;
 import com.eomcs.pms.handler.Command;
 import com.eomcs.pms.handler.MemberValidator;
 import com.eomcs.pms.service.BoardService;
@@ -227,11 +228,6 @@ public class ServerApp {
         sessionMap.put(sessionId, session);
       }
 
-      // 클라이언트 요청에 대해 기록(log)을 남긴다.
-      System.out.printf("[%s:%d] %s\n", 
-          remoteAddr.getHostString(), remoteAddr.getPort(), requestLine);
-
-
       if (requestLine.equalsIgnoreCase("serverstop")) {
         out.println("Server stopped!");
         out.println();
@@ -266,6 +262,9 @@ public class ServerApp {
 
       // 필터를 FilterList에 보관한다.
       filterList.add(commandFilter);
+
+      // 추가로 삽입할 필터가 있다면 다음과 같이 등록한다.
+      filterList.add(new RequestLogFilter());
 
       // 클라이언트가 요청한 작업을 처리한 후 응답 데이터를 보내기 전에 
       // 먼저 클라이언트에게 응답 헤더를 보낸다.

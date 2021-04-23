@@ -182,7 +182,7 @@
 ### 28-c. 세션(Session) 다루기 : Stateless 통신에서 세션 유지 방법
 
 ### 29-a. `Chain of Responsibility` 디자인 패턴 : 프로젝트에 적용
-### 29-b. `Chain of Responsibility` 디자인 패턴 : 필터로 사용자 인증 제어
+### 29-b. `Chain of Responsibility` 디자인 패턴 : 필터 객체 자동 로딩 및 실행
 
 
 

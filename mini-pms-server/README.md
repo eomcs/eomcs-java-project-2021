@@ -1,4 +1,4 @@
-# 29-a. `Chain of Responsibility` 디자인 패턴 : 프로젝트에 적용
+# 29-b. `Chain of Responsibility` 디자인 패턴 : 필터 객체 자동 로딩 및 실행
 
 이번 훈련에서는,
 - **Chain of Responsibility 디자인 패턴** 을 응용하는 방법을 배울 것이다.
@@ -21,13 +21,23 @@
 
 ## 실습
 
-### 1단계 - 커맨드 실행 전/후에 삽입될 필터의 호출 규칙을 정의한다.
+### 1단계 - `Filter` 를 이용하여 클라이언트의 접속 정보를 기록한다.
 
-- com.eomcs.util.FilterChain 인터페이스 생성
-  - 필터 체인이 보관하고 있는 필터를 실행시킬 때 호출할 메서드의 규칙을 정의한다.
-- com.eomcs.util.Filter 인터페이스 생성
-  - 필터 체인이 보관할 객체가 반드시 구현해야 할 인터페이스이다.
-  - 필터 체인이 호출하는 메서드이다.
+- 기존 방식
+  - `ServerApp` 에 해당 기능의 코드를 직접 삽입해야 한다.
+  - 즉 기능을 추가할 때마다 `ServerApp` 클래스를 변경해야 한다.
+- 새 방식
+  - 해당 기능을 수행하는 `Filter` 구현체를 만들어 삽입한다.
+  - com.eomcs.pms.filter.RequestLogFilter 클래스 생성
+    - 클라이언트 요청 정보를 서버 콘솔로 출력한다.
+  - com.eomcs.pms.ServerApp 클래스 변경
+    - `RequestLogFilter`
+
+
+
+
+
+
 
 ### 2단계 - FilterChain 규칙에 따라 동작할 클래스를 정의한다.
 - com.eomcs.util.DefaultFilterChain 클래스 생성
