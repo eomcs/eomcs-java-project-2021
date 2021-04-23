@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eomcs.pms.dao.ProjectDao">
+  
+  <resultMap id="projectMap" type="project">
+    <id column="no" property="no"/>
+    <result column="title" property="title"/>
+    <result column="content" property="content"/>
+    <result column="sdt" property="startDate"/>
+    <result column="edt" property="endDate"/>
+    
+    <association property="owner" javaType="member">
+	    <id column="owner_no" property="no"/>
+	    <result column="owner_name" property="name"/>
+    </association>
+    
+    <collection property="members" ofType="member">
+      <id column="member_no" property="no"/>
+      <result column="member_name" property="name"/>
+    </collection>
+  </resultMap>
+  
+  <sql id="select1">
+    select
+      p.no,
+      p.title,
+      p.sdt,
+      p.edt,
+      m.no as owner_no,
+      m.name as owner_name,
+      m2.no as member_no,
+      m2.name as member_name
+    from pms_project p
+      inner join pms_member m on p.owner=m.no
+      left outer join pms_member_project mp on mp.project_no=p.no
+      left outer join pms_member m2 on mp.member_no=m2.no
+  </sql>
+  
+  
+  <insert id="insert" parameterType="project"
+          useGeneratedKeys="true" keyColumn="no" keyProperty="no">
+    insert into pms_project(title,content,sdt,edt,owner) 
+    values(#{title}, #{content}, #{startDate}, #{endDate}, #{owner.no})
+  </insert>
+  <!-- 
+    위의 SQL은 내부적으로 다음과 같이 실행된다.
+    
+    int insert(String sqlid, Project project) {
+      // ProjectMapper.xml 파일에서 sqlid로 찾은 SQL 문을 꺼내온다.
+      // 그리고 다음과 같이 실행할 것이다.
+      PreparedStatement stmt = con.prepareStatement(
+        "insert into pms_project(title,content,sdt,edt,owner) values(?,?,?,?,?)",
+        Statement.RETURN_GENERATED_KEYS);
+      
+      stmt.setString(1, project.getTitle());
+      stmt.setString(2, project.getContent());
+      stmt.setString(3, project.getStartDate());
+      stmt.setString(4, project.getEndDate());
+      stmt.setString(5, project.getOwner().getNo());
+      int count = stmt.executeUpdate();
+      
+      ResultSet keyRs = stmt.getGeneratedKeys();
+      keyRs.next();
+      int projectNo = keyRs.getInt(1);
+      
+      project.setNo(projectNo);
+    }
+   -->
+  
+  <select id="findByKeyword" resultMap="projectMap" parameterType="map">
+    <include refid="select1"/>
+    <where>
+	    <choose>
+		    <when test="item == 1">
+		    p.title like concat('%', #{keyword}, '%')
+		    </when>
+		    <when test="item == 2">
+		    m.name like concat('%', #{keyword}, '%')
+		    </when>
+		    <when test="item == 3">
+		    m2.name like concat('%', #{keyword}, '%')
+		    </when>
+	    </choose>
+    </where>
+    order by title asc
+  </select>
+  
+  <select id="findByKeywords" resultMap="projectMap" parameterType="map">
+    <include refid="select1"/>
+    <where>
+	    <if test="title != ''">
+	      p.title like concat('%', #{title}, '%')
+	    </if>
+	    <if test="owner != ''">
+	      and m.name = #{owner}
+	    </if>
+	    <if test="member != ''">
+	      and m2.name = #{member}
+	    </if>
+    </where>
+    order by title asc
+  </select>
+  
+  <select id="findByNo" resultMap="projectMap" parameterType="int">
+    select
+      p.no,
+      p.title,
+      p.content,
+      p.sdt,
+      p.edt,
+      m.no as owner_no,
+      m.name as owner_name,
+      m2.no as member_no,
+      m2.name as member_name
+    from pms_project p
+      inner join pms_member m on p.owner=m.no
+      left outer join pms_member_project mp on mp.project_no=p.no
+      left outer join pms_member m2 on mp.member_no=m2.no
+    where p.no=#{value}
+  </select>
+  
+  <update id="update" parameterType="project">
+    update pms_project set
+      title=#{title},
+      content=#{content},
+      sdt=#{startDate},
+      edt=#{endDate},
+      owner=#{owner.no}
+    where no=#{no}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    delete from pms_project 
+    where no=#{value}
+  </delete>
+
+
+  <insert id="insertMember" parameterType="map">
+    insert into pms_member_project(member_no,project_no) 
+    values(#{memberNo}, #{projectNo})
+  </insert>
+  
+  <insert id="insertMembers" parameterType="map">
+    insert into pms_member_project(member_no,project_no) 
+    values
+    <foreach collection="members" item="m" separator=",">
+      (#{m.no}, #{projectNo})
+    </foreach>
+  </insert>
+  
+  <delete id="deleteMembers" parameterType="int">
+    delete from pms_member_project 
+    where project_no=#{value}
+  </delete>
+  
+  <select id="findAllMembers" resultType="member" parameterType="int">
+    select
+      m.no,
+      m.name
+    from pms_member_project mp
+      inner join pms_member m on mp.member_no=m.no
+    where 
+      mp.project_no=#{value}
+  </select>
+</mapper>
+
+
+
+
+
+
+
