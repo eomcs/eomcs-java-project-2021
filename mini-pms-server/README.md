@@ -85,6 +85,32 @@
   - `com.eomcs.pms.handler.MemberDeleteHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/member/delete?no=xxx`
 
+### 7단계 - 프로젝트 관리 구현체를 `Servlet` 구현체로 변경하기
+
+- com.eomcs.pms.web.ProjectDetailHandler 추가
+  - `com.eomcs.pms.handler.ProjectDetialHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/detail?no=xxx`
+- com.eomcs.pms.web.ProjectAddHandler 추가
+  - `com.eomcs.pms.handler.ProjectAddHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/add?title=xxx&content=xxx&startDate=xxx&endDate=xxx&member=xxx&member=xxx&member=xxx`
+- com.eomcs.pms.web.ProjectUpdateHandler 추가
+  - `com.eomcs.pms.handler.ProjectUpdateHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/update?no=xxx&name=xxx&email=xxx&password=xxx&photo=xxx&tel=xxx`
+- com.eomcs.pms.web.ProjectDeleteHandler 추가
+  - `com.eomcs.pms.handler.ProjectDeleteHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/delete?no=xxx`
+- com.eomcs.pms.web.ProjectSearchHandler 추가
+  - `com.eomcs.pms.handler.ProjectSearchHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/search?keyword=xxx`
+- com.eomcs.pms.web.ProjectDetailSearchHandler 추가
+  - `com.eomcs.pms.handler.ProjectDetailSearchHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/detailSearch?keyword=xxx`
+- com.eomcs.pms.web.ProjectMemberUpdateHandler 추가
+  - `com.eomcs.pms.handler.ProjectMemberUpdateHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/memberUpdate?no=xxx`
+- com.eomcs.pms.web.ProjectMemberDeleteHandler 추가
+  - `com.eomcs.pms.handler.ProjectMemberDeleteHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/memberDelete?no=xxx`
 
 
 ## 실습 결과
