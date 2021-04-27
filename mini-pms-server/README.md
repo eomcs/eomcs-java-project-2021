@@ -141,4 +141,5 @@
 - src/main/java/com/eomcs/pms/web/ProjectXxxHandler.java 추가
 - src/main/java/com/eomcs/pms/web/TaskXxxHandler.java 추가
 - src/main/java/com/eomcs/pms/handler 패키지 삭제
-- src/main/java/com/eomcs/pms/util 패키지 삭제
+- src/main/java/com/eomcs/util 패키지 삭제
+- src/main/java/com/eomcs/stereotype 패키지 삭제
