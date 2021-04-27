@@ -108,10 +108,28 @@
   - HTTP 요청: `localhost:8080/pms/project/detailSearch?title=xxx&owner=xxx&member=xxx`
 - com.eomcs.pms.web.ProjectMemberUpdateHandler 추가
   - `com.eomcs.pms.handler.ProjectMemberUpdateHandler` 클래스를 가져와서 변경한다.
-  - HTTP 요청: `localhost:8080/pms/project/memberUpdate?no=xxx`
+  - HTTP 요청: `localhost:8080/pms/project/memberUpdate?no=xxx&member=xxx&member=xxx&member=xxx`
 - com.eomcs.pms.web.ProjectMemberDeleteHandler 추가
   - `com.eomcs.pms.handler.ProjectMemberDeleteHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/project/memberDelete?no=xxx`
+
+### 8단계 - 작업 관리 구현체를 `Servlet` 구현체로 변경하기
+
+- com.eomcs.pms.web.TaskListHandler 추가
+  - `com.eomcs.pms.handler.TaskListHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/task/list?projectNo=xxx`
+- com.eomcs.pms.web.TaskDetailHandler 추가
+  - `com.eomcs.pms.handler.TaskDetialHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/task/detail?no=xxx`
+- com.eomcs.pms.web.TaskAddHandler 추가
+  - `com.eomcs.pms.handler.TaskAddHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/task/add?title=xxx&content=xxx&startDate=xxx&endDate=xxx&member=xxx&member=xxx&member=xxx`
+- com.eomcs.pms.web.TaskUpdateHandler 추가
+  - `com.eomcs.pms.handler.TaskUpdateHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/task/update?no=xxx&title=xxx&content=xxx&startDate=xxx&endDate=xxx&member=xxx&member=xxx&member=xxx`
+- com.eomcs.pms.web.TaskDeleteHandler 추가
+  - `com.eomcs.pms.handler.TaskDeleteHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/task/delete?no=xxx`
 
 
 ## 실습 결과
