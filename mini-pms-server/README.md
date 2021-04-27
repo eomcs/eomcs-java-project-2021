@@ -41,6 +41,7 @@
 
 - com.eomcs.pms.web.BoardDetailHandler 추가
   - `com.eomcs.pms.handler.BoardDetialHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/board/detail?no=xxx`
 
 ### 4단계 - 로그인/로그인 사용자정보 조회/로그아웃 구현체를 `Servlet` 구현체로 변경하기
 
@@ -68,6 +69,23 @@
 - com.eomcs.pms.web.BoardSearchHandler 추가
   - `com.eomcs.pms.handler.BoardSearchHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/board/search?keyword=xxxx`
+
+### 6단계 - 회원 관리 구현체를 `Servlet` 구현체로 변경하기
+
+- com.eomcs.pms.web.MemberDetailHandler 추가
+  - `com.eomcs.pms.handler.MemberDetialHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/member/detail?no=xxx`
+- com.eomcs.pms.web.MemberAddHandler 추가
+  - `com.eomcs.pms.handler.MemberAddHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/member/add?name=xxx&email=xxx&password=xxx&photo=xxx&tel=xxx`
+- com.eomcs.pms.web.MemberUpdateHandler 추가
+  - `com.eomcs.pms.handler.MemberUpdateHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/member/update?no=xxx&name=xxx&email=xxx&password=xxx&photo=xxx&tel=xxx`
+- com.eomcs.pms.web.MemberDeleteHandler 추가
+  - `com.eomcs.pms.handler.MemberDeleteHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/member/delete?no=xxx`
+
+
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/web/AppInitHandler.java 추가
