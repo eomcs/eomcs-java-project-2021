@@ -91,13 +91,13 @@
   <select id="findByKeywords" resultMap="projectMap" parameterType="map">
     <include refid="select1"/>
     <where>
-	    <if test="title != ''">
+	    <if test="title != null">
 	      p.title like concat('%', #{title}, '%')
 	    </if>
-	    <if test="owner != ''">
+	    <if test="owner != null">
 	      and m.name = #{owner}
 	    </if>
-	    <if test="member != ''">
+	    <if test="member != null">
 	      and m2.name = #{member}
 	    </if>
     </where>

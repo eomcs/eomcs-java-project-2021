@@ -95,16 +95,17 @@
   - HTTP 요청: `localhost:8080/pms/project/add?title=xxx&content=xxx&startDate=xxx&endDate=xxx&member=xxx&member=xxx&member=xxx`
 - com.eomcs.pms.web.ProjectUpdateHandler 추가
   - `com.eomcs.pms.handler.ProjectUpdateHandler` 클래스를 가져와서 변경한다.
-  - HTTP 요청: `localhost:8080/pms/project/update?no=xxx&name=xxx&email=xxx&password=xxx&photo=xxx&tel=xxx`
+  - HTTP 요청: `localhost:8080/pms/project/update?no=xxx&title=xxx&content=xxx&startDate=xxx&endDate=xxx&member=xxx&member=xxx&member=xxx`
 - com.eomcs.pms.web.ProjectDeleteHandler 추가
   - `com.eomcs.pms.handler.ProjectDeleteHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/project/delete?no=xxx`
 - com.eomcs.pms.web.ProjectSearchHandler 추가
   - `com.eomcs.pms.handler.ProjectSearchHandler` 클래스를 가져와서 변경한다.
-  - HTTP 요청: `localhost:8080/pms/project/search?keyword=xxx`
+  - HTTP 요청: `localhost:8080/pms/project/search?item=xxx&keyword=xxx`
 - com.eomcs.pms.web.ProjectDetailSearchHandler 추가
   - `com.eomcs.pms.handler.ProjectDetailSearchHandler` 클래스를 가져와서 변경한다.
-  - HTTP 요청: `localhost:8080/pms/project/detailSearch?keyword=xxx`
+  - `src/main/resources/com/eomcs/pms/mapper/ProjectMapper.xml` 의 `findByKeywords` SQL을 변경한다.
+  - HTTP 요청: `localhost:8080/pms/project/detailSearch?title=xxx&owner=xxx&member=xxx`
 - com.eomcs.pms.web.ProjectMemberUpdateHandler 추가
   - `com.eomcs.pms.handler.ProjectMemberUpdateHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/project/memberUpdate?no=xxx`
