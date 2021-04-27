@@ -1,4 +1,4 @@
-# 30-c. 웹 애플리케이션 서버 아키텍처로 전환하기 : `Command` 구현체를 `Servlet` 구현체로 바꾸기
+# 30-c. 웹 애플리케이션 서버 아키텍처로 전환하기 : `Command` 와 `Filter` 구현체를 Java EE 구현체로 바꾸기
 
 이번 훈련에서는,
 - **JavaEE** 의 **Servlet/JSP** 기술을 이용하여 기존의 애플리케이션 서버 아키텍처를 웹 애플리케이션 서버(Web Application Server: WAS) 아키텍처로 전환할 것이다.  
@@ -18,7 +18,7 @@
   - `init()` 메서드에 `ServerApp` 클래스에 있던 서비스/DAO/Mybatis/트랜잭션 객체 생성 코드를 가져온다.
   - 생성한 객체는 `ServletContext` 에 보관해 둔다.
 
-### 2단계 - 게시글/회원/프로젝트 목록 조회 구현체를 `Servlet` 구현체로 변경하기
+### 2단계 - 게시글/회원/프로젝트 목록 조회 구현체를 `javax.servlet.Servlet` 구현체로 변경하기
 
 - com.eomcs.pms.web.BoardListHandler 추가
   - `com.eomcs.pms.handler.BoardListHandler` 클래스를 가져와서 변경한다.
@@ -27,7 +27,7 @@
 - com.eomcs.pms.web.ProjectListHandler 추가
   - `com.eomcs.pms.handler.ProjectListHandler` 클래스를 가져와서 변경한다.
 
-### 3단계 - 게시글 조회 구현체를 `Servlet` 구현체로 변경하기
+### 3단계 - 게시글 조회 구현체를 `javax.servlet.Servlet` 구현체로 변경하기
 
 웹 브라우저가 웹 애플리케이션 서버에게 값을 보낼 때는 URL 뒤에 파라미터를 붙인다.
 ```
@@ -43,7 +43,7 @@
   - `com.eomcs.pms.handler.BoardDetialHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/board/detail?no=xxx`
 
-### 4단계 - 로그인/로그인 사용자정보 조회/로그아웃 구현체를 `Servlet` 구현체로 변경하기
+### 4단계 - 로그인/로그인 사용자정보 조회/로그아웃 구현체를 `javax.servlet.Servlet` 구현체로 변경하기
 
 - com.eomcs.pms.web.LoginHandler 추가
   - `com.eomcs.pms.handler.LoginHandler` 클래스를 가져와서 변경한다.
@@ -55,7 +55,7 @@
   - `com.eomcs.pms.handler.LogoutHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/logout`
 
-### 5단계 - 게시글 등록/변경/삭제 구현체를 `Servlet` 구현체로 변경하기
+### 5단계 - 게시글 등록/변경/삭제 구현체를 `javax.servlet.Servlet` 구현체로 변경하기
 
 - com.eomcs.pms.web.BoardAddHandler 추가
   - `com.eomcs.pms.handler.BoardAddHandler` 클래스를 가져와서 변경한다.
@@ -70,7 +70,7 @@
   - `com.eomcs.pms.handler.BoardSearchHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/board/search?keyword=xxxx`
 
-### 6단계 - 회원 관리 구현체를 `Servlet` 구현체로 변경하기
+### 6단계 - 회원 관리 구현체를 `javax.servlet.Servlet` 구현체로 변경하기
 
 - com.eomcs.pms.web.MemberDetailHandler 추가
   - `com.eomcs.pms.handler.MemberDetialHandler` 클래스를 가져와서 변경한다.
@@ -85,7 +85,7 @@
   - `com.eomcs.pms.handler.MemberDeleteHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/member/delete?no=xxx`
 
-### 7단계 - 프로젝트 관리 구현체를 `Servlet` 구현체로 변경하기
+### 7단계 - 프로젝트 관리 구현체를 `javax.servlet.Servlet` 구현체로 변경하기
 
 - com.eomcs.pms.web.ProjectDetailHandler 추가
   - `com.eomcs.pms.handler.ProjectDetialHandler` 클래스를 가져와서 변경한다.
@@ -113,7 +113,7 @@
   - `com.eomcs.pms.handler.ProjectMemberDeleteHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/project/memberDelete?no=xxx`
 
-### 8단계 - 작업 관리 구현체를 `Servlet` 구현체로 변경하기
+### 8단계 - 작업 관리 구현체를 `javax.servlet.Servlet` 구현체로 변경하기
 
 - com.eomcs.pms.web.TaskListHandler 추가
   - `com.eomcs.pms.handler.TaskListHandler` 클래스를 가져와서 변경한다.
@@ -132,7 +132,14 @@
   - `com.eomcs.pms.handler.TaskDeleteHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/task/delete?no=xxx`
 
-### 9단계 - 필터 구현체를 `Filter` 구현체로 변경하기
+### 9단계 - 필터 구현체를 `javax.servlet.Filter` 구현체로 변경하기
+
+- com.eomcs.pms.web.filter.RequestLogFilter 변경
+  - 기존 클래스의 패키지를 변경한다.
+  - Java EE 규칙에 따라 필터를 정의한다.
+- com.eomcs.pms.web.filter.LoginCheckFilter 변경
+  - 기존 클래스의 패키지를 변경한다.
+  - Java EE 규칙에 따라 필터를 정의한다.
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/web/AppInitHandler.java 추가
@@ -140,6 +147,8 @@
 - src/main/java/com/eomcs/pms/web/MemberXxxHandler.java 추가
 - src/main/java/com/eomcs/pms/web/ProjectXxxHandler.java 추가
 - src/main/java/com/eomcs/pms/web/TaskXxxHandler.java 추가
+- src/main/java/com/eomcs/pms/web/filter/XxxFilter.java 추가
 - src/main/java/com/eomcs/pms/handler 패키지 삭제
+- src/main/java/com/eomcs/pms/filter 패키지 삭제
 - src/main/java/com/eomcs/util 패키지 삭제
 - src/main/java/com/eomcs/stereotype 패키지 삭제
