@@ -27,16 +27,18 @@ public class TaskListHandler extends HttpServlet {
 
     out.println("[작업 목록]");
 
-    // 1) 사용자가 입력한 문자열을 프로젝트 번호로 바꾼다.
+    String input  = request.getParameter("projectNo");
+
     int projectNo = 0;
-    try {
-      projectNo = Integer.parseInt(request.getParameter("projectNo"));
-    } catch (Exception e) {
-      out.println("유효한 프로젝트 번호를 입력하세요.");
-      return;
+    if (input != null) {
+      try {
+        projectNo = Integer.parseInt(input);
+      } catch (Exception e) {
+        out.println("유효한 프로젝트 번호를 입력하세요.");
+        return;
+      }
     }
 
-    // 2) 해당 프로젝트에 소속된 작업 목록을 가져온다.
     try {
       List<Task> tasks = null;
       if (projectNo == 0) {

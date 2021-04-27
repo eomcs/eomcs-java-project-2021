@@ -14,8 +14,8 @@ import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.service.TaskService;
 
 @SuppressWarnings("serial")
-@WebServlet("/task/add")
-public class TaskAddHandler extends HttpServlet {
+@WebServlet("/task/update")
+public class TaskUpdateHandler extends HttpServlet {
 
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response)
@@ -26,23 +26,33 @@ public class TaskAddHandler extends HttpServlet {
     response.setContentType("text/plain;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
-    out.println("[작업 등록]");
+    out.println("[작업 변경]");
 
     try {
-      Task t = new Task();
-      t.setProjectNo(Integer.parseInt(request.getParameter("projectNo")));
-      t.setContent(request.getParameter("content"));
-      t.setDeadline(Date.valueOf(request.getParameter("deadline")));
+      int no = Integer.parseInt(request.getParameter("no"));
+
+      Task oldTask = taskService.get(no);
+      if (oldTask == null) {
+        out.println("해당 번호의 작업이 없습니다.");
+        return;
+      }
+      Task task = new Task();
+      task.setNo(no);
+      task.setProjectNo(Integer.parseInt(request.getParameter("projectNo")));
+      task.setContent(request.getParameter("content"));
+      task.setDeadline(Date.valueOf(request.getParameter("deadline")));
       //신규(0), 진행중(1), 완료(2)
-      t.setStatus(Integer.parseInt(request.getParameter("status")));
+      task.setStatus(Integer.parseInt(request.getParameter("status")));
 
       Member owner = new Member();
       owner.setNo(Integer.parseInt(request.getParameter("owner")));
-      t.setOwner(owner);
+      task.setOwner(owner);
 
-      taskService.add(t);
+      // DBMS에게 게시글 변경을 요청한다.
+      taskService.update(task);
 
-      out.println("작업을 등록했습니다.");
+      out.println("작업을 변경하였습니다.");
+
 
     } catch (Exception e) {
       StringWriter strWriter = new StringWriter();

@@ -117,20 +117,22 @@
 
 - com.eomcs.pms.web.TaskListHandler 추가
   - `com.eomcs.pms.handler.TaskListHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/task/list`
   - HTTP 요청: `localhost:8080/pms/task/list?projectNo=xxx`
 - com.eomcs.pms.web.TaskDetailHandler 추가
   - `com.eomcs.pms.handler.TaskDetialHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/task/detail?no=xxx`
 - com.eomcs.pms.web.TaskAddHandler 추가
   - `com.eomcs.pms.handler.TaskAddHandler` 클래스를 가져와서 변경한다.
-  - HTTP 요청: `localhost:8080/pms/task/add?title=xxx&content=xxx&startDate=xxx&endDate=xxx&member=xxx&member=xxx&member=xxx`
+  - HTTP 요청: `localhost:8080/pms/task/add?projectNo=xxx&content=xxx&deadline=xxx&status=xxx&owner=xxx`
 - com.eomcs.pms.web.TaskUpdateHandler 추가
   - `com.eomcs.pms.handler.TaskUpdateHandler` 클래스를 가져와서 변경한다.
-  - HTTP 요청: `localhost:8080/pms/task/update?no=xxx&title=xxx&content=xxx&startDate=xxx&endDate=xxx&member=xxx&member=xxx&member=xxx`
+  - HTTP 요청: `localhost:8080/pms/task/update?no=xxx&projectNo=xxx&content=xxx&deadline=xxx&status=xxx&owner=xxx`
 - com.eomcs.pms.web.TaskDeleteHandler 추가
   - `com.eomcs.pms.handler.TaskDeleteHandler` 클래스를 가져와서 변경한다.
   - HTTP 요청: `localhost:8080/pms/task/delete?no=xxx`
 
+### 9단계 - 필터 구현체를 `Filter` 구현체로 변경하기
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/web/AppInitHandler.java 추가
@@ -139,3 +141,4 @@
 - src/main/java/com/eomcs/pms/web/ProjectXxxHandler.java 추가
 - src/main/java/com/eomcs/pms/web/TaskXxxHandler.java 추가
 - src/main/java/com/eomcs/pms/handler 패키지 삭제
+- src/main/java/com/eomcs/pms/util 패키지 삭제
