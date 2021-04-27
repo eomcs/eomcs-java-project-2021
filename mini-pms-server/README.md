@@ -27,9 +27,9 @@
 - com.eomcs.pms.web.ProjectListHandler 추가
   - `com.eomcs.pms.handler.ProjectListHandler` 클래스를 가져와서 변경한다.
 
-### 3단계 - 게시글 조회/등록/변경/삭제 구현체를 `Servlet` 구현체로 변경하기
+### 3단계 - 게시글 조회 구현체를 `Servlet` 구현체로 변경하기
 
-웹 애플리케이션 서버에게 값을 보낼 때는 URL 뒤에 파라미터 값을 붙인다.
+웹 브라우저가 웹 애플리케이션 서버에게 값을 보낼 때는 URL 뒤에 파라미터를 붙인다.
 ```
 예) localhost:8080/pms/board/detail?no=100
 ```
@@ -41,13 +41,38 @@
 
 - com.eomcs.pms.web.BoardDetailHandler 추가
   - `com.eomcs.pms.handler.BoardDetialHandler` 클래스를 가져와서 변경한다.
+
+### 4단계 - 로그인/로그인 사용자정보 조회/로그아웃 구현체를 `Servlet` 구현체로 변경하기
+
+- com.eomcs.pms.web.LoginHandler 추가
+  - `com.eomcs.pms.handler.LoginHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/login?email=aa@test.com&password=1111`
+- com.eomcs.pms.web.UserInfoHandler 추가
+  - `com.eomcs.pms.handler.UserInfoHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/userInfo`
+- com.eomcs.pms.web.LogoutHandler 추가
+  - `com.eomcs.pms.handler.LogoutHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/logout`
+
+### 5단계 - 게시글 등록/변경/삭제 구현체를 `Servlet` 구현체로 변경하기
+
 - com.eomcs.pms.web.BoardAddHandler 추가
   - `com.eomcs.pms.handler.BoardAddHandler` 클래스를 가져와서 변경한다.
-
+  - HTTP 요청: `localhost:8080/pms/board/add?title=xxx&content=xxxx`
+- com.eomcs.pms.web.BoardUpdateHandler 추가
+  - `com.eomcs.pms.handler.BoardUpdateHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/board/update?no=xxx&title=xxx&content=xxxx`
+- com.eomcs.pms.web.BoardDeleteHandler 추가
+  - `com.eomcs.pms.handler.BoardDeleteHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/board/delete?no=xxx`
+- com.eomcs.pms.web.BoardSearchHandler 추가
+  - `com.eomcs.pms.handler.BoardSearchHandler` 클래스를 가져와서 변경한다.
+  - HTTP 요청: `localhost:8080/pms/board/search?keyword=xxxx`
 
 ## 실습 결과
 - src/main/java/com/eomcs/pms/web/AppInitHandler.java 추가
-- src/main/java/com/eomcs/pms/web/BoardListHandler.java 추가
-- src/main/java/com/eomcs/pms/web/MemberListHandler.java 추가
-- src/main/java/com/eomcs/pms/web/ProjectListHandler.java 추가
-
+- src/main/java/com/eomcs/pms/web/BoardXxxHandler.java 추가
+- src/main/java/com/eomcs/pms/web/MemberXxxHandler.java 추가
+- src/main/java/com/eomcs/pms/web/ProjectXxxHandler.java 추가
+- src/main/java/com/eomcs/pms/web/TaskXxxHandler.java 추가
+- src/main/java/com/eomcs/pms/handler 패키지 삭제
