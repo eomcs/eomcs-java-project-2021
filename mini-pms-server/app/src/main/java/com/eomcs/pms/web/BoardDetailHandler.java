@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.eomcs.pms.domain.Board;
+import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.BoardService;
 
 @SuppressWarnings("serial")
@@ -57,9 +58,17 @@ public class BoardDetailHandler extends HttpServlet {
       out.printf("<tr><th>조회수</th> <td>%s</td></tr>\n", b.getViewCount());
       out.printf("<tr><th>좋아요</th> <td>%s</td></tr>\n", b.getLike());
       out.println("</tbody>");
-      out.println("<tfoot>");
-      out.println("<tr><td colspan='2'><input type='submit' value='변경'></td></tr>");
-      out.println("</tfoot>");
+
+      Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+      if (loginUser != null && b.getWriter().getNo() == loginUser.getNo()) {
+        out.println("<tfoot>");
+        out.println("<tr><td colspan='2'>");
+        out.println("<input type='submit' value='변경'> "
+            + "<a href='delete?no=" + b.getNo() + "'>삭제</a> ");
+        out.println("</td></tr>");
+        out.println("</tfoot>");
+      }
+
       out.println("</table>");
       out.println("</form>");
 

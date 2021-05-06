@@ -35,7 +35,7 @@ public class BoardAddHandler extends HttpServlet {
     Member loginUser = (Member) httpRequest.getSession().getAttribute("loginUser");
     b.setWriter(loginUser);
 
-    response.setContentType("text/plain;charset=UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
     out.println("<!DOCTYPE html>");
@@ -43,23 +43,29 @@ public class BoardAddHandler extends HttpServlet {
     out.println("<head>");
     out.println("<title>게시글 등록</title>");
 
-    out.println("</head>");
-    out.println("<body>");
-    out.println("<h1>게시글 상세보기</h1>");
-
-    out.println("[게시글 등록]");
-
     try {
       boardService.add(b);
 
-      <meta http-eqiv>
+      out.println("<meta http-equiv='Refresh' content='1;url=list'>");
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>게시글 등록</h1>");
+      out.println("<p>게시글을 등록했습니다.</p>");
 
     } catch (Exception e) {
       StringWriter strWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter(strWriter);
       e.printStackTrace(printWriter);
-      out.println(strWriter.toString());
+
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>게시글 등록 오류</h1>");
+      out.printf("<pre>%s</pre>\n", strWriter.toString());
+      out.println("<p><a href='list'>목록</a></p>");
     }
+
+    out.println("</body>");
+    out.println("</html>");
   }
 }
 

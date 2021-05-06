@@ -17,7 +17,7 @@ import com.eomcs.pms.service.BoardService;
 public class BoardSearchHandler extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     BoardService boardService = (BoardService) request.getServletContext().getAttribute("boardService");

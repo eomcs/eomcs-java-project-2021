@@ -64,6 +64,12 @@ public class BoardListHandler extends HttpServlet {
       out.println("</tbody>");
       out.println("</table>");
 
+      out.println("<form action=`search` method='get'>");
+      out.println("<input type='text' name='keyword'> ");
+      out.println("<button>검색</button>");
+      out.println("</form>");
+
+
     } catch (Exception e) {
       // 상세 오류 내용을 StringWriter로 출력한다.
       StringWriter strWriter = new StringWriter();

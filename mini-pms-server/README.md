@@ -21,6 +21,7 @@
   - 그래야만 src/main 에 추가한 webapp 폴더를 이클립스가 인식할 수 있다.
 - com.eomcs.pms.web.BoardAddHandler 변경
 - com.eomcs.pms.web.BoardUpdateHandler 변경
+- com.eomcs.pms.web.BoardDeleteHandler 변경
 
 ## 실습 결과
 - build.gradle 변경
