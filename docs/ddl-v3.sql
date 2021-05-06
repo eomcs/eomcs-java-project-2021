@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS pms_member RESTRICT;
+DROP TABLE IF EXISTS pms_board RESTRICT;
+DROP TABLE IF EXISTS pms_project RESTRICT;
+DROP TABLE IF EXISTS pms_task RESTRICT;
+DROP TABLE IF EXISTS pms_member_project RESTRICT;
+
 create table pms_member(
   no int not null,
   name varchar(30) not null,
