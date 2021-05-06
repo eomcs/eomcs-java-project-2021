@@ -1,14 +1,14 @@
 -- pms_member 테이블 예제 데이터 삽입
 insert into pms_member(no, name, email, password)  values(1, 'aaa', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(2, 'bbb', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(3, 'ccc', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(4, 'ddd', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(5, 'eee', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(6, 'fff', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(7, 'ggg', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(8, 'hhh', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(9, 'iii', 'aaa@test.com', password('1111'));
-insert into pms_member(no, name, email, password)  values(10, 'jjj', 'aaa@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(2, 'bbb', 'bbb@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(3, 'ccc', 'ccc@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(4, 'ddd', 'ddd@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(5, 'eee', 'eee@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(6, 'fff', 'fff@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(7, 'ggg', 'ggg@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(8, 'hhh', 'hhh@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(9, 'iii', 'iii@test.com', password('1111'));
+insert into pms_member(no, name, email, password)  values(10, 'jjj', 'jjj@test.com', password('1111'));
 
 -- pms_board 테이블 예제 데이터 삽입
 insert into pms_board(no, title, content, writer) values(11, '제목101', '내용101', 1);
