@@ -180,6 +180,7 @@ create table pms_board(
   content text not null,
   writer int not null,
   cdt datetime default now(),
+  like_cnt int default 0,
   vw_cnt int default 0
 );
 
@@ -203,3 +204,4 @@ alter table pms_board
 - src/main/java/com/eomcs/pms/domain/Board.java 변경
 - src/main/java/com/eomcs/pms/handler/TaskXxxCommand.java 변경
 - src/main/java/com/eomcs/pms/handler/BoardXxxCommand.java 변경
+- docs/ddl-v3.sql 참조

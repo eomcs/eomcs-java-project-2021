@@ -168,3 +168,4 @@ alter table pms_member_project
 - src/main/java/com/eomcs/pms/handler/MemberListCommand.java 변경
 - src/main/java/com/eomcs/pms/handler/ProjectXxxCommand.java 변경
 - src/main/java/com/eomcs/pms/handler/TaskXxxCommand.java 변경
+- docs/ddl-v2.sql 참조
