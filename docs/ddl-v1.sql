@@ -36,7 +36,7 @@ alter table pms_member
   modify column no int not null auto_increment;
 
 alter table pms_member
-  add constraint pms_member_uk unique (no);
+  add constraint pms_member_uk unique (email);
 
 create table pms_project(
   no int not null,
