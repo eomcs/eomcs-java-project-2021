@@ -17,9 +17,8 @@ import com.eomcs.pms.service.BoardService;
 public class BoardUpdateHandler extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
     BoardService boardService = (BoardService) request.getServletContext().getAttribute("boardService");
 
     response.setContentType("text/plain;charset=UTF-8");
@@ -28,6 +27,7 @@ public class BoardUpdateHandler extends HttpServlet {
     out.println("[게시글 변경]");
 
     try {
+      request.setCharacterEncoding("UTF-8");
       int no = Integer.parseInt(request.getParameter("no"));
 
       Board oldBoard = boardService.get(no);

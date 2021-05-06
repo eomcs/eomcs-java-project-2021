@@ -43,17 +43,26 @@ public class BoardDetailHandler extends HttpServlet {
         out.println("<p>해당 번호의 게시글이 없습니다.</p>");
         return;
       }
+      out.println("<form action='update' method='post'>");
       out.println("<table border='1'>");
       out.println("<tbody>");
-      out.printf("<tr><th>번호</th> <td>%d</td></tr>\n", b.getNo());
-      out.printf("<tr><th>제목</th> <td>%s</td></tr>\n", b.getTitle());
-      out.printf("<tr><th>내용</th> <td>%s</td></tr>\n", b.getContent());
+      out.printf("<tr><th>번호</th>"
+          + " <td><input type='text' name='no' value='%d' readonly></td></tr>\n", b.getNo());
+      out.printf("<tr><th>제목</th>"
+          + " <td><input name='title' type='text' value='%s'></td></tr>\n", b.getTitle());
+      out.printf("<tr><th>내용</th>"
+          + " <td><textarea name='content' rows='10' cols='60'>%s</textarea></td></tr>\n", b.getContent());
       out.printf("<tr><th>작성자</th> <td>%s</td></tr>\n", b.getWriter().getName());
       out.printf("<tr><th>등록일</th> <td>%s</td></tr>\n", formatter.format(b.getRegisteredDate()));
       out.printf("<tr><th>조회수</th> <td>%s</td></tr>\n", b.getViewCount());
       out.printf("<tr><th>좋아요</th> <td>%s</td></tr>\n", b.getLike());
       out.println("</tbody>");
+      out.println("<tfoot>");
+      out.println("<tr><td colspan='2'><input type='submit' value='변경'></td></tr>");
+      out.println("</tfoot>");
       out.println("</table>");
+      out.println("</form>");
+
 
     } catch (Exception e) {
       StringWriter strWriter = new StringWriter();
