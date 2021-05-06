@@ -22,6 +22,7 @@
 - com.eomcs.pms.web.BoardAddHandler 변경
 - com.eomcs.pms.web.BoardUpdateHandler 변경
 - com.eomcs.pms.web.BoardDeleteHandler 변경
+- com.eomcs.pms.web.BoardSearchHandler 변경
 
 ## 실습 결과
 - build.gradle 변경
