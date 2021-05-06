@@ -14,6 +14,12 @@
 ### 1단계 - 게시판 콘텐트의 출력 형식을 HTML로 바꾼다.
 
 - com.eomcs.pms.web.BoardListHandler 변경
+- com.eomcs.pms.web.BoardDetailHandler 변경
+- src/main/webapp 생성
+- src/main/webapp/board/form.html 생성
+  - `$ gradle eclipse`를 다시 실행하여 이클립스 설정 파일을 갱신하라.
+  - 그래야만 src/main 에 추가한 webapp 폴더를 이클립스가 인식할 수 있다.
+
 
 ## 실습 결과
 - build.gradle 변경
