@@ -47,7 +47,7 @@ public class ProjectDetailHandler extends HttpServlet {
       }
 
       out.println("<form action='update' method='post'>");
-      out.printf("<input type='text' name='no' value='%d'>\n", project.getNo());
+      out.printf("번호: <input type='text' name='no' value='%d' readonly><br>\n", project.getNo());
       out.printf("제목: <input type='text' name='title' value='%s'><br>\n", project.getTitle());
       out.printf("내용: <textarea name='content' rows='10' cols='60'>%s</textarea><br>\n", project.getContent());
       out.printf("시작일: <input type='date' name='startDate' value='%s'><br>\n", project.getStartDate());
@@ -62,7 +62,8 @@ public class ProjectDetailHandler extends HttpServlet {
             m.getNo(), contain(project.getMembers(), m.getNo()) ? "checked" : "", m.getName());
       }
 
-      out.println("<input type='submit' value='등록'>");
+      out.println("<input type='submit' value='변경'> ");
+      out.printf("<a href='delete?no=%d'>삭제</a>\n", project.getNo());
       out.println("</form>");
 
     } catch (Exception e) {

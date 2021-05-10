@@ -19,15 +19,21 @@ import com.eomcs.pms.service.ProjectService;
 public class ProjectUpdateHandler extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     ProjectService projectService = (ProjectService) request.getServletContext().getAttribute("projectService");
 
-    response.setContentType("text/plain;charset=UTF-8");
+    // 클라이언트가 POST 요청으로 보낸 데이터가 UTF-8임을 알려준다.
+    request.setCharacterEncoding("UTF-8");
+
+    response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
-    out.println("[프로젝트 변경]");
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<title>프로젝트 변경</title>");
 
     try {
       int no = Integer.parseInt(request.getParameter("no"));
@@ -35,14 +41,12 @@ public class ProjectUpdateHandler extends HttpServlet {
       Project oldProject = projectService.get(no);
 
       if (oldProject == null) {
-        out.println("해당 번호의 프로젝트가 없습니다.");
-        return;
-      }
+        throw new Exception("해당 번호의 프로젝트가 없습니다.");
+      } 
 
       Member loginUser = (Member) request.getSession().getAttribute("loginUser");
       if (oldProject.getOwner().getNo() != loginUser.getNo()) {
-        out.println("변경 권한이 없습니다!");
-        return;
+        throw new Exception("변경 권한이 없습니다!");
       }
 
       // 사용자에게서 변경할 데이터를 입력 받는다.
@@ -66,14 +70,28 @@ public class ProjectUpdateHandler extends HttpServlet {
 
       // DBMS에게 프로젝트 변경을 요청한다.
       projectService.update(project);
-      out.println("프로젝트을 변경하였습니다.");
+
+      out.println("<meta http-equiv='Refresh' content='1;url=list'>");
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>프로젝트 변경</h1>");
+      out.println("<p>프로젝트를 변경하였습니다.</p>");
 
     } catch (Exception e) {
       StringWriter strWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter(strWriter);
       e.printStackTrace(printWriter);
-      out.println(strWriter.toString());
+
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>프로젝트 변경 오류</h1>");
+      out.printf("<p>%s</p>\n", e.getMessage());
+      out.printf("<pre>%s</pre>\n", strWriter.toString());
+      out.println("<p><a href='list'>목록</a></p>");
     }
+
+    out.println("</body>");
+    out.println("</html>");
   }
 }
 
