@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
 
 @SuppressWarnings("serial")
@@ -18,49 +19,71 @@ import com.eomcs.pms.service.ProjectService;
 public class ProjectDetailHandler extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     ProjectService projectService = (ProjectService) request.getServletContext().getAttribute("projectService");
 
-    response.setContentType("text/plain;charset=UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
-    out.println("[프로젝트 상세보기]");
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<title>프로젝트 상세</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>프로젝트 상세보기</h1>");
 
     try {
       int no = Integer.parseInt(request.getParameter("no"));
 
       Project project = projectService.get(no);
-
       if (project == null) {
-        out.println("해당 번호의 프로젝트가 없습니다.");
+        out.println("<p>해당 번호의 프로젝트가 없습니다.</p>");
+        out.println("</body>");
+        out.println("</html>");
         return;
       }
 
-      out.printf("프로젝트명: %s\n", project.getTitle());
-      out.printf("내용: %s\n", project.getContent());
-      out.printf("시작일: %s\n", project.getStartDate());
-      out.printf("종료일: %s\n", project.getEndDate());
-      out.printf("관리자: %s\n", project.getOwner().getName());
+      out.println("<form action='update' method='post'>");
+      out.printf("<input type='text' name='no' value='%d'>\n", project.getNo());
+      out.printf("제목: <input type='text' name='title' value='%s'><br>\n", project.getTitle());
+      out.printf("내용: <textarea name='content' rows='10' cols='60'>%s</textarea><br>\n", project.getContent());
+      out.printf("시작일: <input type='date' name='startDate' value='%s'><br>\n", project.getStartDate());
+      out.printf("종료일: <input type='date' name='endDate' value='%s'><br>\n", project.getEndDate());
+      out.printf("관리자: %s<br>\n", project.getOwner().getName());
+      out.println("팀원: <br>");
 
-      // 프로젝트의 팀원 목록 가져오기
-      StringBuilder strBuilder = new StringBuilder();
-      List<Member> members = project.getMembers();
+      MemberService memberService = (MemberService) request.getServletContext().getAttribute("memberService");
+      List<Member> members = memberService.list();
       for (Member m : members) {
-        if (strBuilder.length() > 0) {
-          strBuilder.append("/");
-        }
-        strBuilder.append(m.getName());
+        out.printf("  <input type='checkbox' name='member' value='%d' %s>%s<br>\n", 
+            m.getNo(), contain(project.getMembers(), m.getNo()) ? "checked" : "", m.getName());
       }
-      out.printf("팀원: %s\n", strBuilder.toString());
+
+      out.println("<input type='submit' value='등록'>");
+      out.println("</form>");
 
     } catch (Exception e) {
       StringWriter strWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter(strWriter);
       e.printStackTrace(printWriter);
-      out.println(strWriter.toString());
+      out.printf("<pre>%s</pre>\n", strWriter.toString());
     }
+    out.println("<p><a href='list'>목록</a></p>");
+
+    out.println("</body>");
+    out.println("</html>");
+  }
+
+  private boolean contain(List<Member> members, int memberNo) {
+    for (Member m : members) {
+      if (m.getNo() == memberNo) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
