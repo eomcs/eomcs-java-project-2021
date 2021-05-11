@@ -20,6 +20,8 @@ public interface ProjectService {
 
   List<Project> search(String item, String keyword) throws Exception;
 
+  List<Member> getMembers(int projectNo) throws Exception;
+
   int deleteMembers(int projectNo) throws Exception;
 
   int updateMembers(int projectNo, List<Member> members) throws Exception;

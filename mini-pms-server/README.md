@@ -27,6 +27,6 @@
 ### 2단계 - 회원, 프로젝트, 작업 콘텐트의 출력 형식을 HTML로 바꾼다.
 
 - com.eomcs.pms.web.ProjectListHandler 변경
-
+ 
 ## 실습 결과
 - build.gradle 변경

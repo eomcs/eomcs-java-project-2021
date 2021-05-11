@@ -16,15 +16,21 @@ import com.eomcs.pms.service.MemberService;
 public class MemberDetailHandler extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     MemberService memberService = (MemberService) request.getServletContext().getAttribute("memberService");
 
-    response.setContentType("text/plain;charset=UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
-    out.println("[회원 상세보기]");
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<title>회원</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>회원 정보</h1>");
 
     try {
       int no = Integer.parseInt(request.getParameter("no"));
@@ -32,22 +38,58 @@ public class MemberDetailHandler extends HttpServlet {
       Member m = memberService.get(no);
 
       if (m == null) {
-        out.println("해당 번호의 회원이 없습니다.");
+        out.println("<p>해당 번호의 회원이 없습니다.</p>");
+        out.println("</body>");
+        out.println("</html>");
         return;
       }
 
-      out.printf("이름: %s\n", m.getName());
-      out.printf("이메일: %s\n", m.getEmail());
-      out.printf("사진: %s\n", m.getPhoto());
-      out.printf("전화: %s\n", m.getTel());
-      out.printf("가입일: %s\n", m.getRegisteredDate());
+      out.println("<form action='update' method='post' enctype='multipart/form-data'>");
+      out.println("<table border='1'>");
+      out.println("<tbody>");
+      out.printf("<tr><th>번호</th>"
+          + " <td><input type='text' name='no' value='%d' readonly></td></tr>\n", m.getNo());
+      out.printf("<tr><th>이름</th>"
+          + " <td><input name='name' type='text' value='%s'></td></tr>\n", m.getName());
+      out.printf("<tr><th>이메일</th>"
+          + " <td><input name='email' type='email' value='%s'></td></tr>\n", m.getEmail());
+      out.println("<tr><th>암호</th> <td><input name='password' type='password'></td></tr>");
+      out.printf("<tr><th>전화</th>"
+          + " <td><input name='tel' type='tel' value='%s'></td></tr>\n", 
+          m.getTel() != null ? m.getTel() : "");
+      out.printf("<tr><th>가입일</th> <td>%s</td></tr>\n", m.getRegisteredDate());
+      out.printf("<tr><th>사진</th> <td>"
+          + "<a href='%s'><img src='%s'></a><br>"
+          + "<input name='photo' type='file'></td></tr>\n",
+          m.getPhoto() != null ? "../upload/" + m.getPhoto() : "",
+              m.getPhoto() != null ? "../upload/" + m.getPhoto() + "_80x80.jpg" : "../images/person_80x80.jpg");
+      out.println("</tbody>");
+
+      // 회원 관리를 관리자가 할 경우 모든 회원의 정보 변경 가능
+      //Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+      //if (loginUser != null && m.getNo() == loginUser.getNo()) {
+      out.println("<tfoot>");
+      out.println("<tr><td colspan='2'>");
+      out.println("<input type='submit' value='변경'> "
+          + "<a href='delete?no=" + m.getNo() + "'>삭제</a> ");
+      out.println("</td></tr>");
+      out.println("</tfoot>");
+      //}
+
+      out.println("</table>");
+      out.println("</form>");
+
 
     } catch (Exception e) {
       StringWriter strWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter(strWriter);
       e.printStackTrace(printWriter);
-      out.println(strWriter.toString());
+      out.printf("<pre>%s</pre>\n", strWriter.toString());
     }
+    out.println("<p><a href='list'>목록</a></p>");
+
+    out.println("</body>");
+    out.println("</html>");
   }
 }
 

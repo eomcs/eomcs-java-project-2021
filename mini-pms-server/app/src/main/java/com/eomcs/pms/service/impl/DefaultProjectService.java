@@ -62,6 +62,11 @@ public class DefaultProjectService implements ProjectService {
     return projectDao.findByNo(no);
   }
 
+  @Override
+  public List<Member> getMembers(int projectNo) throws Exception {
+    return projectDao.findMembers(projectNo);
+  }
+
   // 변경 업무
   @Override
   public int update(Project project) throws Exception {

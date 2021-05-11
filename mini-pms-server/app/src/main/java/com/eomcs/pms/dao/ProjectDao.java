@@ -19,11 +19,11 @@ public interface ProjectDao {
 
   int delete(int no) throws Exception;
 
+  List<Member> findMembers(int projectNo) throws Exception;
+
   int insertMember(Map<String,Object> params) throws Exception;
 
   int insertMembers(Map<String,Object> params) throws Exception;
-
-  List<Member> findAllMembers(int projectNo) throws Exception;
 
   int deleteMembers(int projectNo) throws Exception;
 }

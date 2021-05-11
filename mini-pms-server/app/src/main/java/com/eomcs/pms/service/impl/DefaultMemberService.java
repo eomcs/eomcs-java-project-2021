@@ -23,8 +23,8 @@ public class DefaultMemberService implements MemberService {
 
   // 조회 업무
   @Override
-  public List<Member> list() throws Exception {
-    return memberDao.findAll();
+  public List<Member> list(String keyword) throws Exception {
+    return memberDao.findByKeyword(keyword);
   }
 
   // 상세 조회 업무

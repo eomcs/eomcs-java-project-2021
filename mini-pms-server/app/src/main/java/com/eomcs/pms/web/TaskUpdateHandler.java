@@ -18,24 +18,28 @@ import com.eomcs.pms.service.TaskService;
 public class TaskUpdateHandler extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     TaskService taskService = (TaskService) request.getServletContext().getAttribute("taskService");
 
-    response.setContentType("text/plain;charset=UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
-    out.println("[작업 변경]");
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<title>작업 변경</title>");
 
     try {
+      request.setCharacterEncoding("UTF-8");
       int no = Integer.parseInt(request.getParameter("no"));
 
       Task oldTask = taskService.get(no);
       if (oldTask == null) {
-        out.println("해당 번호의 작업이 없습니다.");
-        return;
-      }
+        throw new Exception("해당 번호의 회원이 없습니다.");
+      } 
+
       Task task = new Task();
       task.setNo(no);
       task.setProjectNo(Integer.parseInt(request.getParameter("projectNo")));
@@ -48,17 +52,27 @@ public class TaskUpdateHandler extends HttpServlet {
       owner.setNo(Integer.parseInt(request.getParameter("owner")));
       task.setOwner(owner);
 
-      // DBMS에게 게시글 변경을 요청한다.
       taskService.update(task);
 
-      out.println("작업을 변경하였습니다.");
-
+      out.println("<meta http-equiv='Refresh' content='1;url=list'>");
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>작업 변경</h1>");
+      out.println("<p>작업을 변경했습니다.</p>");
 
     } catch (Exception e) {
       StringWriter strWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter(strWriter);
       e.printStackTrace(printWriter);
-      out.println(strWriter.toString());
+
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>작업 변경 오류</h1>");
+      out.printf("<pre>%s</pre>\n", strWriter.toString());
+      out.println("<p><a href='list'>목록</a></p>");
     }
+
+    out.println("</body>");
+    out.println("</html>");
   }
 }

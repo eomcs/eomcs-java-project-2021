@@ -14,22 +14,39 @@ import com.eomcs.pms.domain.Member;
 public class UserInfoHandler extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    response.setContentType("text/plain;charset=UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
-    Member member = (Member) request.getSession().getAttribute("loginUser");
-    if (member == null) {
-      out.println("로그인 하지 않았습니다!");
-      return;
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<title>사용자 정보</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>사용자 정보</h1>");
+
+    Member m = (Member) request.getSession().getAttribute("loginUser");
+    if (m == null) {
+      out.println("<p>로그인 하지 않았습니다!</p>");
+
+    } else {
+      out.println("<table border='1'>");
+      out.println("<tbody>");
+      out.printf("<tr><th>사용자 번호</th> <td>%d</td></tr>\n", m.getNo());
+      out.printf("<tr><th>이름</th> <td>%s</td></tr>\n", m.getName());
+      out.printf("<tr><th>이메일</th> <td>%s</td></tr>\n", m.getEmail());
+      out.printf("<tr><th>사진</th> <td><a href='%s'><img src='%s'></a></td></tr>\n",
+          m.getPhoto() != null ? "upload/" + m.getPhoto() : "",
+              m.getPhoto() != null ? "upload/" + m.getPhoto() + "_80x80.jpg" : "images/person_80x80.jpg");
+
+      out.println("</tbody></table>");
     }
 
-    out.printf("사용자번호: %d\n", member.getNo());
-    out.printf("이름: %s\n", member.getName());
-    out.printf("이메일: %s\n", member.getEmail());
-    out.printf("사진: %s\n", member.getPhoto());
+    out.println("</body>");
+    out.println("</html>");
   }
 }
 

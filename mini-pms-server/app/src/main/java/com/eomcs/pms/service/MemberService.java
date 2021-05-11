@@ -7,7 +7,7 @@ public interface MemberService {
 
   int add(Member member) throws Exception;
 
-  List<Member> list() throws Exception;
+  List<Member> list(String keyword) throws Exception;
 
   Member get(int no) throws Exception;
 

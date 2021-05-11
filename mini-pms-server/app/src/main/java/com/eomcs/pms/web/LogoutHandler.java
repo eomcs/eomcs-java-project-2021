@@ -14,21 +14,33 @@ import com.eomcs.pms.domain.Member;
 public class LogoutHandler extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    response.setContentType("text/plain;charset=UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
+
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<title>로그인</title>");
+    out.println("<meta http-equiv='Refresh' content='1;url=login'>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>로그아웃</h1>");
 
     Member member = (Member) request.getSession().getAttribute("loginUser");
     if (member == null) {
-      out.println("로그인 하지 않았습니다!");
-      return;
+      out.println("<p>로그인 하지 않았습니다!</p>");
+
+    } else {
+      request.getSession().invalidate();
+      out.printf("<p>%s 님 안녕히 가세요!</p>\n", member.getName());
     }
 
-    request.getSession().invalidate();
+    out.println("</body>");
+    out.println("</html>");
 
-    out.printf("%s 님 안녕히 가세요!\n", member.getName());
   }
 }
 

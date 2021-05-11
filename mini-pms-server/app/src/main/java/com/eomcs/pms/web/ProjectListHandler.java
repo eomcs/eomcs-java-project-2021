@@ -37,7 +37,16 @@ public class ProjectListHandler extends HttpServlet {
     out.println("<p><a href='add'>새 프로젝트</a></p>");
 
     try {
-      List<Project> projects = projectService.list();
+      List<Project> projects = null;
+
+      String item = request.getParameter("item");
+      String keyword = request.getParameter("keyword");
+
+      if (item != null && keyword != null && keyword.length() > 0) {
+        projects = projectService.search(item, keyword);
+      } else {
+        projects = projectService.list();
+      }
 
       out.println("<table border='1'>");
       out.println("<thead>");
@@ -74,7 +83,13 @@ public class ProjectListHandler extends HttpServlet {
       out.println("</tbody>");
       out.println("</table>");
 
-      out.println("<form action='search' method='get'>");
+      out.println("<form action='list' method='get'>");
+      out.println("<select name='item'>");
+      out.println("  <option value='0'>전체</option>");
+      out.println("  <option value='1'>프로젝트명</option>");
+      out.println("  <option value='2'>관리자</option>");
+      out.println("  <option value='3'>팀원</option>");
+      out.println("</select>");
       out.println("<input type='text' name='keyword'> ");
       out.println("<button>검색</button>");
       out.println("</form>");

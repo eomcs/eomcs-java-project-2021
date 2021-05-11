@@ -44,14 +44,16 @@ public class ProjectAddHandler extends HttpServlet {
     out.println("종료일: <input type='date' name='endDate'><br>");
     out.println("팀원: <br>");
     try {
-      List<Member> members = memberService.list();
+      List<Member> members = memberService.list(null);
       for (Member m : members) {
         out.printf("  <input type='checkbox' name='member' value='%d'>%s<br>\n", m.getNo(), m.getName());
       }
     } catch (Exception e) {
       throw new ServletException(e);
     }
-    out.println("<input type='submit' value='등록'>");
+    out.println("<p><input type='submit' value='등록'>");
+    out.println("<a href='list'>목록</a></p>");
+
     out.println("</form>");
     out.println("</body>");
     out.println("</html>");

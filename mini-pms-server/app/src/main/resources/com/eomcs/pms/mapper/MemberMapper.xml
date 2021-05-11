@@ -19,7 +19,7 @@
     values(#{name}, #{email}, password(#{password}), #{photo}, #{tel})
   </insert>
   
-  <select id="findAll" resultMap="memberMap">
+  <select id="findByKeyword" resultMap="memberMap" parameterType="string">
     select 
       no,
       name,
@@ -27,6 +27,13 @@
       photo,
       tel 
     from pms_member 
+    <where>
+      <if test="keyword != null and keyword != ''">
+      name like concat('%', #{keyword}, '%')
+      or email like concat('%', #{keyword}, '%')
+      or tel like concat('%', #{keyword}, '%')
+      </if>
+    </where>
     order by name asc
   </select>
   

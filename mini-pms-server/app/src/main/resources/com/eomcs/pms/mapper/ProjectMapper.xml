@@ -73,17 +73,15 @@
   <select id="findByKeyword" resultMap="projectMap" parameterType="map">
     <include refid="select1"/>
     <where>
-	    <choose>
-		    <when test="item == 1">
+		    <if test="item == 1 or item == 0">
 		    p.title like concat('%', #{keyword}, '%')
-		    </when>
-		    <when test="item == 2">
-		    m.name like concat('%', #{keyword}, '%')
-		    </when>
-		    <when test="item == 3">
-		    m2.name like concat('%', #{keyword}, '%')
-		    </when>
-	    </choose>
+		    </if>
+		    <if test="item == 2 or item == 0">
+		    or m.name like concat('%', #{keyword}, '%')
+		    </if>
+		    <if test="item == 3 or item == 0">
+		    or m2.name like concat('%', #{keyword}, '%')
+		    </if>
     </where>
     order by title asc
   </select>
@@ -137,7 +135,17 @@
     where no=#{value}
   </delete>
 
-
+  
+  <select id="findMembers" resultType="member" parameterType="int">
+    select
+      m.no,
+      m.name
+    from pms_member_project mp
+      inner join pms_member m on mp.member_no=m.no
+    where 
+      mp.project_no=#{value}
+  </select>
+  
   <insert id="insertMember" parameterType="map">
     insert into pms_member_project(member_no,project_no) 
     values(#{memberNo}, #{projectNo})
@@ -155,16 +163,7 @@
     delete from pms_member_project 
     where project_no=#{value}
   </delete>
-  
-  <select id="findAllMembers" resultType="member" parameterType="int">
-    select
-      m.no,
-      m.name
-    from pms_member_project mp
-      inner join pms_member m on mp.member_no=m.no
-    where 
-      mp.project_no=#{value}
-  </select>
+
 </mapper>
 
 

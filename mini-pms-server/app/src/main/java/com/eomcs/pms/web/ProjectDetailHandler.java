@@ -56,7 +56,7 @@ public class ProjectDetailHandler extends HttpServlet {
       out.println("팀원: <br>");
 
       MemberService memberService = (MemberService) request.getServletContext().getAttribute("memberService");
-      List<Member> members = memberService.list();
+      List<Member> members = memberService.list(null);
       for (Member m : members) {
         out.printf("  <input type='checkbox' name='member' value='%d' %s>%s<br>\n", 
             m.getNo(), contain(project.getMembers(), m.getNo()) ? "checked" : "", m.getName());
