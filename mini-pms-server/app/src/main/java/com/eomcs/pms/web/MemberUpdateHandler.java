@@ -45,7 +45,6 @@ public class MemberUpdateHandler extends HttpServlet {
 
 
     try {
-      request.setCharacterEncoding("UTF-8");
       int no = Integer.parseInt(request.getParameter("no"));
 
       Member oldMember = memberService.get(no);

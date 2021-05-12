@@ -90,8 +90,6 @@ public class TaskAddHandler extends HttpServlet {
     out.println("<title>작업 등록</title>");
 
     try {
-      request.setCharacterEncoding("UTF-8");
-
       Task t = new Task();
       t.setProjectNo(Integer.parseInt(request.getParameter("projectNo")));
       t.setContent(request.getParameter("content"));

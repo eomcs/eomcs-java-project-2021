@@ -30,7 +30,6 @@ public class BoardUpdateHandler extends HttpServlet {
     out.println("<title>게시글 변경</title>");
 
     try {
-      request.setCharacterEncoding("UTF-8");
       int no = Integer.parseInt(request.getParameter("no"));
 
       Board oldBoard = boardService.get(no);

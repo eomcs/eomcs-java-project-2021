@@ -24,9 +24,6 @@ public class BoardAddHandler extends HttpServlet {
 
     Board b = new Board();
 
-    // 클라이언트가 POST 요청으로 보낸 데이터가 UTF-8임을 알려준다.
-    request.setCharacterEncoding("UTF-8");
-
     b.setTitle(request.getParameter("title"));
     b.setContent(request.getParameter("content"));
 

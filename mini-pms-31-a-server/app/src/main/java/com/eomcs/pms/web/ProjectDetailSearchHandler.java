@@ -14,8 +14,8 @@ import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.service.ProjectService;
 
 @SuppressWarnings("serial")
-@WebServlet("/project/search")
-public class ProjectSearchHandler extends HttpServlet {
+@WebServlet("/project/detailSearch")
+public class ProjectDetailSearchHandler extends HttpServlet {
 
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response)
@@ -26,19 +26,14 @@ public class ProjectSearchHandler extends HttpServlet {
     response.setContentType("text/plain;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
-    out.println("[프로젝트 검색]");
+    out.println("[프로젝트 상세 검색]");
 
     try {
-      // 항목(1:프로젝트명, 2:관리자명, 3:팀원, 그 외: 전체)
-      String item = request.getParameter("item");
-      String keyword = null;
-      if (item.equals("1") || 
-          item.equals("2") || 
-          item.equals("3")) {
-        keyword = request.getParameter("keyword");
-      }
+      String title = request.getParameter("title");
+      String owner = request.getParameter("owner");
+      String member = request.getParameter("member");
 
-      List<Project> projects = projectService.search(item, keyword);
+      List<Project> projects = projectService.search(title, owner, member);
 
       for (Project p : projects) {
 

@@ -32,7 +32,6 @@ public class TaskUpdateHandler extends HttpServlet {
     out.println("<title>작업 변경</title>");
 
     try {
-      request.setCharacterEncoding("UTF-8");
       int no = Integer.parseInt(request.getParameter("no"));
 
       Task oldTask = taskService.get(no);

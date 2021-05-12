@@ -45,10 +45,6 @@ public class MemberAddHandler extends HttpServlet {
     out.println("<title>회원 등록</title>");
 
     try {
-
-      // 클라이언트가 POST 요청으로 보낸 데이터가 UTF-8임을 알려준다.
-      request.setCharacterEncoding("UTF-8");
-
       Member m = new Member();
       m.setName(request.getParameter("name"));
       m.setEmail(request.getParameter("email"));
