@@ -41,9 +41,18 @@ public class ProjectListHandler extends HttpServlet {
 
       String item = request.getParameter("item");
       String keyword = request.getParameter("keyword");
+      String title = request.getParameter("title");
+      String owner = request.getParameter("owner");
+      String member = request.getParameter("member");
 
       if (item != null && keyword != null && keyword.length() > 0) {
         projects = projectService.search(item, keyword);
+
+      } else if ((title != null && title.length() > 0) ||
+          (owner != null && owner.length() > 0) ||
+          (member != null && member.length() > 0)) {
+        projects = projectService.search(title, owner, member);
+
       } else {
         projects = projectService.list();
       }
@@ -86,13 +95,13 @@ public class ProjectListHandler extends HttpServlet {
       out.println("<form method='get'>");
       out.println("<select name='item'>");
       out.printf("  <option value='0' %s>전체</option>\n", 
-          item.equals("0") ? "selected" : "");
+          (item != null && item.equals("0")) ? "selected" : "");
       out.printf("  <option value='1' %s>프로젝트명</option>\n", 
-          item.equals("1") ? "selected" : "");
+          (item != null && item.equals("1")) ? "selected" : "");
       out.printf("  <option value='2' %s>관리자</option>\n", 
-          item.equals("2") ? "selected" : "");
+          (item != null && item.equals("2")) ? "selected" : "");
       out.printf("  <option value='3' %s>팀원</option>\n", 
-          item.equals("3") ? "selected" : "");
+          (item != null && item.equals("3")) ? "selected" : "");
       out.println("</select>");
       out.printf("<input type='search' name='keyword' value='%s'> \n",
           keyword != null ? keyword : "");

@@ -39,12 +39,15 @@ public class DefaultProjectService implements ProjectService {
         // 1) 프로젝트 정보를 입력한다.
         int count = projectDao.insert(project); 
 
-        // 2) 멤버를 입력한다.
-        HashMap<String,Object> params = new HashMap<>();
-        params.put("projectNo", project.getNo());
-        params.put("members", project.getMembers());
+        if (project.getMembers().size() > 0) {
+          // 2) 멤버를 입력한다.
+          HashMap<String,Object> params = new HashMap<>();
+          params.put("projectNo", project.getNo());
+          params.put("members", project.getMembers());
 
-        projectDao.insertMembers(params);
+          projectDao.insertMembers(params);
+        }
+
         return count;
       }
     });
@@ -76,12 +79,13 @@ public class DefaultProjectService implements ProjectService {
         int count = projectDao.update(project);
         projectDao.deleteMembers(project.getNo());
 
-        HashMap<String,Object> params = new HashMap<>();
-        params.put("projectNo", project.getNo());
-        params.put("members", project.getMembers());
+        if (project.getMembers().size() > 0) {
+          HashMap<String,Object> params = new HashMap<>();
+          params.put("projectNo", project.getNo());
+          params.put("members", project.getMembers());
 
-        projectDao.insertMembers(params);
-
+          projectDao.insertMembers(params);
+        }
         // 다른 스레드가 작업할 시간을 준다.
         // => 즉 다른 스레드가 현재 스레드의 트랜잭션 작업을 간섭할 수 있는지 확인하기 위함이다.
         //        Thread.sleep(30000);

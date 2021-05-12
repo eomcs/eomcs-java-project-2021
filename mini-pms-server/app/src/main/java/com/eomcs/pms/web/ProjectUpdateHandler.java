@@ -61,10 +61,12 @@ public class ProjectUpdateHandler extends HttpServlet {
       // ...&member=1&member=18&member=23
       String[] values = request.getParameterValues("member");
       ArrayList<Member> memberList = new ArrayList<>();
-      for (String value : values) {
-        Member member = new Member();
-        member.setNo(Integer.parseInt(value));
-        memberList.add(member);
+      if (values != null) {
+        for (String value : values) {
+          Member member = new Member();
+          member.setNo(Integer.parseInt(value));
+          memberList.add(member);
+        }
       }
       project.setMembers(memberList);
 
