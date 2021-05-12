@@ -20,8 +20,8 @@ import net.coobird.thumbnailator.name.Rename;
 
 @SuppressWarnings("serial")
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10)
-@WebServlet("/member/add")
-public class MemberAddHandler extends HttpServlet {
+@WebServlet("/member/update")
+public class MemberUpdateHandler extends HttpServlet {
 
   private String uploadDir;
 
@@ -29,7 +29,6 @@ public class MemberAddHandler extends HttpServlet {
   public void init() throws ServletException {
     this.uploadDir = this.getServletContext().getRealPath("/upload");
   }
-
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -42,24 +41,36 @@ public class MemberAddHandler extends HttpServlet {
     out.println("<!DOCTYPE html>");
     out.println("<html>");
     out.println("<head>");
-    out.println("<title>회원 등록</title>");
-    out.println("</head>");
-    out.println("<body>");
-    out.println("<h1>회원 등록</h1>");
+    out.println("<title>회원 변경</title>");
+
 
     try {
-      Member m = new Member();
-      m.setName(request.getParameter("name"));
-      m.setEmail(request.getParameter("email"));
-      m.setPassword(request.getParameter("password"));
-      m.setTel(request.getParameter("tel"));
+      int no = Integer.parseInt(request.getParameter("no"));
+
+      Member oldMember = memberService.get(no);
+      if (oldMember == null) {
+        throw new Exception("해당 번호의 회원이 없습니다.");
+      } 
+
+      // 회원 관리를 관리자가 할 경우 모든 회원의 정보 변경 가능
+      //      Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+      //      if (oldMember.getNo() != loginUser.getNo()) {
+      //        throw new Exception("변경 권한이 없습니다!");
+      //      }
+
+      Member member = new Member();
+      member.setNo(oldMember.getNo());
+      member.setName(request.getParameter("name"));
+      member.setEmail(request.getParameter("email"));
+      member.setPassword(request.getParameter("password"));
+      member.setTel(request.getParameter("tel"));
 
       Part photoPart = request.getPart("photo");
       if (photoPart.getSize() > 0) {
         // 파일을 선택해서 업로드 했다면,
         String filename = UUID.randomUUID().toString();
         photoPart.write(this.uploadDir + "/" + filename);
-        m.setPhoto(filename);
+        member.setPhoto(filename);
 
         // 썸네일 이미지 생성
         Thumbnails.of(this.uploadDir + "/" + filename)
@@ -84,25 +95,23 @@ public class MemberAddHandler extends HttpServlet {
           }
         });
       }
-      memberService.add(m);
 
-      out.println("<p>회원을 등록했습니다.</p>");
+      memberService.update(member);
 
-      // 응답헤더에 리프래시 정보를 설정한다.
-      response.setHeader("Refresh", "0;url=list");
-
-      // 질문!
-      // 클라이언트에게 응답할 때 헤더를 먼저 보내고 콘텐트를 나중에 보내는데
-      // 위의 코드를 보면 println()을 이용하여 콘텐트를 먼저 출력한 다음에
-      // 응답 헤더를 설정하는데 이것이 가능한가요?
-      // - println()을 실행할 때 출력 내용은 모두 버퍼로 보낸다.
-      // - 즉 아직 클라이언트에게 응답한 상태가 아니기 때문에 응답헤더를 설정할 수 있는 것이다.
+      out.println("<meta http-equiv='Refresh' content='1;url=list'>");
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>회원 변경</h1>");
+      out.println("<p>회원을 변경했습니다.</p>");
 
     } catch (Exception e) {
       StringWriter strWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter(strWriter);
       e.printStackTrace(printWriter);
 
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>회원 변경 오류</h1>");
       out.printf("<pre>%s</pre>\n", strWriter.toString());
       out.println("<p><a href='list'>목록</a></p>");
     }
