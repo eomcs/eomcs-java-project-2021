@@ -18,6 +18,11 @@
 - com.eomcs.pms.web.MemberDeleteHandler 변경
   - HTML의 meta 태그를 활용하여 리프래시를 설정하던 방식을 응답 헤더 방식으로 변경한다.
 
+### 2단계 - 리다이렉트 정보를 클라이언트에게 보낸다.
+
+- com.eomcs.pms.web.LoginHandler 변경
+- com.eomcs.pms.web.LogoutHandler 변경
+  - HTML의 meta 태그를 활용하여 리프래시를 설정하던 방식을 리다이렉트 방식으로 변경한다.
  
 ## 실습 결과
 - src/main/java/com/eomcs/pms/web/filter/CharacterEncodingFilter.java 추가
