@@ -13,8 +13,8 @@ import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.service.ProjectService;
 
 @SuppressWarnings("serial")
-@WebServlet("/project/add")
-public class ProjectAddHandler extends HttpServlet {
+@WebServlet("/project/update")
+public class ProjectUpdateHandler extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -23,14 +23,27 @@ public class ProjectAddHandler extends HttpServlet {
     ProjectService projectService = (ProjectService) request.getServletContext().getAttribute("projectService");
 
     try {
-      Project p = new Project();
-      p.setTitle(request.getParameter("title"));
-      p.setContent(request.getParameter("content"));
-      p.setStartDate(Date.valueOf(request.getParameter("startDate")));
-      p.setEndDate(Date.valueOf(request.getParameter("endDate")));
+      int no = Integer.parseInt(request.getParameter("no"));
+
+      Project oldProject = projectService.get(no);
+
+      if (oldProject == null) {
+        throw new Exception("해당 번호의 프로젝트가 없습니다.");
+      } 
 
       Member loginUser = (Member) request.getSession().getAttribute("loginUser");
-      p.setOwner(loginUser);
+      if (oldProject.getOwner().getNo() != loginUser.getNo()) {
+        throw new Exception("변경 권한이 없습니다!");
+      }
+
+      // 사용자에게서 변경할 데이터를 입력 받는다.
+      Project project = new Project();
+      project.setNo(no);
+      project.setTitle(request.getParameter("title"));
+      project.setContent(request.getParameter("content"));
+      project.setStartDate(Date.valueOf(request.getParameter("startDate")));
+      project.setEndDate(Date.valueOf(request.getParameter("endDate")));
+      project.setOwner(loginUser);
 
       // ...&member=1&member=18&member=23
       String[] values = request.getParameterValues("member");
@@ -42,9 +55,10 @@ public class ProjectAddHandler extends HttpServlet {
           memberList.add(member);
         }
       }
-      p.setMembers(memberList);
+      project.setMembers(memberList);
 
-      projectService.add(p);
+      // DBMS에게 프로젝트 변경을 요청한다.
+      projectService.update(project);
 
       response.sendRedirect("list");
 
@@ -55,8 +69,6 @@ public class ProjectAddHandler extends HttpServlet {
     }
   }
 }
-
-
 
 
 

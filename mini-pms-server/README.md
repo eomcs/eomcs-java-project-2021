@@ -1,7 +1,7 @@
-# 31-d. Servlet 기술 활용하기 : 포워딩과 인클루딩 활용 
+# 31-e. Servlet 기술 활용하기 : 쿠키와 세션 활용
 
 이번 훈련에서는,
-- **포워딩(forwarding)** 과 **인클루딩(including)** 을 활용하는 방법을 배울 것이다.  
+- **쿠키(cookie)** 과 **세션(session)** 을 활용하는 방법을 배울 것이다.  
 
 ## 훈련 목표
 -
@@ -11,31 +11,20 @@
 
 ## 실습
 
-### 1단계 - 포워딩을 이용하여 요청 처리를 다른 서블릿에게 위임한다.
+### 1단계 - 로그인 할 때 입력한 이메일을 쿠키를 사용해서 유지한다.
 
-- com.eomcs.pms.web.ErrorHandler 추가
-  - 서블릿 실행 중 오류가 발생했을 때 실행되는 서블릿이다.
-  - 간단한 오류 메시지와 상세 내용을 출력한다. 
-- com.eomcs.pms.web.XxxHandler 변경
-  - 예외가 발생했을 때 ErrorHandler로 포워딩 한다.
+- com.eomcs.pms.web.LoginHandler 변경
+  - 로그인 할 때 입력한 이메일 정보를 쿠키에 보관해 두었다가 다음에 로그인 입력폼을 출력할 때 자동 입력되게 한다.
 
-### 2단계 - 인클루딩을 이용하여 프로젝트 멤버 목록을 출력하는 기능을 별도의 서블릿으로 분리한다.
+### 2단계 - 프로젝트 입력을 3단계에 걸쳐 처리한다. 이때 페이지간 데이터 공유는 세션을 이용한다.
 
-- com.eomcs.pms.web.ProjectMemberListHandler 추가
-  - 프로젝트의 멤버를 선택하거나 출력하는 기능을 제공한다.
 - com.eomcs.pms.web.ProjectAddHandler 변경
-- com.eomcs.pms.web.ProjectDetailHandler 변경
-  - 프로젝트 멤버 목록을 출력할 때 ProjectMemberListHandler를 인클루딩 한다.
+  - 3개의 클래스로 쪼개서 프로젝트를 정보를 입력 받는다.
+
  
 ## 실습 결과
-- src/main/java/com/eomcs/pms/web/MemberAddHandler.java 변경
-- src/main/java/com/eomcs/pms/web/MemberUpdateHandler.java 변경
-- src/main/java/com/eomcs/pms/web/MemberDeleteHandler.java 변경
-- src/main/java/com/eomcs/pms/web/LoginHandler.java 변경
-- src/main/java/com/eomcs/pms/web/LogoutHandler.java 변경
+- src/main/java/com/eomcs/pms/web/ErrorHandler.java 추가
+- src/main/java/com/eomcs/pms/web/ProjectMemberListHandler.java 추가
 - src/main/java/com/eomcs/pms/web/ProjectAddHandler.java 변경
-- src/main/java/com/eomcs/pms/web/ProjectUpdateHandler.java 변경
-- src/main/java/com/eomcs/pms/web/ProjectDeleteHandler.java 변경
-- src/main/java/com/eomcs/pms/web/TaskAddHandler.java 변경
-- src/main/java/com/eomcs/pms/web/TaskUpdateHandler.java 변경
-- src/main/java/com/eomcs/pms/web/TaskDeleteHandler.java 변경
+- src/main/java/com/eomcs/pms/web/ProjectDetailHandler.java 변경
+- src/main/java/com/eomcs/pms/web/XxxHandler.java 변경

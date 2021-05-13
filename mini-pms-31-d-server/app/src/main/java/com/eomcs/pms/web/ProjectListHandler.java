@@ -33,7 +33,7 @@ public class ProjectListHandler extends HttpServlet {
     out.println("<body>");
     out.println("<h1>프로젝트</h1>");
 
-    out.println("<p><a href='add1'>새 프로젝트</a></p>");
+    out.println("<p><a href='add'>새 프로젝트</a></p>");
 
     try {
       List<Project> projects = null;
