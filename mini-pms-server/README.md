@@ -16,22 +16,16 @@
 - com.eomcs.pms.web.ErrorHandler 추가
   - 서블릿 실행 중 오류가 발생했을 때 실행되는 서블릿이다.
   - 간단한 오류 메시지와 상세 내용을 출력한다. 
-- com.eomcs.pms.web.MemberAddHandler 변경
-- com.eomcs.pms.web.MemberUpdateHandler 변경
-- com.eomcs.pms.web.MemberDeleteHandler 변경
-  - HTML의 meta 태그를 활용하여 리프래시를 설정하던 방식을 응답 헤더 방식으로 변경한다.
+- com.eomcs.pms.web.XxxHandler 변경
+  - 예외가 발생했을 때 ErrorHandler로 포워딩 한다.
 
-### 2단계 - 자동으로 다시 요청하게 할 때 리프래시 대신 리다이렉트를 사용한다.
+### 2단계 - 인클루딩을 이용하여 프로젝트 멤버 목록을 출력하는 기능을 별도의 서블릿으로 분리한다.
 
-- com.eomcs.pms.web.LoginHandler 변경
-- com.eomcs.pms.web.LogoutHandler 변경
+- com.eomcs.pms.web.ProjectMemberListHandler 추가
+  - 프로젝트의 멤버를 선택하거나 출력하는 기능을 제공한다.
 - com.eomcs.pms.web.ProjectAddHandler 변경
-- com.eomcs.pms.web.ProjectUpdateHandler 변경
-- com.eomcs.pms.web.ProjectDeleteHandler 변경
-- com.eomcs.pms.web.TaskAddHandler 변경
-- com.eomcs.pms.web.TaskUpdateHandler 변경
-- com.eomcs.pms.web.TaskDeleteHandler 변경
-  - HTML의 meta 태그를 활용하여 리프래시를 설정하던 방식을 리다이렉트 방식으로 변경한다.
+- com.eomcs.pms.web.ProjectDetailHandler 변경
+  - 프로젝트 멤버 목록을 출력할 때 ProjectMemberListHandler를 인클루딩 한다.
  
 ## 실습 결과
 - src/main/java/com/eomcs/pms/web/MemberAddHandler.java 변경

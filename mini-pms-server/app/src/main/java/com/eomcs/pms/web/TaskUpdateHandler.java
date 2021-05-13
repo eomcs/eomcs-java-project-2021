@@ -1,8 +1,6 @@
 package com.eomcs.pms.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,24 +46,9 @@ public class TaskUpdateHandler extends HttpServlet {
       response.sendRedirect("list");
 
     } catch (Exception e) {
-      StringWriter strWriter = new StringWriter();
-      PrintWriter printWriter = new PrintWriter(strWriter);
-      e.printStackTrace(printWriter);
-
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
-
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<title>작업 변경</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>작업 변경 오류</h1>");
-      out.printf("<pre>%s</pre>\n", strWriter.toString());
-      out.println("<p><a href='list'>목록</a></p>");
-      out.println("</body>");
-      out.println("</html>");
+      request.setAttribute("exception", e);
+      request.getRequestDispatcher("/error").forward(request, response);
+      return;
     }
   }
 }

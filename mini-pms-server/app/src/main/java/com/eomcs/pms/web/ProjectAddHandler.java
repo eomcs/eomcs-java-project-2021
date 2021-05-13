@@ -2,10 +2,8 @@ package com.eomcs.pms.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
-import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
 
 @SuppressWarnings("serial")
@@ -23,8 +20,6 @@ public class ProjectAddHandler extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
-    MemberService memberService = (MemberService) request.getServletContext().getAttribute("memberService");
 
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
@@ -43,14 +38,14 @@ public class ProjectAddHandler extends HttpServlet {
     out.println("시작일: <input type='date' name='startDate'><br>");
     out.println("종료일: <input type='date' name='endDate'><br>");
     out.println("팀원: <br>");
-    try {
-      List<Member> members = memberService.list(null);
-      for (Member m : members) {
-        out.printf("  <input type='checkbox' name='member' value='%d'>%s<br>\n", m.getNo(), m.getName());
-      }
-    } catch (Exception e) {
-      throw new ServletException(e);
-    }
+
+    // 팀원 출력은 다른 서블릿에게 맡긴다.
+    request.getRequestDispatcher("/project/member/list").include(request, response);
+
+    // 인클루딩은 이전에 출력한 내용을 그대로 유지한다.
+    // 인클루딩 서블릿을 실행한 후, 리턴된 뒤에 수행하는 출력도 유효한다. 
+    // 
+
     out.println("<p><input type='submit' value='등록'>");
     out.println("<a href='list'>목록</a></p>");
 
@@ -92,24 +87,9 @@ public class ProjectAddHandler extends HttpServlet {
       response.sendRedirect("list");
 
     } catch (Exception e) {
-      StringWriter strWriter = new StringWriter();
-      PrintWriter printWriter = new PrintWriter(strWriter);
-      e.printStackTrace(printWriter);
-
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
-
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<title>프로젝트 등록</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>프로젝트 등록 오류</h1>");
-      out.printf("<pre>%s</pre>\n", strWriter.toString());
-      out.println("<p><a href='list'>목록</a></p>");
-      out.println("</body>");
-      out.println("</html>");
+      request.setAttribute("exception", e);
+      request.getRequestDispatcher("/error").forward(request, response);
+      return;
     }
   }
 }

@@ -64,9 +64,10 @@ public class BoardListHandler extends HttpServlet {
       out.println("</tbody>");
       out.println("</table>");
 
-      if (request.getParameter("okok") == null) {
-        throw new Exception("테스트하기 위해 일부러 오류를 발생시킨다.");
-      }
+      // 포워딩을 테스트하기 위해 일부러 예외를 발생시킴
+      //      if (request.getParameter("okok") == null) {
+      //        throw new Exception("테스트하기 위해 일부러 오류를 발생시킨다.");
+      //      }
 
       out.println("<form action='search' method='get'>");
       out.println("<input type='text' name='keyword'> ");
