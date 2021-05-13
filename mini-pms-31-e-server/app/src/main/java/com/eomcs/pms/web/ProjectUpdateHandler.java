@@ -8,14 +8,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.service.ProjectService;
 
 @SuppressWarnings("serial")
-@WebServlet("/project/add")
-public class ProjectAddHandler extends HttpServlet {
+@WebServlet("/project/update")
+public class ProjectUpdateHandler extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -23,23 +22,29 @@ public class ProjectAddHandler extends HttpServlet {
 
     ProjectService projectService = (ProjectService) request.getServletContext().getAttribute("projectService");
 
-    HttpSession session = request.getSession();
-
     try {
-      Project p = new Project();
-      // 프로젝트 등록 1단계에서 입력한 내용이 세션에 보관되어 있다. 
-      p.setTitle((String) session.getAttribute("title"));
+      int no = Integer.parseInt(request.getParameter("no"));
 
-      // 프로젝트 등록 2단계에서 입력한 내용이 세션에 보관되어 있다.
-      p.setContent((String) session.getAttribute("content"));
-      p.setStartDate(Date.valueOf((String) session.getAttribute("startDate")));
-      p.setEndDate(Date.valueOf((String) session.getAttribute("endDate")));
+      Project oldProject = projectService.get(no);
 
-      // 사용자 로그인 정보는 세션에 보관되어 있다.
-      Member loginUser = (Member) session.getAttribute("loginUser");
-      p.setOwner(loginUser);
+      if (oldProject == null) {
+        throw new Exception("해당 번호의 프로젝트가 없습니다.");
+      } 
 
-      // 프로젝트 팀원 정보는 파라미터에 있다.
+      Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+      if (oldProject.getOwner().getNo() != loginUser.getNo()) {
+        throw new Exception("변경 권한이 없습니다!");
+      }
+
+      // 사용자에게서 변경할 데이터를 입력 받는다.
+      Project project = new Project();
+      project.setNo(no);
+      project.setTitle(request.getParameter("title"));
+      project.setContent(request.getParameter("content"));
+      project.setStartDate(Date.valueOf(request.getParameter("startDate")));
+      project.setEndDate(Date.valueOf(request.getParameter("endDate")));
+      project.setOwner(loginUser);
+
       // ...&member=1&member=18&member=23
       String[] values = request.getParameterValues("member");
       ArrayList<Member> memberList = new ArrayList<>();
@@ -50,9 +55,10 @@ public class ProjectAddHandler extends HttpServlet {
           memberList.add(member);
         }
       }
-      p.setMembers(memberList);
+      project.setMembers(memberList);
 
-      projectService.add(p);
+      // DBMS에게 프로젝트 변경을 요청한다.
+      projectService.update(project);
 
       response.sendRedirect("list");
 
@@ -63,8 +69,6 @@ public class ProjectAddHandler extends HttpServlet {
     }
   }
 }
-
-
 
 
 
