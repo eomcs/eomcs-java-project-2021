@@ -2,8 +2,8 @@ package com.eomcs.pms.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -64,6 +64,10 @@ public class BoardListHandler extends HttpServlet {
       out.println("</tbody>");
       out.println("</table>");
 
+      if (request.getParameter("okok") == null) {
+        throw new Exception("테스트하기 위해 일부러 오류를 발생시킨다.");
+      }
+
       out.println("<form action='search' method='get'>");
       out.println("<input type='text' name='keyword'> ");
       out.println("<button>검색</button>");
@@ -71,13 +75,21 @@ public class BoardListHandler extends HttpServlet {
 
 
     } catch (Exception e) {
-      // 상세 오류 내용을 StringWriter로 출력한다.
-      StringWriter strWriter = new StringWriter();
-      PrintWriter printWriter = new PrintWriter(strWriter);
-      e.printStackTrace(printWriter);
+      // 예외가 발생하면 예외 정보를 ServletRequest 보관소에 담는다.
+      request.setAttribute("exception", e);
 
-      // StringWriter 에 들어 있는 출력 내용을 꺼내 클라이언트로 보낸다.
-      out.printf("<pre>%s</pre>\n", strWriter.toString());
+      // 예외 내용을 출력하기 위해 ErrorHandler 에게 실행을 넘긴다.(포워딩)
+      // - 이때 이 서블릿 버퍼로 출력한 내용은 모두 버려질 것이다.
+      RequestDispatcher 요청배달자 = request.getRequestDispatcher("/error");
+      요청배달자.forward(request, response);
+
+      System.out.println("========> 오호라!!! ");
+      // 다른 서블릿으로 포워딩 한 이후, 그 서블릿의 실행을 마친 후 되돌아 온다.
+      // 되돌아 온 이후에 클라이언트로 출력하는 작업은 모두 무시된다.
+      // 그러니 다음 문장을 실행할 이유가 없다.
+      // 따라서 forwarding을 수행하고 리턴한 이후에 의미없이 명령을 실행하지 않도록 
+      // 이 메서드를 종료하게 만드는 것이 좋다.
+      return;
     }
 
     out.println("</body>");
