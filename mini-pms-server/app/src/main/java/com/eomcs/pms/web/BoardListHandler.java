@@ -21,9 +21,15 @@ public class BoardListHandler extends HttpServlet {
 
     BoardService boardService = (BoardService) request.getServletContext().getAttribute("boardService");
 
+    // JSP가 게시글 목록을 출력할 때 사용할 데이터를 준비한다.  
     try {
-      // JSP가 게시글 목록을 출력할 때 사용할 데이터를 준비한다.  
-      List<Board> boards = boardService.list();
+      String keyword = request.getParameter("keyword");
+      List<Board> boards = null;
+      if (keyword != null && keyword.length() > 0) {
+        boards = boardService.search(keyword);
+      } else {
+        boards = boardService.list();
+      }
 
       // JSP가 사용할 수 있도록 ServletRequest 보관소에 저장한다.
       request.setAttribute("list", boards);

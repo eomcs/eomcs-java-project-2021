@@ -1,7 +1,6 @@
 package com.eomcs.pms.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,14 +18,6 @@ public class BoardUpdateHandler extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     BoardService boardService = (BoardService) request.getServletContext().getAttribute("boardService");
-
-    response.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = response.getWriter();
-
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("<title>게시글 변경</title>");
 
     try {
       int no = Integer.parseInt(request.getParameter("no"));
@@ -47,19 +38,11 @@ public class BoardUpdateHandler extends HttpServlet {
       board.setContent(request.getParameter("content"));
       boardService.update(board);
 
-      out.println("<meta http-equiv='Refresh' content='1;url=list'>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>게시글 변경</h1>");
-      out.println("<p>게시글을 변경하였습니다.</p>");
+      response.sendRedirect("list");
 
     } catch (Exception e) {
       throw new ServletException(e);
     }
-
-    out.println("</body>");
-    out.println("</html>");
-
   }
 }
 

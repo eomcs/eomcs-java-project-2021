@@ -12,7 +12,7 @@
 <title>게시글 목록</title>
 </head>
 <body>
-<h1>게시글 목록(JSP3)</h1>
+<h1>게시글 목록(JSP)</h1>
 <p><a href='form.html'>새 글</a></p>
 <table border='1'>
 <thead>
@@ -37,8 +37,10 @@ for (Board b : list) {
 %>
 </tbody>
 </table>
-<form action='search' method='get'>
-<input type='text' name='keyword'> 
+
+<% String keyword = request.getParameter("keyword");%>
+<form action='list' method='get'>
+<input type='search' name='keyword' value='<%=keyword != null ? keyword : ""%>'> 
 <button>검색</button>
 </form>
 </body>

@@ -1,7 +1,6 @@
 package com.eomcs.pms.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,29 +30,12 @@ public class BoardAddHandler extends HttpServlet {
     Member loginUser = (Member) httpRequest.getSession().getAttribute("loginUser");
     b.setWriter(loginUser);
 
-    response.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = response.getWriter();
-
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("<title>게시글 등록</title>");
-
     try {
       boardService.add(b);
-
-      out.println("<meta http-equiv='Refresh' content='1;url=list'>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>게시글 등록</h1>");
-      out.println("<p>게시글을 등록했습니다.</p>");
-
+      response.sendRedirect("list");
     } catch (Exception e) {
       throw new ServletException(e);
     }
-
-    out.println("</body>");
-    out.println("</html>");
   }
 }
 
