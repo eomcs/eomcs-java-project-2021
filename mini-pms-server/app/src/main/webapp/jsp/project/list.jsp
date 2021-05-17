@@ -11,7 +11,7 @@
 <title>프로젝트</title>
 </head>
 <body>
-<h1>프로젝트(JSP + JSP 액션태그)</h1>
+<h1>프로젝트(JSP + JSP 액션태그 + EL)</h1>
 <p><a href='add1'>새 프로젝트</a></p>
 <table border='1'>
 <thead>
@@ -23,73 +23,40 @@
 <jsp:useBean id="projects" type="List<Project>" scope="request"/>
 <%
 for (Project p : projects) {
-  StringBuilder strBuilder = new StringBuilder();
-  List<Member> members = p.getMembers();
-  for (Member m : members) {
-    if (strBuilder.length() > 0) {
-      strBuilder.append(",");
-    }
-    strBuilder.append(m.getName());
-  }
+  pageContext.setAttribute("p", p);
 %>
 <tr> 
-  <td><%=p.getNo()%></td> 
-  <td><a href='detail?no=<%=p.getNo()%>'><%=p.getTitle()%></a></td> 
-  <td><%=p.getStartDate()%> ~ <%=p.getEndDate()%></td> 
-  <td><%=p.getOwner().getName()%></td> 
-  <td><%=strBuilder.toString()%></td> 
+  <td>${p.no}</td> 
+  <td><a href='detail?no=${p.no}'>${p.title}</a></td> 
+  <td>${p.startDate} ~ ${p.endDate}</td> 
+  <td>${p.owner.name}</td> 
+  <td>${p.memberNames}</td> 
 </tr>
 <%
 }
 %>
 </tbody>
 </table>
-<%
-String item = request.getParameter("item");
-if (item == null) {
-  item = "";
-}
 
-String keyword = request.getParameter("keyword");
-if (keyword == null) {
-  keyword = "";
-}
-%>
 <form method='get'>
 <select name='item'>
-  <option value='0' <%=item.equals("0") ? "selected" : ""%>>전체</option>
-  <option value='1' <%=item.equals("1") ? "selected" : ""%>>프로젝트명</option>
-  <option value='2' <%=item.equals("2") ? "selected" : ""%>>관리자</option>
-  <option value='3' <%=item.equals("3") ? "selected" : ""%>>팀원</option>
+  <option value='0' ${param.item == "0" ? "selected" : ""}>전체</option>
+  <option value='1' ${param.item == "1" ? "selected" : ""}>프로젝트명</option>
+  <option value='2' ${param.item == "2" ? "selected" : ""}>관리자</option>
+  <option value='3' ${param.item == "3" ? "selected" : ""}>팀원</option>
 </select>
-<input type='search' name='keyword' value='<%=keyword%>'> 
+<input type='search' name='keyword' value='${param.keyword}'> 
 <button>검색</button>
 </form>
 
-<%
-String title = request.getParameter("title");
-if (title == null) {
-  title = "";
-}
-
-String owner = request.getParameter("owner");
-if (owner == null) {
-  owner = "";
-}
-
-String member = request.getParameter("member");
-if (member == null) {
-  member = "";
-}
-%>
 <form method='get'>
 <fieldset>
   <legend>상세 검색</legend>
   <table border='1'>
   <tbody>
-  <tr> <th>프로젝트명</th> <td><input type='search' name='title' value='<%=title%>'></td> </tr>
-  <tr> <th>관리자</th> <td><input type='search' name='owner' value='<%=owner%>'></td> </tr>
-  <tr> <th>팀원</th> <td><input type='search' name='member' value='<%=member%>'></td> </tr>
+  <tr> <th>프로젝트명</th> <td><input type='search' name='title' value='${param.title}'></td> </tr>
+  <tr> <th>관리자</th> <td><input type='search' name='owner' value='${param.owner}'></td> </tr>
+  <tr> <th>팀원</th> <td><input type='search' name='member' value='${param.member}'></td> </tr>
   <tr> <td colspan='2'><button>검색</button></td> </tr>
   </tbody>
   </table>

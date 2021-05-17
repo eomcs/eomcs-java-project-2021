@@ -25,9 +25,10 @@ String checked(List<Member> members, int memberNo) {
 <jsp:useBean id="projectMembers" type="List<Member>" class="java.util.ArrayList" scope="request"/>
 <%
 for (Member m : members) {
+  pageContext.setAttribute("m", m);
 %> 
   <input type='checkbox' name='member' 
-         value='<%=m.getNo()%>' <%=checked(projectMembers, m.getNo())%>><%=m.getName()%><br>
+         value='${m.no}' <%=checked(projectMembers, m.getNo())%>>${m.name}<br>
 <%
 }
 %>

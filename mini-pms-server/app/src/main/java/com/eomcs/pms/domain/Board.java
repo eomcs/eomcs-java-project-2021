@@ -1,6 +1,7 @@
 package com.eomcs.pms.domain;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 public class Board {
   private int no;
@@ -10,6 +11,11 @@ public class Board {
   private Date registeredDate;
   private int viewCount;
   private int like;
+
+  // 날짜 값을 특정 포맷의 문자열로 만들어 리턴한다.
+  public String getRegisteredDate2() {
+    return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(registeredDate);
+  }
 
   @Override
   public String toString() {

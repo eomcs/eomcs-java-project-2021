@@ -12,6 +12,22 @@ public class Project {
   private Member owner;
   private List<Member> members;
 
+  // 회원 목록에서 이름을 추출하여 문자열로 리턴한다.
+  public String getMemberNames() {
+    if (members == null || members.size() == 0) {
+      return null;
+    }
+
+    StringBuilder strBuilder = new StringBuilder();
+    for (Member m : members) {
+      if (strBuilder.length() > 0) {
+        strBuilder.append(",");
+      }
+      strBuilder.append(m.getName());
+    }
+    return strBuilder.toString();
+  }
+
   @Override
   public String toString() {
     return "Project [no=" + no + ", title=" + title + ", content=" + content + ", startDate="
