@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1>회원(JSP)</h1>
-<p><a href='form.html'>새 회원</a></p>
+<p><a href='add'>새 회원</a></p>
 <table border='1'>
 <thead>
 <tr>

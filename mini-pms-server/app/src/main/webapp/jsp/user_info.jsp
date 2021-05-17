@@ -12,6 +12,11 @@
 <h1>사용자 정보(JSP)</h1>
 <%
 Member loginUser = (Member) session.getAttribute("loginUser");
+if (loginUser == null) {
+%>
+  <p>로그인 하지 않았습니다.</p>
+<%
+} else {
 %>
 <table border='1'>
 <tbody>
@@ -29,6 +34,10 @@ Member loginUser = (Member) session.getAttribute("loginUser");
   <td><a href='<%=loginUser.getPhoto() != null ? "upload/" + loginUser.getPhoto() : ""%>'>
   <img src='<%=loginUser.getPhoto() != null ? 
       "upload/" + loginUser.getPhoto() + "_80x80.jpg" : "images/person_80x80.jpg"%>'></a></td></tr>
-</tbody></table>
+</tbody>
+</table>
+<%
+}
+%>
 </body>
 </html>

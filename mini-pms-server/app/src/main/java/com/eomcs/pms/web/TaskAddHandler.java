@@ -1,16 +1,13 @@
 package com.eomcs.pms.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.eomcs.pms.domain.Member;
-import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
@@ -27,51 +24,16 @@ public class TaskAddHandler extends HttpServlet {
     ProjectService projectService = (ProjectService) request.getServletContext().getAttribute("projectService");
     MemberService memberService = (MemberService) request.getServletContext().getAttribute("memberService");
 
-    response.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = response.getWriter();
-
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("<meta charset='UTF-8'>");
-    out.println("<title>새 작업</title>");
-    out.println("</head>");
-    out.println("<body>");
-    out.println("<h1>새 작업</h1>");
-
     try {
-      out.println("<form action='add' method='post'>");
+      request.setAttribute("projects", projectService.list());
+      request.setAttribute("members", memberService.list(null));
 
-      out.println("프로젝트: <select name='projectNo'>");
-      List<Project> projects = projectService.list();
-      for (Project project : projects) {
-        out.printf("  <option value='%d'>%s</option>\n", project.getNo(), project.getTitle());
-      }
-      out.println("</select><br>");
-
-      out.println("작업: <input type='text' name='content'><br>");
-      out.println("마감일: <input type='date' name='deadline'><br>");
-
-      out.println("담당자: <select name='owner'>");
-      List<Member> members = memberService.list(null);
-      for (Member m : members) {
-        out.printf("  <option value='%d'>%s</option>\n", m.getNo(), m.getName());
-      }
-      out.println("</select><br>");
-
-      out.println("상태: ");
-      out.println("<input type='radio' name='status' value='0' checked>신규 ");
-      out.println("<input type='radio' name='status' value='1'>진행중 ");
-      out.println("<input type='radio' name='status' value='2'>완료 ");
-
-      out.println("<input type='submit' value='등록'>");
-      out.println("</form>");
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/jsp/task/form.jsp").include(request, response);
 
     } catch (Exception e) {
       throw new ServletException(e);
     }
-    out.println("</body>");
-    out.println("</html>");
   }
 
   @Override

@@ -15,6 +15,14 @@ import com.eomcs.pms.service.BoardService;
 public class BoardAddHandler extends HttpServlet {
 
   @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+
+    response.setContentType("text/html;charset=UTF-8");
+    request.getRequestDispatcher("/jsp/board/form.jsp").include(request, response);
+  }
+
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
