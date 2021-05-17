@@ -11,7 +11,7 @@
 <title>게시글 목록</title>
 </head>
 <body>
-<h1>게시글 목록(JSP + JSP 액션태그 + EL)</h1>
+<h1>게시글 목록(JSP + JSP 액션태그)</h1>
 <p><a href='add'>새 글</a></p>
 <table border='1'>
 <thead>
@@ -23,7 +23,6 @@
 <jsp:useBean id="list" type="List<Board>" scope="request"/>
 <% 
 for (Board b : list) {
-  pageContext.setAttribute("b", b);
 %>
 <tr> 
   <td><%=b.getNo()%></td> 
