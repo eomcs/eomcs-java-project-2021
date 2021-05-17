@@ -11,7 +11,7 @@
 <title>회원</title>
 </head>
 <body>
-<h1>회원(JSP + JSP 액션태그)</h1>
+<h1>회원(JSP + JSP 액션태그 + EL)</h1>
 <p><a href='add'>새 회원</a></p>
 <table border='1'>
 <thead>
@@ -23,21 +23,22 @@
 <jsp:useBean id="list" type="List<Member>" scope="request"/>
 <%
 for (Member m : list) {
+  pageContext.setAttribute("m", m);
+  pageContext.setAttribute("photoUrl", 
+      m.getPhoto() != null ? "../upload/" + m.getPhoto() + "_30x30.jpg" : "../images/person_30x30.jpg");
 %>
 <tr> 
-  <td><%=m.getNo()%></td> 
-  <td><img src='<%=m.getPhoto() != null ? 
-      "../upload/" + m.getPhoto() + "_30x30.jpg" : "../images/person_30x30.jpg"%>'></td> 
-  <td><a href='detail?no=<%=m.getNo()%>'><%=m.getName()%></a></td> 
-  <td><%=m.getEmail()%></td> 
-  <td><%=m.getTel()%></td> </tr>
+  <td>${m.no}</td> 
+  <td><img src='${photoUrl}'></td> 
+  <td><a href='detail?no=${m.no}'>${m.name}</a></td> 
+  <td>${m.email}</td> 
+  <td>${m.tel}</td> </tr>
 <%}%>
 </tbody>
 </table>
 
-<% String keyword = request.getParameter("keyword");%>
 <form action='list' method='get'>
-<input type='search' name='keyword' value='<%=keyword != null ? keyword : ""%>'> 
+<input type='search' name='keyword' value='${param.keyword}'> 
 <button>검색</button>
 </form>
 </body>

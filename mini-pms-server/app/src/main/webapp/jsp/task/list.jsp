@@ -20,8 +20,9 @@
   <option value='0' selected>전체</option>
 <% 
 for (Project p : projects) {
+  pageContext.setAttribute("p", p);
 %>
-  <option value='<%=p.getNo()%>'  <%=p.getNo() == projectNo ? "selected" : ""%>><%=p.getTitle()%></option>
+  <option value='${p.no}'  ${p.no == projectNo ? "selected" : ""}>${p.title}</option>
 <%
 }
 %>
@@ -45,18 +46,20 @@ if (tasks.size() == 0) {
 <%
 } else {
   for (Task t : tasks) {
+    pageContext.setAttribute("t", t);
+    pageContext.setAttribute("status", Task.getStatusLabel(t.getStatus()));
     if (projectNo != t.getProjectNo()) {
 %>
 <tr>
-  <td colspan='5'>프로젝트: '<%=t.getProjectTitle()%>'</td>
+  <td colspan='5'>프로젝트: '${t.projectTitle}'</td>
 </tr>
 <%  }%>
 <tr> 
-  <td><%=t.getNo()%></td> 
-  <td><a href='detail?no=<%=t.getNo()%>'><%=t.getContent()%></a></td> 
-  <td><%=t.getDeadline()%></td> 
-  <td><%=t.getOwner().getName()%></td> 
-  <td><%=Task.getStatusLabel(t.getStatus())%></td> 
+  <td>${t.no}</td> 
+  <td><a href='detail?no=${t.no}'>${t.content}</a></td> 
+  <td>${t.deadline}</td> 
+  <td>${t.owner.name}</td> 
+  <td>${status}</td> 
 </tr>
 <%}
 }
