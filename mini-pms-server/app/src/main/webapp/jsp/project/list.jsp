@@ -65,14 +65,31 @@ if (keyword == null) {
 <input type='search' name='keyword' value='<%=keyword%>'> 
 <button>검색</button>
 </form>
+
+<%
+String title = request.getParameter("title");
+if (title == null) {
+  title = "";
+}
+
+String owner = request.getParameter("owner");
+if (owner == null) {
+  owner = "";
+}
+
+String member = request.getParameter("member");
+if (member == null) {
+  member = "";
+}
+%>
 <form method='get'>
 <fieldset>
   <legend>상세 검색</legend>
   <table border='1'>
   <tbody>
-  <tr> <th>프로젝트명</th> <td><input type='search' name='title' value=''></td> </tr>
-  <tr> <th>관리자</th> <td><input type='search' name='owner' value=''></td> </tr>
-  <tr> <th>팀원</th> <td><input type='search' name='member' value=''></td> </tr>
+  <tr> <th>프로젝트명</th> <td><input type='search' name='title' value='<%=title%>'></td> </tr>
+  <tr> <th>관리자</th> <td><input type='search' name='owner' value='<%=owner%>'></td> </tr>
+  <tr> <th>팀원</th> <td><input type='search' name='member' value='<%=member%>'></td> </tr>
   <tr> <td colspan='2'><button>검색</button></td> </tr>
   </tbody>
   </table>
