@@ -8,7 +8,7 @@
 <title>로그인</title>
 </head>
 <body>
-<h1>로그인 결과(JSP + JSP 액션태그 + EL)</h1>
-<p>${loginUser.name} 님 환영합니다.</p>
+<h1>로그인 결과</h1>
+<p>사용자 정보가 맞지 않습니다.</p>
 </body>
 </html>
