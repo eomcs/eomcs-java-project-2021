@@ -1,7 +1,6 @@
 package com.eomcs.pms.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,17 +19,6 @@ public class MemberDeleteHandler extends HttpServlet {
 
     MemberService memberService = (MemberService) request.getServletContext().getAttribute("memberService");
 
-    response.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = response.getWriter();
-
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("<title>회원 삭제</title>");
-    out.println("</head>");
-    out.println("<body>");
-    out.println("<h1>회원 삭제</h1>");
-
     try {
       int no = Integer.parseInt(request.getParameter("no"));
 
@@ -46,16 +34,11 @@ public class MemberDeleteHandler extends HttpServlet {
       //      }
 
       memberService.delete(no);
-      out.println("<p>회원을 삭제하였습니다.</p>");
-
-      response.setHeader("Refresh", "1;url=list");
+      response.sendRedirect("list");
 
     } catch (Exception e) {
       throw new ServletException(e);
     }
-
-    out.println("</body>");
-    out.println("</html>");
   }
 }
 
