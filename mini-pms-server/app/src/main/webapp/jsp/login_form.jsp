@@ -8,13 +8,11 @@
 <title>로그인</title>
 </head>
 <body>
-<h1>로그인(JSP)</h1>
+<h1>로그인(JSP + JSP 액션태그)</h1>
 <form method='post'>
 <table border='1'>
 <tbody>
-<%
-String email = (String) request.getAttribute("email");
-%>
+<jsp:useBean id="email" type="java.lang.String" scope="request"/>
 <tr><th>이메일</th><td><input name='email' type='email' value='<%=email%>'></td></tr>
 <tr><th>암호</th><td><input name='password' type='password'></td></tr>
 </tbody>

@@ -11,7 +11,7 @@
 <title>게시글 목록</title>
 </head>
 <body>
-<h1>게시글 목록(JSP)</h1>
+<h1>게시글 목록(JSP + JSP 액션태그)</h1>
 <p><a href='add'>새 글</a></p>
 <table border='1'>
 <thead>
@@ -20,8 +20,8 @@
 </tr>
 </thead>
 <tbody>
-<% // scriptlet element = 자바 코드를 두는 블록 
-List<Board> list = (List<Board>) request.getAttribute("list");
+<jsp:useBean id="list" type="List<Board>" scope="request"/>
+<% 
 for (Board b : list) {
 %>
 <tr> 

@@ -11,12 +11,10 @@
 <title>작업</title>
 </head>
 <body>
-<h1>작업(JSP)</h1>
+<h1>작업(JSP + JSP 액션태그)</h1>
 <p><a href='add'>새 작업</a></p>
-<%
-int projectNo = (int) request.getAttribute("projectNo");
-List<Project> projects = (List<Project>) request.getAttribute("projects");
-%>
+<jsp:useBean id="projectNo" type="java.lang.Integer" scope="request"/>
+<jsp:useBean id="projects" type="List<Project>" scope="request"/>
 <form>
 프로젝트: <select name='projectNo'>
   <option value='0' selected>전체</option>
@@ -37,8 +35,8 @@ for (Project p : projects) {
 </tr>
 </thead>
 <tbody>
+<jsp:useBean id="tasks" type="List<Task>" scope="request"/>
 <%
-List<Task> tasks = (List<Task>) request.getAttribute("tasks");
 if (tasks.size() == 0) {
 %>
 <tr>

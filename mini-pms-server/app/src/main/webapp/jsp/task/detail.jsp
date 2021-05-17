@@ -11,10 +11,8 @@
 <title>작업</title>
 </head>
 <body>
-<h1>작업 정보(JSP)</h1>
-<%
-Task task = (Task) request.getAttribute("task");
-%>
+<h1>작업 정보(JSP + JSP 액션태그)</h1>
+<jsp:useBean id="task" type="com.eomcs.pms.domain.Task" scope="request"/>
 <form action='update' method='post'>
 <input type='hidden' name='projectNo' value='<%=task.getProjectNo()%>'>
 <table border='1'>
@@ -40,8 +38,8 @@ Task task = (Task) request.getAttribute("task");
 <tr>
   <th>담당자</th> 
   <td><select name='owner'>
+<jsp:useBean id="members" type="List<Member>" scope="request"/>
 <%
-List<Member> members = (List<Member>) request.getAttribute("members");
 for (Member m : members) {
 %>
   <option value='<%=m.getNo()%>' <%=task.getOwner().getNo() == m.getNo() ? "selected" : ""%>><%=m.getName()%></option>

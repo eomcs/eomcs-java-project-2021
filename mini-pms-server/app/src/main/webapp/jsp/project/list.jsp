@@ -11,7 +11,7 @@
 <title>프로젝트</title>
 </head>
 <body>
-<h1>프로젝트(JSP)</h1>
+<h1>프로젝트(JSP + JSP 액션태그)</h1>
 <p><a href='add1'>새 프로젝트</a></p>
 <table border='1'>
 <thead>
@@ -20,8 +20,8 @@
 </tr>
 </thead>
 <tbody>
+<jsp:useBean id="projects" type="List<Project>" scope="request"/>
 <%
-List<Project> projects = (List<Project>) request.getAttribute("projects");
 for (Project p : projects) {
   StringBuilder strBuilder = new StringBuilder();
   List<Member> members = p.getMembers();

@@ -3,10 +3,9 @@
 <%@ page language="java" 
   contentType="text/html; charset=UTF-8"
   pageEncoding="UTF-8"%>
+<jsp:useBean id="members" type="List<Member>" scope="request"/>
+<jsp:useBean id="projectMembers" type="List<Member>" scope="request"/>
 <%
-List<Member> members = (List<Member>) request.getAttribute("members");
-List<Member> projectMembers = (List<Member>) request.getAttribute("projectMembers");
-
 for (Member m : members) {
   String checked = "";
   if (projectMembers != null) {

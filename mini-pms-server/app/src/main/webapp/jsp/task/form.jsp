@@ -12,11 +12,11 @@
 <title>새 작업</title>
 </head>
 <body>
-<h1>새 작업(JSP)</h1>
+<h1>새 작업(JSP + JSP 액션태그)</h1>
 <form action='add' method='post'>
 프로젝트: <select name='projectNo'>
+<jsp:useBean id="projects" type="List<Project>" scope="request"/>
 <%
-List<Project> projects = (List<Project>) request.getAttribute("projects");
 for (Project p : projects) {
 %>
   <option value='<%=p.getNo()%>'><%=p.getTitle()%></option>
@@ -27,8 +27,8 @@ for (Project p : projects) {
 작업: <input type='text' name='content'><br>
 마감일: <input type='date' name='deadline'><br>
 담당자: <select name='owner'>
+<jsp:useBean id="members" type="List<Member>" scope="request"/>
 <%
-List<Member> members = (List<Member>) request.getAttribute("members");
 for (Member m : members) {
 %>
   <option value='<%=m.getNo()%>'><%=m.getName()%></option>

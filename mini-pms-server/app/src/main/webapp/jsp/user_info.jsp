@@ -9,9 +9,9 @@
 <title>사용자 정보</title>
 </head>
 <body>
-<h1>사용자 정보(JSP)</h1>
+<h1>사용자 정보(JSP + JSP 액션태그)</h1>
+<jsp:useBean id="loginUser" type="com.eomcs.pms.domain.Member" scope="session"></jsp:useBean>
 <%
-Member loginUser = (Member) session.getAttribute("loginUser");
 if (loginUser == null) {
 %>
   <p>로그인 하지 않았습니다.</p>

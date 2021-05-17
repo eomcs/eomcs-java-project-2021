@@ -11,7 +11,7 @@
 <title>회원</title>
 </head>
 <body>
-<h1>회원(JSP)</h1>
+<h1>회원(JSP + JSP 액션태그)</h1>
 <p><a href='add'>새 회원</a></p>
 <table border='1'>
 <thead>
@@ -20,8 +20,8 @@
 </tr>
 </thead>
 <tbody>
+<jsp:useBean id="list" type="List<Member>" scope="request"/>
 <%
-List<Member> list = (List<Member>) request.getAttribute("list");
 for (Member m : list) {
 %>
 <tr> 

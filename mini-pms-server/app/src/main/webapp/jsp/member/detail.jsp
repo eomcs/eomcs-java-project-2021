@@ -11,42 +11,42 @@
 <title>회원</title>
 </head>
 <body>
-<h1>회원 정보(JSP)</h1>
+<h1>회원 정보(JSP + JSP 액션태그)</h1>
+<jsp:useBean id="member" type="com.eomcs.pms.domain.Member" scope="request"/>
 <% 
-Member m = (Member) request.getAttribute("member");
-if (m != null) {
+if (member != null) {
 %>
 <form action='update' method='post' enctype='multipart/form-data'>
 <table border='1'>
 <tbody>
 <tr>
   <th>번호</th> 
-  <td><input type='text' name='no' value='<%=m.getNo()%>' readonly></td></tr>
+  <td><input type='text' name='no' value='<%=member.getNo()%>' readonly></td></tr>
 <tr>
   <th>이름</th> 
-  <td><input name='name' type='text' value='<%=m.getName()%>'></td></tr>
+  <td><input name='name' type='text' value='<%=member.getName()%>'></td></tr>
 <tr>
   <th>이메일</th> 
-  <td><input name='email' type='email' value='<%=m.getEmail()%>'></td></tr>
+  <td><input name='email' type='email' value='<%=member.getEmail()%>'></td></tr>
 <tr>
   <th>암호</th> 
   <td><input name='password' type='password'></td></tr>
 <tr>
   <th>전화</th> 
-  <td><input name='tel' type='tel' value='<%=m.getTel() != null ? m.getTel() : ""%>'></td></tr>
+  <td><input name='tel' type='tel' value='<%=member.getTel() != null ? member.getTel() : ""%>'></td></tr>
 <tr>
   <th>가입일</th> 
-  <td><%=m.getRegisteredDate()%></td></tr>
+  <td><%=member.getRegisteredDate()%></td></tr>
 <tr>
   <th>사진</th> 
-  <td><a href='<%=m.getPhoto() != null ? "../upload/" + m.getPhoto() : ""%>'>
-  <img src='<%=m.getPhoto() != null ? 
-      "../upload/" + m.getPhoto() + "_80x80.jpg" : "../images/person_80x80.jpg"%>'></a><br>
+  <td><a href='<%=member.getPhoto() != null ? "../upload/" + member.getPhoto() : ""%>'>
+  <img src='<%=member.getPhoto() != null ? 
+      "../upload/" + member.getPhoto() + "_80x80.jpg" : "../images/person_80x80.jpg"%>'></a><br>
   <input name='photo' type='file'></td></tr>
 </tbody>
 <tfoot>
 <tr><td colspan='2'>
-<input type='submit' value='변경'> <a href='delete?no=<%=m.getNo()%>'>삭제</a> 
+<input type='submit' value='변경'> <a href='delete?no=<%=member.getNo()%>'>삭제</a> 
 </td></tr>
 </tfoot>
 </table>
