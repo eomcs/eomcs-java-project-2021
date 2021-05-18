@@ -1,17 +1,15 @@
-<%@page import="com.eomcs.pms.domain.Member"%>
-<%@page import="com.eomcs.pms.domain.Project"%>
-<%@page import="java.util.List"%>
 <%@ page language="java" 
   contentType="text/html; charset=UTF-8"
   pageEncoding="UTF-8"
   trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <title>프로젝트</title>
 </head>
 <body>
-<h1>프로젝트(JSP + JSP 액션태그 + EL)</h1>
+<h1>프로젝트(JSP + JSP 액션태그 + EL + JSTL)</h1>
 <p><a href='add1'>새 프로젝트</a></p>
 <table border='1'>
 <thead>
@@ -20,11 +18,8 @@
 </tr>
 </thead>
 <tbody>
-<jsp:useBean id="projects" type="List<Project>" scope="request"/>
-<%
-for (Project p : projects) {
-  pageContext.setAttribute("p", p);
-%>
+
+<c:forEach items="${projects}" var="p">
 <tr> 
   <td>${p.no}</td> 
   <td><a href='detail?no=${p.no}'>${p.title}</a></td> 
@@ -32,9 +27,8 @@ for (Project p : projects) {
   <td>${p.owner.name}</td> 
   <td>${p.memberNames}</td> 
 </tr>
-<%
-}
-%>
+</c:forEach>
+
 </tbody>
 </table>
 

@@ -1,17 +1,16 @@
-<%@page import="com.eomcs.pms.domain.Member"%>
-<%@page import="java.util.List"%>
 <%@ page 
     language="java" 
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <title>회원</title>
 </head>
 <body>
-<h1>회원(JSP + JSP 액션태그 + EL)</h1>
+<h1>회원(JSP + JSP 액션태그 + EL + JSTL)</h1>
 <p><a href='add'>새 회원</a></p>
 <table border='1'>
 <thead>
@@ -20,20 +19,23 @@
 </tr>
 </thead>
 <tbody>
-<jsp:useBean id="list" type="List<Member>" scope="request"/>
-<%
-for (Member m : list) {
-  pageContext.setAttribute("m", m);
-  pageContext.setAttribute("photoUrl", 
-      m.getPhoto() != null ? "../upload/" + m.getPhoto() + "_30x30.jpg" : "../images/person_30x30.jpg");
-%>
-<tr> 
-  <td>${m.no}</td> 
-  <td><img src='${photoUrl}'></td> 
-  <td><a href='detail?no=${m.no}'>${m.name}</a></td> 
-  <td>${m.email}</td> 
-  <td>${m.tel}</td> </tr>
-<%}%>
+
+<c:forEach items="${list}" var="m">
+  <c:if test="${not empty m.photo}">
+    <c:set var="photoUrl">../upload/${m.photo}_30x30.jpg</c:set>
+  </c:if>
+  <c:if test="${empty m.photo}">
+    <c:set var="photoUrl">../images/person_30x30.jpg</c:set>
+  </c:if>
+	<tr> 
+	  <td>${m.no}</td> 
+	  <td><img src='${photoUrl}'></td> 
+	  <td><a href='detail?no=${m.no}'>${m.name}</a></td> 
+	  <td>${m.email}</td> 
+	  <td>${m.tel}</td> 
+	</tr>
+</c:forEach>
+
 </tbody>
 </table>
 

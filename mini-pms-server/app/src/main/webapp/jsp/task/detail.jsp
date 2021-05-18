@@ -1,16 +1,15 @@
-<%@page import="com.eomcs.pms.domain.Member"%>
-<%@page import="java.util.List"%>
 <%@ page language="java" 
   contentType="text/html; charset=UTF-8"
   pageEncoding="UTF-8"
   trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <!DOCTYPE html>
 <html>
 <head>
 <title>작업</title>
 </head>
 <body>
-<h1>작업 정보(JSP + JSP 액션태그 + EL)</h1>
+<h1>작업 정보(JSP + JSP 액션태그 + EL + JSTL)</h1>
 <form action='update' method='post'>
 <input type='hidden' name='projectNo' value='${task.projectNo}'>
 <table border='1'>
@@ -36,15 +35,11 @@
 <tr>
   <th>담당자</th> 
   <td><select name='owner'>
-<jsp:useBean id="members" type="List<Member>" scope="request"/>
-<%
-for (Member m : members) {
-  pageContext.setAttribute("m", m);
-%>
+  
+<c:forEach items="${members}" var="m">
   <option value='${m.no}' ${task.owner.no == m.no ? "selected" : ""}>${m.name}</option>
-<%
-}
-%>
+</c:forEach>
+
 </select><br>
 </tbody>
 <tfoot>

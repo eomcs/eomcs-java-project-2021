@@ -41,13 +41,19 @@ dependencies {
     //implementation 'commons-fileupload:commons-fileupload:1.4'
   
     // 웹 애플리케이션을 제작할 때 사용하는 Servlet/JSP 라이브러리
-    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    // - 서블릿 API 는 서블릿 컨테이너에 존재하기 때문에 컴파일 하는 동안에만 사용한다.
+    // - 배포에서는 제외한다.
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
  
+    // JSTL API 구현체
+    implementation 'javax.servlet:jstl:1.2'
+    
     // MariaDB JDBC 드라이버
     implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
     
     // Mybatis 퍼시스턴스 프레임워크
     implementation 'org.mybatis:mybatis:3.5.6'
+  
     
     testImplementation 'junit:junit:4.13'
     implementation 'com.google.guava:guava:29.0-jre'
