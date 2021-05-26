@@ -35,9 +35,9 @@
 <tbody>
 
 <c:forEach items="${list}" var="b">
-<tr> 
+<tr class="e-title" data-no="${b.no}"> 
   <td>${b.no}</td> 
-  <td><a href='detail?no=${b.no}'>${b.title}</a></td>
+  <td>${b.title}</a></td>
   <td>${b.writer.name}</td>
   <td>${b.registeredDate}</td>
   <td>${b.viewCount}</td>
@@ -48,5 +48,20 @@
 </table>
 
 </div>
+<script>
+var trList = document.querySelectorAll(".e-title");
+for (var tr of trList) {
+	tr.querySelector("a").onclick = (e) => {
+		e.preventDefault();
+	};
+
+	tr.onclick = (e) => {
+		var boardNo = e.currentTarget.getAttribute("data-no");
+		location.href = "detail?no=" + boardNo;
+	};
+
+}
+
+</script>
 </body>
 </html>
