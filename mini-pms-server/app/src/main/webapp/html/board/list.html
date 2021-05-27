@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>게시글 목록</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+<link href="../../css/common.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+<h1>게시글 목록(Bootstrap)</h1>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a href='add' class="btn btn-primary btn-sm">새 글</a>
+    <form class="d-flex">
+      <input class="form-control me-2" type="search" name="keyword" value='' placeholder="검색" aria-label="검색">
+      <button class="btn btn-outline-success col-sm-3" type="submit">검색</button>
+    </form>
+  </div>
+</nav>
+
+<table id="e-table" class="table table-hover">
+<thead>
+<tr>
+<th>번호</th> <th>제목</th> <th>작성자</th> <th>등록일</th> <th>조회수</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+</div>
+<script>
+
+(function() {
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4) {
+			if (xhr.status == 200) {
+				var arr = JSON.parse(xhr.responseText);
+				var tr = '';
+				for (var b of arr) {
+					var tr = tr + "<tr class='e-title' data-no='" + b.no + "'>" 
+					  + "<td>" + b.no + "</td>" 
+					  + "<td><a href='detail?no=" + b.no + "'>" + b.title + "</a></td>"
+					  + "<td>" + b.writer.name + "</td>"
+					  + "<td>" + b.registeredDate + "</td>"
+					  + "<td>" + b.viewCount + "</td>"
+					  + "</tr>\n";
+					console.log(tr);
+				}
+				document.querySelector("#e-table > tbody").innerHTML = tr;
+				
+			} else {
+				alert("서버에서 데이터를 가져오는데 실패했습니다!");
+			}
+		}
+	};
+	xhr.open("GET", "../../json/board/list", true);
+	xhr.send();
+})();
+
+
+
+
+/*
+var trList = document.querySelectorAll(".e-title");
+for (var tr of trList) {
+  tr.querySelector("a").onclick = (e) => {
+    e.preventDefault();
+  };
+
+  tr.onclick = (e) => {
+    var boardNo = e.currentTarget.getAttribute("data-no");
+    location.href = "detail?no=" + boardNo;
+  };
+}
+*/
+
+</script>
+</body>
+</html>

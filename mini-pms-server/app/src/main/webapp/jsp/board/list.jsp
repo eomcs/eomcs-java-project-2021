@@ -37,7 +37,7 @@
 <c:forEach items="${list}" var="b">
 <tr class="e-title" data-no="${b.no}"> 
   <td>${b.no}</td> 
-  <td>${b.title}</a></td>
+  <td><a href="detail?no=${b.no}">${b.title}</a></td>
   <td>${b.writer.name}</td>
   <td>${b.registeredDate}</td>
   <td>${b.viewCount}</td>
