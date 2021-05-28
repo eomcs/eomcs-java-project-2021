@@ -32,18 +32,25 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
       
-<!-- 서블릿 등록 및 서블릿의 URL 설정 -->
-<!--  
   <servlet>
-    <servlet-name>AppInitHandler</servlet-name>
-    <servlet-class>com.eomcs.pms.web.AppInitHandler</servlet-class>
-    <init-param>
-      <param-name>mybatis-config</param-name>
-      <param-value>com/eomcs/pms/conf/mybatis-config.xml</param-value>
+    <servlet-name>DispatcherServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param> <!-- 프론트 컨트롤러가 사용할 빈 컨테이너의 클래스를 지정한다. -->
+      <param-name>contextClass</param-name>
+      <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
     </init-param>
-    <load-on-startup>1</load-on-startup>
+    <init-param> <!-- 빈 컨테이너의 설정 정보를 다루는 클래스를 지정한다. -->
+      <param-name>contextConfigLocation</param-name>
+      <param-value>com.eomcs.pms.config.AppConfig</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000000</max-file-size>
+    </multipart-config>
   </servlet>
--->
+  <servlet-mapping>
+    <servlet-name>DispatcherServlet</servlet-name>
+    <url-pattern>/app2/*</url-pattern>
+  </servlet-mapping>
   
   <error-page>
     <exception-type>javax.servlet.ServletException</exception-type>

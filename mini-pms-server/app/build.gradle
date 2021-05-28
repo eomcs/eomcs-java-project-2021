@@ -54,6 +54,8 @@ dependencies {
     // Mybatis 퍼시스턴스 프레임워크
     implementation 'org.mybatis:mybatis:3.5.6'
   
+    // Spring WebMVC 프레임워크
+    implementation 'org.springframework:spring-webmvc:5.3.7'
     
     testImplementation 'junit:junit:4.13'
     implementation 'com.google.guava:guava:29.0-jre'
