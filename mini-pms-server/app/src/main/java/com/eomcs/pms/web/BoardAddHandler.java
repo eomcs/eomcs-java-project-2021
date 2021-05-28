@@ -17,9 +17,7 @@ public class BoardAddHandler extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
-    response.setContentType("text/html;charset=UTF-8");
-    request.getRequestDispatcher("/jsp/board/form.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/jsp/board/form.jsp");
   }
 
   @Override
@@ -40,7 +38,8 @@ public class BoardAddHandler extends HttpServlet {
 
     try {
       boardService.add(b);
-      response.sendRedirect("list");
+      request.setAttribute("redirect", "list");
+
     } catch (Exception e) {
       throw new ServletException(e);
     }

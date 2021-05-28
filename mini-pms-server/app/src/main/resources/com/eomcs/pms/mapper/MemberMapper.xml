@@ -71,18 +71,6 @@
     where email = #{email} and password = password(#{password})
   </select>
   
-  <select id="findByEmail" resultMap="memberMap" parameterType="string">
-    select 
-      no,
-      name,
-      email,
-      photo,
-      tel 
-    from pms_member
-    where email = #{value}
-    order by name asc
-  </select>
-  
   <update id="update" parameterType="member">
     update pms_member 
     <set> 

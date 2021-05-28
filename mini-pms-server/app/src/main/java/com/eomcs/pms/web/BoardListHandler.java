@@ -33,10 +33,7 @@ public class BoardListHandler extends HttpServlet {
 
       // JSP가 사용할 수 있도록 ServletRequest 보관소에 저장한다.
       request.setAttribute("list", boards);
-
-      // 목록 출력을 JSP에게 맡긴다.
-      response.setContentType("text/html;charset=UTF-8");
-      request.getRequestDispatcher("/jsp/board/list.jsp").include(request, response);
+      request.setAttribute("viewUrl", "/jsp/board/list.jsp");
 
     } catch (Exception e) {
       throw new ServletException(e);

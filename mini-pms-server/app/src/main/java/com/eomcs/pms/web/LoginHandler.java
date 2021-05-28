@@ -17,8 +17,7 @@ public class LoginHandler extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    response.setContentType("text/html;charset=UTF-8");
-    request.getRequestDispatcher("/jsp/login_form.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/jsp/login_form.jsp");
   }
 
   @Override
@@ -45,22 +44,15 @@ public class LoginHandler extends HttpServlet {
     try {
       Member member = memberService.get(email, password);
 
-      response.setContentType("text/html;charset=UTF-8");
-
       if (member == null) {
         // 로그인 실패한다면 세션 객체의 모든 내용을 삭제한다.
         request.getSession().invalidate(); 
-        response.setContentType("text/html;charset=UTF-8");
-        request.getRequestDispatcher("/jsp/login_fail.jsp").include(request, response);
-        response.setHeader("Refresh", "1;url=login");
+        request.setAttribute("viewUrl", "/jsp/login_fail.jsp");
 
       } else {
         // 로그인 성공한다면, 로그인 사용자 정보를 세션 객체에 보관한다.
         request.getSession().setAttribute("loginUser", member);
-
-        response.setContentType("text/html;charset=UTF-8");
-        request.getRequestDispatcher("/jsp/login_success.jsp").include(request, response);
-        response.setHeader("Refresh", "1;url=userInfo");
+        request.setAttribute("viewUrl", "/jsp/login_success.jsp");
       }
     } catch (Exception e) {
       throw new ServletException(e);

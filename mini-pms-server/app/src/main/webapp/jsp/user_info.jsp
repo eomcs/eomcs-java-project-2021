@@ -7,14 +7,10 @@
 <html>
 <head>
 <title>사용자 정보</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-<link href="css/common.css" rel="stylesheet" >
 </head>
 <body>
-<div class="container">
+<h1>사용자 정보(JSP + JSP 액션태그 + EL + JSTL)</h1>
 
-<h1>사용자 정보</h1>
 <c:if test="${empty loginUser}">
   <p>로그인 하지 않았습니다.</p>
 </c:if>
@@ -28,34 +24,23 @@
     <c:set var="photo80x80Url">images/person_80x80.jpg</c:set>
     <c:set var="photoUrl"></c:set>
   </c:if>
-  
-  <div class="mb-3 row">
-    <label for="no" class="col-sm-2 col-form-label">사용자 번호</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control-plaintext form-control-sm" id="no" value='${loginUser.no}'>
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="name" class="col-sm-2 col-form-label">이름</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control-plaintext form-control-sm" id="name" value='${loginUser.name}'>
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="email" class="col-sm-2 col-form-label">이메일</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control-plaintext form-control-sm" id="email" value='${loginUser.email}'>
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="email" class="col-sm-2 col-form-label">사진</label>
-    <div class="col-sm-10">
-    <a href='${photoUrl}'>
-      <img src="${photo80x80Url}" class="img-thumbnail" alt="사용자 사진">
-    </a>
-    </div>
-  </div>
+	<table border='1'>
+	<tbody>
+	<tr>
+	  <th>사용자 번호</th> 
+	  <td>${loginUser.no}</td></tr>
+	<tr>
+	  <th>이름</th> 
+	  <td>${loginUser.name}</td></tr>
+	<tr>
+	  <th>이메일</th> 
+	  <td>${loginUser.email}</td></tr>
+	<tr>
+	  <th>사진</th> 
+	  <td><a href='${photoUrl}'>
+	  <img src='${photo80x80Url}'></a></td></tr>
+	</tbody>
+	</table>
 </c:if>
-</div>
 </body>
 </html>
