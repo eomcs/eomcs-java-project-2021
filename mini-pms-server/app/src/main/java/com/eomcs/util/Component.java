@@ -1,0 +1,6 @@
+package com.eomcs.util;
+
+// 자동으로 생성할 객체를 표시할 때 이 애노테이션을 붙인다.
+public @interface Component {
+  String value() default "";
+}
