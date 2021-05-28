@@ -7,21 +7,10 @@
   
   <display-name>mini-pms-server</display-name>
 
-<!-- 리스너, 필터, 서블릿이 공동으로 사용할 초기화 파라미터 설정 -->
-  <context-param>
-    <param-name>mybatis-config</param-name>
-    <param-value>com/eomcs/pms/conf/mybatis-config.xml</param-value>
-  </context-param>
-
-<!-- 리스너 등록 -->
-  <listener>
-    <listener-class>com.eomcs.pms.web.listener.ContextLoaderListener</listener-class>
-  </listener>
-
 <!-- 필터 등록 및 필터를 적용할 URL 설정 -->
   <filter>
     <filter-name>CharacterEncodingFilter</filter-name>
-    <filter-class>com.eomcs.pms.web.filter.CharacterEncodingFilter</filter-class>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
     <init-param>
       <param-name>encoding</param-name>
       <param-value>UTF-8</param-value>
@@ -43,13 +32,14 @@
       <param-name>contextConfigLocation</param-name>
       <param-value>com.eomcs.pms.config.AppConfig</param-value>
     </init-param>
+    <load-on-startup>1</load-on-startup>
     <multipart-config>
       <max-file-size>10000000</max-file-size>
     </multipart-config>
   </servlet>
   <servlet-mapping>
     <servlet-name>DispatcherServlet</servlet-name>
-    <url-pattern>/app2/*</url-pattern>
+    <url-pattern>/app/*</url-pattern>
   </servlet-mapping>
   
   <error-page>

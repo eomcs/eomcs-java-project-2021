@@ -2,14 +2,14 @@ package com.eomcs.pms.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.BoardService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/board/add")
-public class BoardAddHandler implements PageController {
+@Controller
+public class BoardAddHandler {
 
   BoardService boardService;
 
@@ -17,7 +17,7 @@ public class BoardAddHandler implements PageController {
     this.boardService = boardService;
   }
 
-  @Override
+  @RequestMapping("/board/add")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     if (request.getMethod().equals("GET")) {

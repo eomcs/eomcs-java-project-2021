@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.service.ProjectService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/project/add")
-public class ProjectAddHandler implements PageController {
+@Controller
+public class ProjectAddHandler {
 
   ProjectService projectService;
 
@@ -20,7 +20,7 @@ public class ProjectAddHandler implements PageController {
     this.projectService = projectService;
   }
 
-  @Override
+  @RequestMapping("/project/add")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     HttpSession session = request.getSession();

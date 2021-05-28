@@ -3,13 +3,13 @@ package com.eomcs.pms.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.service.ProjectService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/project/list")
-public class ProjectListHandler implements PageController {
+@Controller
+public class ProjectListHandler {
 
   ProjectService projectService;
 
@@ -17,7 +17,7 @@ public class ProjectListHandler implements PageController {
     this.projectService = projectService;
   }
 
-  @Override
+  @RequestMapping("/project/list")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     List<Project> projects = null;

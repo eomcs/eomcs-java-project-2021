@@ -3,13 +3,13 @@ package com.eomcs.pms.web;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/login")
-public class LoginHandler implements PageController {
+@Controller
+public class LoginHandler {
 
   MemberService memberService;
 
@@ -17,7 +17,7 @@ public class LoginHandler implements PageController {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/login")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     if (request.getMethod().equals("GET")) {

@@ -2,13 +2,13 @@ package com.eomcs.pms.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Component("/project/add1")
-public class ProjectAdd1Handler implements PageController {
+@Controller
+public class ProjectAdd1Handler {
 
-  @Override
+  @RequestMapping("/project/add1")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     return "/jsp/project/form1.jsp";
   }

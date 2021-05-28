@@ -4,13 +4,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/project/add3")
-public class ProjectAdd3Handler implements PageController {
+@Controller
+public class ProjectAdd3Handler {
 
   MemberService memberService;
 
@@ -18,7 +18,7 @@ public class ProjectAdd3Handler implements PageController {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/project/add3")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     HttpSession session = request.getSession();
     session.setAttribute("content", request.getParameter("content"));

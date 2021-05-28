@@ -3,13 +3,13 @@ package com.eomcs.pms.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Component("/project/add2")
-public class ProjectAdd2Handler implements PageController {
+@Controller
+public class ProjectAdd2Handler {
 
-  @Override
+  @RequestMapping("/project/add2")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     // 클라이언트에서 보낸 값을 세션에 보관한다.
     HttpSession session = request.getSession();

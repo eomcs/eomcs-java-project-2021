@@ -2,14 +2,14 @@ package com.eomcs.pms.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.BoardService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/board/update")
-public class BoardUpdateHandler implements PageController {
+@Controller
+public class BoardUpdateHandler {
 
   BoardService boardService;
 
@@ -17,7 +17,7 @@ public class BoardUpdateHandler implements PageController {
     this.boardService = boardService;
   }
 
-  @Override
+  @RequestMapping("/board/update")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     int no = Integer.parseInt(request.getParameter("no"));
 

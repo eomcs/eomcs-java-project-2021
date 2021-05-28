@@ -1,16 +1,19 @@
 package com.eomcs.pms.service.impl;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.service.BoardService;
 
+@Service
 public class DefaultBoardService implements BoardService {
 
   BoardDao boardDao; 
 
   public DefaultBoardService(BoardDao boardDao) {
     this.boardDao = boardDao;
+    System.out.println("DefaultBoardService 객체 생성됨!");
   }
 
   // 게시글 등록 업무

@@ -3,21 +3,22 @@ package com.eomcs.pms.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.service.BoardService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/board/list")
-public class BoardListHandler implements PageController {
+@Controller
+public class BoardListHandler {
 
   BoardService boardService;
 
   public BoardListHandler(BoardService boardService) {
     this.boardService = boardService;
+    System.out.println("BoardListHandler 객체 생성됨!");
   }
 
-  @Override
+  @RequestMapping("/board/list")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String keyword = request.getParameter("keyword");
     List<Board> boards = null;
