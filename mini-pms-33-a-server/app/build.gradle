@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    
+    // 이클립스 IDE에서 사용할 기본 설정 파일 및 웹 프로젝트 설정 파일을 만들어주는 플러그인 
+    id 'eclipse-wtp'
+    
+    // 웹 애플리케이션 패키지 파일(.war)을 생성할 때 사용할 플러그인 등록
+    id 'war'
+}
+
+// 자바 소스를 컴파일 할 때 적용할 옵션
+tasks.withType(JavaCompile) {
+    // $javac -encoding UTF-8 ...
+    options.encoding = 'UTF-8';
+} 
+
+eclipse {
+    project {
+        name = "mini-pms-server"
+    }
+}
+
+war {
+  archiveBaseName = "pms"
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // 의존라이브러리 옵션
+    // => implementation : 컴파일한 후 생성되는 빌드 파일에 포함된다.
+    // => compileOnly : 컴파일한 후 생성되는 빌드 파일에 포함되지 않는다.
+    //
+    
+    // Thumbnailator 썸네일 생성 라이브러리
+    implementation 'net.coobird:thumbnailator:0.4.13'
+    
+    // Apache의 파일업로드 처리 라이브러리
+    //implementation 'commons-fileupload:commons-fileupload:1.4'
+  
+    // 웹 애플리케이션을 제작할 때 사용하는 Servlet/JSP 라이브러리
+    // - 서블릿 API 는 서블릿 컨테이너에 존재하기 때문에 컴파일 하는 동안에만 사용한다.
+    // - 배포에서는 제외한다.
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+ 
+    // JSTL API 구현체
+    implementation 'javax.servlet:jstl:1.2'
+    
+    // MariaDB JDBC 드라이버
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
+    
+    // Mybatis 퍼시스턴스 프레임워크
+    implementation 'org.mybatis:mybatis:3.5.6'
+  
+    
+    testImplementation 'junit:junit:4.13'
+    implementation 'com.google.guava:guava:29.0-jre'
+}
