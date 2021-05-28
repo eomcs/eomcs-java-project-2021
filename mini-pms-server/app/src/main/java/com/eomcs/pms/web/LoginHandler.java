@@ -1,30 +1,28 @@
 package com.eomcs.pms.web;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
+import com.eomcs.util.Component;
+import com.eomcs.util.PageController;
 
-@SuppressWarnings("serial")
-@WebServlet("/login")
-public class LoginHandler extends HttpServlet {
+@Component("/login")
+public class LoginHandler implements PageController {
 
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    request.setAttribute("viewUrl", "/jsp/login_form.jsp");
+  MemberService memberService;
+
+  public LoginHandler(MemberService memberService) {
+    this.memberService = memberService;
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    MemberService memberService = (MemberService) request.getServletContext().getAttribute("memberService");
+    if (request.getMethod().equals("GET")) {
+      return "/jsp/login_form.jsp";
+    } 
 
     String email = request.getParameter("email");
     String password = request.getParameter("password");
@@ -41,21 +39,15 @@ public class LoginHandler extends HttpServlet {
       response.addCookie(cookie);
     }
 
-    try {
-      Member member = memberService.get(email, password);
+    Member member = memberService.get(email, password);
 
-      if (member == null) {
-        // 로그인 실패한다면 세션 객체의 모든 내용을 삭제한다.
-        request.getSession().invalidate(); 
-        request.setAttribute("viewUrl", "/jsp/login_fail.jsp");
+    if (member == null) {
+      request.getSession().invalidate(); 
+      return "/jsp/login_fail.jsp";
 
-      } else {
-        // 로그인 성공한다면, 로그인 사용자 정보를 세션 객체에 보관한다.
-        request.getSession().setAttribute("loginUser", member);
-        request.setAttribute("viewUrl", "/jsp/login_success.jsp");
-      }
-    } catch (Exception e) {
-      throw new ServletException(e);
+    } else {
+      request.getSession().setAttribute("loginUser", member);
+      return "/jsp/login_success.jsp";
     }
   }
 }

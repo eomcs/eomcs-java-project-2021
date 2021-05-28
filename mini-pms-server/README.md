@@ -24,10 +24,13 @@
 
 - com.eomcs.pms.web.listener.ContextLoaderListener 변경
 
-### 3단계: 페이지 컨트롤러를 일반 클래스로 전환한다.
+### 4단계: 페이지 컨트롤러를 일반 클래스로 전환한다.
 
 - com.eomcs.pms.web.XxxHandler 변경
 
+### 5단계: 프론트 컨트롤러를 변경한다.
+
+- com.eomcs.pms.web.servlet.DispatcherServlet 변경
 
 
 ## 실습 결과

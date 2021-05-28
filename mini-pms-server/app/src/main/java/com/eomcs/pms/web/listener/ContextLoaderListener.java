@@ -85,7 +85,6 @@ public class ContextLoaderListener implements ServletContextListener {
 
     // @Component 목록에서 클래스 정보를 한 개 꺼내 컴포넌트를 생성하여 빈컨테이너에 저장한다.
     for (Class<?> clazz : components) {
-      System.out.println(clazz.getName());
       registerComponent(clazz);
     }
   }
@@ -112,7 +111,6 @@ public class ContextLoaderListener implements ServletContextListener {
         String className = packageName + "." + file.getName().replace(".class", "");
         try {
           Class<?> clazz = Class.forName(className);
-          System.out.println(className);
           if (clazz.getAnnotation(Component.class) != null) {
             components.add(clazz);
           }
