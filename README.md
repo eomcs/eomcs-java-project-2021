@@ -204,7 +204,7 @@
 
 ### 33-a. Front Controller 도입하기 : 프론트 컨트롤러 만들기
 ### 33-b. Front Controller 도입하기 : 페이지 컨트롤러를 일반 객체로 전환하기
-
+### 33-c. Front Controller 도입하기 : 스프링 WebMVC 적용하기
 
 ### 32-e. MVC 아키텍처로 전환하기 : Bootstrap CSS 라이브러리 적용하기
 
