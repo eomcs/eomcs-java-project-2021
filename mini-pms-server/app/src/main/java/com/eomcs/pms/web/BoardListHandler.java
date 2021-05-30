@@ -15,7 +15,6 @@ public class BoardListHandler {
 
   public BoardListHandler(BoardService boardService) {
     this.boardService = boardService;
-    System.out.println("BoardListHandler 객체 생성됨!");
   }
 
   @RequestMapping("/board/list")

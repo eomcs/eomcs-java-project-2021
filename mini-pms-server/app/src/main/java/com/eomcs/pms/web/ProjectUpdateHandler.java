@@ -4,14 +4,14 @@ import java.sql.Date;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.service.ProjectService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/project/update")
-public class ProjectUpdateHandler implements PageController {
+@Controller
+public class ProjectUpdateHandler {
 
   ProjectService projectService;
 
@@ -19,7 +19,7 @@ public class ProjectUpdateHandler implements PageController {
     this.projectService = projectService;
   }
 
-  @Override
+  @RequestMapping("/project/update")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));

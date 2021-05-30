@@ -4,17 +4,17 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 import net.coobird.thumbnailator.ThumbnailParameter;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import net.coobird.thumbnailator.name.Rename;
 
-@Component("/member/update")
-public class MemberUpdateHandler implements PageController {
+@Controller
+public class MemberUpdateHandler {
 
   MemberService memberService;
 
@@ -22,7 +22,7 @@ public class MemberUpdateHandler implements PageController {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/update")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     String uploadDir = request.getServletContext().getRealPath("/upload");

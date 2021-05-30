@@ -2,14 +2,14 @@ package com.eomcs.pms.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/project/detail")
-public class ProjectDetailHandler implements PageController {
+@Controller
+public class ProjectDetailHandler {
 
   ProjectService projectService;
   MemberService memberService;
@@ -19,7 +19,7 @@ public class ProjectDetailHandler implements PageController {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/project/detail")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));

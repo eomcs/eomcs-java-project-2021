@@ -2,13 +2,13 @@ package com.eomcs.pms.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/member/detail")
-public class MemberDetailHandler implements PageController {
+@Controller
+public class MemberDetailHandler {
 
   MemberService memberService;
 
@@ -16,7 +16,7 @@ public class MemberDetailHandler implements PageController {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/detail")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     int no = Integer.parseInt(request.getParameter("no"));
 

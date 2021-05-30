@@ -2,14 +2,14 @@ package com.eomcs.pms.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.TaskService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/task/detail")
-public class TaskDetailHandler implements PageController {
+@Controller
+public class TaskDetailHandler {
 
   TaskService taskService;
   MemberService memberService;
@@ -19,7 +19,7 @@ public class TaskDetailHandler implements PageController {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/task/detail")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));

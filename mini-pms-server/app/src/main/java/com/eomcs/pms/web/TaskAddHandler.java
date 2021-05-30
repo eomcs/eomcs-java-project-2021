@@ -3,16 +3,16 @@ package com.eomcs.pms.web;
 import java.sql.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
 import com.eomcs.pms.service.TaskService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/task/add")
-public class TaskAddHandler implements PageController {
+@Controller
+public class TaskAddHandler {
 
   TaskService taskService;
   ProjectService projectService;
@@ -24,7 +24,7 @@ public class TaskAddHandler implements PageController {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/task/add")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     if (request.getMethod().equals("GET")) {
       request.setAttribute("projects", projectService.list());

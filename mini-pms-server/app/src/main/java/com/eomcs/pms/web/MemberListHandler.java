@@ -3,13 +3,13 @@ package com.eomcs.pms.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/member/list") 
-public class MemberListHandler implements PageController {
+@Controller
+public class MemberListHandler {
 
   MemberService memberService;
 
@@ -17,7 +17,7 @@ public class MemberListHandler implements PageController {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/list") 
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     List<Member> list = memberService.list(request.getParameter("keyword"));
     request.setAttribute("list", list);

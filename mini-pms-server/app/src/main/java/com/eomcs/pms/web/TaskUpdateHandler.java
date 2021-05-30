@@ -3,14 +3,14 @@ package com.eomcs.pms.web;
 import java.sql.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.service.TaskService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/task/update")
-public class TaskUpdateHandler implements PageController {
+@Controller
+public class TaskUpdateHandler {
 
   TaskService taskService;
 
@@ -18,7 +18,7 @@ public class TaskUpdateHandler implements PageController {
     this.taskService = taskService;
   }
 
-  @Override
+  @RequestMapping("/task/update")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));

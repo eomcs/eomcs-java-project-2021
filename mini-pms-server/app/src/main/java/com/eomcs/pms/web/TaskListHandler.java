@@ -3,14 +3,14 @@ package com.eomcs.pms.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.service.ProjectService;
 import com.eomcs.pms.service.TaskService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/task/list")
-public class TaskListHandler implements PageController {
+@Controller
+public class TaskListHandler {
 
   TaskService taskService;
   ProjectService projectService;
@@ -20,7 +20,7 @@ public class TaskListHandler implements PageController {
     this.projectService = projectService;
   }
 
-  @Override
+  @RequestMapping("/task/list")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     String input  = request.getParameter("projectNo");

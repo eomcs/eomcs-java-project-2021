@@ -13,7 +13,6 @@ public class DefaultBoardService implements BoardService {
 
   public DefaultBoardService(BoardDao boardDao) {
     this.boardDao = boardDao;
-    System.out.println("DefaultBoardService 객체 생성됨!");
   }
 
   // 게시글 등록 업무

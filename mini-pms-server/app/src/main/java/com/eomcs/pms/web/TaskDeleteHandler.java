@@ -2,13 +2,13 @@ package com.eomcs.pms.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.service.TaskService;
-import com.eomcs.util.Component;
-import com.eomcs.util.PageController;
 
-@Component("/task/delete")
-public class TaskDeleteHandler implements PageController {
+@Controller
+public class TaskDeleteHandler {
 
   TaskService taskService;
 
@@ -16,7 +16,7 @@ public class TaskDeleteHandler implements PageController {
     this.taskService = taskService;
   }
 
-  @Override
+  @RequestMapping("/task/delete")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));
