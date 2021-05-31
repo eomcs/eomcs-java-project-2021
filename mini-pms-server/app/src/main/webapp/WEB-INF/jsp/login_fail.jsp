@@ -6,7 +6,7 @@
 <html>
 <head>
 <title>로그인</title>
-<meta http-equiv="Refresh" content="1;url=login">
+<meta http-equiv="Refresh" content="1;url=login_form">
 </head>
 <body>
 <h1>로그인 결과</h1>

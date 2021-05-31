@@ -11,7 +11,7 @@
 </head>
 <body>
 <h1>회원(JSP + JSP 액션태그 + EL + JSTL)</h1>
-<p><a href='add'>새 회원</a></p>
+<p><a href='form'>새 회원</a></p>
 <table border='1'>
 <thead>
 <tr>

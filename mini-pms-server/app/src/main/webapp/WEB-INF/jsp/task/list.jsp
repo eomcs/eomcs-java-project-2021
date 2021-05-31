@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1>작업(JSP + JSP 액션태그 + EL + JSTL)</h1>
-<p><a href='add'>새 작업</a></p>
+<p><a href='form'>새 작업</a></p>
 <form>
 프로젝트: <select name='projectNo'>
   <option value='0'>전체</option>

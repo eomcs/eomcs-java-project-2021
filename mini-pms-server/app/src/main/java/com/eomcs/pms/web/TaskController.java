@@ -26,11 +26,10 @@ public class TaskController {
     this.memberService = memberService;
   }
 
-  @GetMapping("add")
-  public String form(Model model) throws Exception {
+  @GetMapping("form")
+  public void form(Model model) throws Exception {
     model.addAttribute("projects", projectService.list());
     model.addAttribute("members", memberService.list(null));
-    return "/jsp/task/form.jsp";
   }
 
   @PostMapping("add")
@@ -48,7 +47,7 @@ public class TaskController {
   }
 
   @GetMapping("detail")
-  public String detail(int no, Model model) throws Exception {
+  public void detail(int no, Model model) throws Exception {
     Task task = taskService.get(no);
     if (task == null) {
       throw new Exception("해당 번호의 작업이 없습니다.");
@@ -56,11 +55,10 @@ public class TaskController {
 
     model.addAttribute("task", task);
     model.addAttribute("members", memberService.list(null));
-    return "/jsp/task/detail.jsp";
   }
 
   @GetMapping("list")
-  public String list(@RequestParam(defaultValue = "0") int projectNo, Model model) throws Exception {
+  public void list(@RequestParam(defaultValue = "0") int projectNo, Model model) throws Exception {
 
     List<Task> tasks = null;
     if (projectNo == 0) {
@@ -72,7 +70,6 @@ public class TaskController {
     model.addAttribute("projectNo", projectNo);
     model.addAttribute("projects", projectService.list());
     model.addAttribute("tasks", tasks);
-    return "/jsp/task/list.jsp";
   }
 
   @PostMapping("update")

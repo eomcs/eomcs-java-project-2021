@@ -28,9 +28,8 @@ public class MemberController {
     this.sc = sc;
   }
 
-  @GetMapping("add")
-  public String form() throws Exception {
-    return "/jsp/member/form.jsp";
+  @GetMapping("form")
+  public void form() throws Exception {
   }
 
   @PostMapping("add")
@@ -89,17 +88,15 @@ public class MemberController {
   }
 
   @GetMapping("detail")
-  public String detail(int no, Model model) throws Exception {
+  public void detail(int no, Model model) throws Exception {
     Member m = memberService.get(no);
     model.addAttribute("member", m);
-    return "/jsp/member/detail.jsp";
   }
 
   @GetMapping("list") 
-  public String list(String keyword, Model model) throws Exception {
+  public void list(String keyword, Model model) throws Exception {
     List<Member> list = memberService.list(keyword);
     model.addAttribute("list", list);
-    return "/jsp/member/list.jsp";
   }
 
   @PostMapping("update")

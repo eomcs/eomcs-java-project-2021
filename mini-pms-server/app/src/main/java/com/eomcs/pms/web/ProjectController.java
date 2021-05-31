@@ -26,25 +26,22 @@ public class ProjectController {
     this.projectService = projectService;
   }
 
-  @GetMapping("add1")
-  public String add1() throws Exception {
-    return "/jsp/project/form1.jsp";
+  @GetMapping("form1")
+  public void form1() throws Exception {
   }
 
-  @PostMapping("add2")
-  public String add2(String title, HttpSession session) throws Exception {
+  @PostMapping("form2")
+  public void form2(String title, HttpSession session) throws Exception {
     session.setAttribute("title", title);
-    return "/jsp/project/form2.jsp";
   }
 
-  @PostMapping("add3")
-  public String add3(String content, String startDate, String endDate, HttpSession session, Model model) throws Exception {
+  @PostMapping("form3")
+  public void form3(String content, String startDate, String endDate, HttpSession session, Model model) throws Exception {
     session.setAttribute("content", content);
     session.setAttribute("startDate", startDate);
     session.setAttribute("endDate", endDate);
 
     model.addAttribute("members", memberService.list(null));
-    return "/jsp/project/form3.jsp";
   }
 
   @PostMapping("add")
@@ -94,7 +91,7 @@ public class ProjectController {
   }
 
   @GetMapping("detail")
-  public String detail(int no, Model model) throws Exception {
+  public void detail(int no, Model model) throws Exception {
 
     Project project = projectService.get(no);
     if (project == null) {
@@ -111,11 +108,10 @@ public class ProjectController {
     model.addAttribute("project", project);
     model.addAttribute("projectMembers", project.getMembers());
     model.addAttribute("members", memberService.list(null));
-    return "/jsp/project/detail.jsp";
   }
 
   @GetMapping("list")
-  public String list(
+  public void list(
       String item, String keyword, String title, String owner, String member, 
       Model model) throws Exception {
 
@@ -134,7 +130,6 @@ public class ProjectController {
     }
 
     model.addAttribute("projects", projects);
-    return "/jsp/project/list.jsp";
   }
 
   @PostMapping("update")

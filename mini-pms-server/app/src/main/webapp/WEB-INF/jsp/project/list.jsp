@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1>프로젝트(JSP + JSP 액션태그 + EL + JSTL)</h1>
-<p><a href='add1'>새 프로젝트</a></p>
+<p><a href='form1'>새 프로젝트</a></p>
 <table border='1'>
 <thead>
 <tr>

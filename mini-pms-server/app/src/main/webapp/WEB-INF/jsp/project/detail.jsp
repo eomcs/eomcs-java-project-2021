@@ -16,7 +16,7 @@
 종료일: <input type='date' name='endDate' value='${project.endDate}'><br>
 관리자: ${project.owner.name}<br>
 팀원: <br>
-<jsp:include page="/jsp/project/member_list.jsp"/>
+<jsp:include page="member_list.jsp"/>
 <input type='submit' value='변경'> 
 <a href='delete?no=${project.no}'>삭제</a>
 </form>

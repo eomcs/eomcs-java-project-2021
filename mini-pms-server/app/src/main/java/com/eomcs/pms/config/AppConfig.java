@@ -16,7 +16,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 // 프론트 컨트롤러는 페이지 컨트롤러와 페이지 컨트롤러가 의존하는 객체를 생성하기 위해
 // 빈 컨테이너를 사용한다.
@@ -109,6 +112,17 @@ public class AppConfig {
     // 즉 편리하게 파라미터로 받을 수 없다.
     //
     return new StandardServletMultipartResolver(); // Servlet 3.0 API의 멀티파트 처리 기능을 사용할 경우
+  }
+
+  @Bean
+  public ViewResolver viewResolver() {
+    // 기존의 기본 ViewResolver를 이 메서드가 리턴하는 객체로 대체한다.
+    // - 요청핸들러가 리턴한 jsp 이름을 가지고 앞뒤로 경로를 붙여서 찾는다.
+    InternalResourceViewResolver vr = new InternalResourceViewResolver();
+    vr.setViewClass(JstlView.class); // JSTL을 처리해줄 클래스 지정
+    vr.setPrefix("/WEB-INF/jsp/");
+    vr.setSuffix(".jsp");
+    return vr;
   }
 
 }

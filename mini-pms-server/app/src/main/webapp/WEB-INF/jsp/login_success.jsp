@@ -6,7 +6,7 @@
 <html>
 <head>
 <title>로그인</title>
-<meta http-equiv="Refresh" content="1;url=userInfo">
+<meta http-equiv="Refresh" content="1;url=user_info">
 </head>
 <body>
 <h1>로그인 결과(JSP + JSP 액션태그 + EL)</h1>

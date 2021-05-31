@@ -9,7 +9,7 @@
 </head>
 <body>
 <h1>로그인(JSP + JSP 액션태그 + EL)</h1>
-<form method='post'>
+<form action="login" method='post'>
 <table border='1'>
 <tbody>
 <tr><th>이메일</th><td><input name='email' type='email' value='${cookie.email.value}'></td></tr>

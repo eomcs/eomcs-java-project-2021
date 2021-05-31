@@ -9,7 +9,7 @@
 </head>
 <body>
 <h1>새 프로젝트: 2단계(JSP)</h1>
-<form action='add3' method='post'>
+<form action='form3' method='post'>
 내용: <textarea name='content' rows='10' cols='60'></textarea><br>
 시작일: <input type='date' name='startDate'><br>
 종료일: <input type='date' name='endDate'><br>
