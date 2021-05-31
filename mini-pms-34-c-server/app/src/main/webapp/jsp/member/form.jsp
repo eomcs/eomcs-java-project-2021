@@ -14,7 +14,7 @@
 이름: <input type="text" name="name"><br>
 이메일: <input type="email" name="email"><br>
 암호: <input type="password" name="password"><br>
-사진: <input type="file" name="photoFile"><br>
+사진: <input type="file" name="photo"><br>
 전화번호: <input type="tel" name="tel"><br>
 <input type="submit" value="등록">
 </form>

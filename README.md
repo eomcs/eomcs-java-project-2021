@@ -208,7 +208,7 @@
 ### 34-a. Spring WebMVC 프레임워크 도입하기 : 스프링 WebMVC 적용
 ### 34-b. Spring WebMVC 프레임워크 도입하기 : CRUD 요청 핸들러 합치기
 ### 34-c. Spring WebMVC 프레임워크 도입하기 : GET/POST 요청 구분하기
-
+### 34-d. Spring WebMVC 프레임워크 도입하기 : 요청 핸들러의 파라미터 다루기
 
 ### 32-e. MVC 아키텍처로 전환하기 : Bootstrap CSS 라이브러리 적용하기
 

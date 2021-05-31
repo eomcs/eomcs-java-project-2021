@@ -46,7 +46,7 @@
 	  <th>사진</th> 
 	  <td><a href='${photoUrl}'>
 	  <img src='${photo80x80Url}'></a><br>
-	  <input name='photoFile' type='file'></td></tr>
+	  <input name='photo' type='file'></td></tr>
 	</tbody>
 	<tfoot>
 	<tr><td colspan='2'>
