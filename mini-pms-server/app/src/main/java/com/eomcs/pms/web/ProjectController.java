@@ -3,10 +3,9 @@ package com.eomcs.pms.web;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,33 +27,28 @@ public class ProjectController {
   }
 
   @GetMapping("add1")
-  public String add1(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public String add1() throws Exception {
     return "/jsp/project/form1.jsp";
   }
 
   @PostMapping("add2")
-  public String add2(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    HttpSession session = request.getSession();
-    session.setAttribute("title", request.getParameter("title"));
+  public String add2(String title, HttpSession session) throws Exception {
+    session.setAttribute("title", title);
     return "/jsp/project/form2.jsp";
   }
 
   @PostMapping("add3")
-  public String add3(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    HttpSession session = request.getSession();
-    session.setAttribute("content", request.getParameter("content"));
-    session.setAttribute("startDate", request.getParameter("startDate"));
-    session.setAttribute("endDate", request.getParameter("endDate"));
+  public String add3(String content, String startDate, String endDate, HttpSession session, Model model) throws Exception {
+    session.setAttribute("content", content);
+    session.setAttribute("startDate", startDate);
+    session.setAttribute("endDate", endDate);
 
-    List<Member> members = memberService.list(null);
-    request.setAttribute("members", members);
+    model.addAttribute("members", memberService.list(null));
     return "/jsp/project/form3.jsp";
   }
 
   @PostMapping("add")
-  public String add(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    HttpSession session = request.getSession();
+  public String add(int[] memberNos, HttpSession session ) throws Exception {
 
     Project p = new Project();
     p.setTitle((String) session.getAttribute("title"));
@@ -65,13 +59,12 @@ public class ProjectController {
     Member loginUser = (Member) session.getAttribute("loginUser");
     p.setOwner(loginUser);
 
-    String[] values = request.getParameterValues("member");
     ArrayList<Member> memberList = new ArrayList<>();
-    if (values != null) {
-      for (String value : values) {
-        Member member = new Member();
-        member.setNo(Integer.parseInt(value));
-        memberList.add(member);
+    if (memberNos != null) {
+      for (int memberNo : memberNos) {
+        Member m = new Member();
+        m.setNo(memberNo);
+        memberList.add(m);
       }
     }
     p.setMembers(memberList);
@@ -82,9 +75,7 @@ public class ProjectController {
   }
 
   @RequestMapping("delete")
-  public String delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    int no = Integer.parseInt(request.getParameter("no"));
+  public String delete(int no, HttpSession session) throws Exception {
 
     Project oldProject = projectService.get(no);
 
@@ -92,7 +83,7 @@ public class ProjectController {
       throw new Exception("해당 번호의 게시글이 없습니다.");
     }
 
-    Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+    Member loginUser = (Member) session.getAttribute("loginUser");
     if (oldProject.getOwner().getNo() != loginUser.getNo()) {
       throw new Exception("삭제 권한이 없습니다!");
     }
@@ -103,9 +94,7 @@ public class ProjectController {
   }
 
   @GetMapping("detail")
-  public String detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    int no = Integer.parseInt(request.getParameter("no"));
+  public String detail(int no, Model model) throws Exception {
 
     Project project = projectService.get(no);
     if (project == null) {
@@ -119,22 +108,18 @@ public class ProjectController {
     //            m.getNo(), contain(project.getMembers(), m.getNo()) ? "checked" : "", m.getName());
     //      }
 
-    request.setAttribute("project", project);
-    request.setAttribute("projectMembers", project.getMembers());
-    request.setAttribute("members", memberService.list(null));
+    model.addAttribute("project", project);
+    model.addAttribute("projectMembers", project.getMembers());
+    model.addAttribute("members", memberService.list(null));
     return "/jsp/project/detail.jsp";
   }
 
   @GetMapping("list")
-  public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public String list(
+      String item, String keyword, String title, String owner, String member, 
+      Model model) throws Exception {
 
     List<Project> projects = null;
-
-    String item = request.getParameter("item");
-    String keyword = request.getParameter("keyword");
-    String title = request.getParameter("title");
-    String owner = request.getParameter("owner");
-    String member = request.getParameter("member");
 
     if (item != null && keyword != null && keyword.length() > 0) {
       projects = projectService.search(item, keyword);
@@ -148,43 +133,30 @@ public class ProjectController {
       projects = projectService.list();
     }
 
-    request.setAttribute("projects", projects);
+    model.addAttribute("projects", projects);
     return "/jsp/project/list.jsp";
   }
 
   @PostMapping("update")
-  public String update(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public String update(Project project, int[] memberNos, HttpSession session) throws Exception {
 
-    int no = Integer.parseInt(request.getParameter("no"));
-
-    Project oldProject = projectService.get(no);
-
+    Project oldProject = projectService.get(project.getNo());
     if (oldProject == null) {
       throw new Exception("해당 번호의 프로젝트가 없습니다.");
     } 
 
-    Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+    Member loginUser = (Member) session.getAttribute("loginUser");
     if (oldProject.getOwner().getNo() != loginUser.getNo()) {
       throw new Exception("변경 권한이 없습니다!");
     }
-
-    // 사용자에게서 변경할 데이터를 입력 받는다.
-    Project project = new Project();
-    project.setNo(no);
-    project.setTitle(request.getParameter("title"));
-    project.setContent(request.getParameter("content"));
-    project.setStartDate(Date.valueOf(request.getParameter("startDate")));
-    project.setEndDate(Date.valueOf(request.getParameter("endDate")));
     project.setOwner(loginUser);
 
-    // ...&member=1&member=18&member=23
-    String[] values = request.getParameterValues("member");
     ArrayList<Member> memberList = new ArrayList<>();
-    if (values != null) {
-      for (String value : values) {
-        Member member = new Member();
-        member.setNo(Integer.parseInt(value));
-        memberList.add(member);
+    if (memberNos != null) {
+      for (int memberNo : memberNos) {
+        Member m = new Member();
+        m.setNo(memberNo);
+        memberList.add(m);
       }
     }
     project.setMembers(memberList);

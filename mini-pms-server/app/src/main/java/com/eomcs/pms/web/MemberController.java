@@ -38,7 +38,7 @@ public class MemberController {
     String uploadDir = sc.getRealPath("/upload");
 
     if (photoFile.getSize() > 0) {
-      // 파일을 선택해서 업로드 했다면,
+      // 파일을 선택해서 업로드 했다면, 
       String filename = UUID.randomUUID().toString();
       photoFile.write(uploadDir + "/" + filename);
       m.setPhoto(filename);

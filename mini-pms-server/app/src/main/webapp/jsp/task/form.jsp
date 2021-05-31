@@ -21,7 +21,7 @@
 </select><br>
 작업: <input type='text' name='content'><br>
 마감일: <input type='date' name='deadline'><br>
-담당자: <select name='owner'>
+담당자: <select name='ownerNo'>
 
 <c:forEach items="${members}" var="m">
   <option value='${m.no}'>${m.name}</option>

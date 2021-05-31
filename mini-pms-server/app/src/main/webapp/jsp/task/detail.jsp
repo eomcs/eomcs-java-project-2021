@@ -34,7 +34,7 @@
     <input type='radio' name='status' value='2' ${task.status == 2 ? "checked" : ""}>완료 </td></tr>
 <tr>
   <th>담당자</th> 
-  <td><select name='owner'>
+  <td><select name='ownerNo'>
   
 <c:forEach items="${members}" var="m">
   <option value='${m.no}' ${task.owner.no == m.no ? "selected" : ""}>${m.name}</option>

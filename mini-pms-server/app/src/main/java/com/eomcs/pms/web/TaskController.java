@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,73 +30,45 @@ public class TaskController {
   }
 
   @GetMapping("add")
-  public String form(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    request.setAttribute("projects", projectService.list());
-    request.setAttribute("members", memberService.list(null));
+  public String form(Model model) throws Exception {
+    model.addAttribute("projects", projectService.list());
+    model.addAttribute("members", memberService.list(null));
     return "/jsp/task/form.jsp";
   }
 
   @PostMapping("add")
-  public String add(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    Task t = new Task();
-    t.setProjectNo(Integer.parseInt(request.getParameter("projectNo")));
-    t.setContent(request.getParameter("content"));
-    t.setDeadline(Date.valueOf(request.getParameter("deadline")));
-    t.setStatus(Integer.parseInt(request.getParameter("status")));
-
+  public String add(Task task, int ownerNo) throws Exception {
     Member owner = new Member();
-    owner.setNo(Integer.parseInt(request.getParameter("owner")));
-    t.setOwner(owner);
+    owner.setNo(ownerNo);
+    task.setOwner(owner);
 
-    taskService.add(t);
+    taskService.add(task);
 
     return "redirect:list";
   }
 
   @RequestMapping("delete")
-  public String delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    int no = Integer.parseInt(request.getParameter("no"));
-
-    Task task = taskService.get(no);
-    if (task == null) {
+  public String delete(int no) throws Exception {
+    if (taskService.delete(no) == 0) {
       throw new Exception("해당 번호의 작업이 없습니다.");
     }
-
-    taskService.delete(no);
-
     return "redirect:list";
   }
 
   @GetMapping("detail")
-  public String detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    int no = Integer.parseInt(request.getParameter("no"));
-
+  public String detail(int no, Model model) throws Exception {
     Task task = taskService.get(no);
     if (task == null) {
       throw new Exception("해당 번호의 작업이 없습니다.");
     }
 
-    request.setAttribute("task", task);
-    request.setAttribute("members", memberService.list(null));
+    model.addAttribute("task", task);
+    model.addAttribute("members", memberService.list(null));
     return "/jsp/task/detail.jsp";
   }
 
   @GetMapping("list")
-  public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    String input  = request.getParameter("projectNo");
-
-    int projectNo = 0;
-    if (input != null) {
-      try {
-        projectNo = Integer.parseInt(input);
-      } catch (Exception e) {
-        throw new Exception("유효한 프로젝트 번호를 입력하세요.");
-      }
-    }
-
+  public String list(int projectNo, Model model) throws Exception {
     List<Task> tasks = null;
     if (projectNo == 0) {
       tasks = taskService.list();
@@ -103,9 +76,9 @@ public class TaskController {
       tasks = taskService.listOfProject(projectNo);
     }
 
-    request.setAttribute("projectNo", projectNo);
-    request.setAttribute("projects", projectService.list());
-    request.setAttribute("tasks", tasks);
+    model.addAttribute("projectNo", projectNo);
+    model.addAttribute("projects", projectService.list());
+    model.addAttribute("tasks", tasks);
     return "/jsp/task/list.jsp";
   }
 

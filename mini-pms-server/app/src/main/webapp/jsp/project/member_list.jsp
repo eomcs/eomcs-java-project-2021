@@ -8,6 +8,6 @@
       <c:set var="checked" value="checked"/>
     </c:if>
   </c:forEach>
-  <input type='checkbox' name='member' value='${m.no}' ${checked}>${m.name}<br>
+  <input type='checkbox' name='memberNos' value='${m.no}' ${checked}>${m.name}<br>
   <c:remove var="checked"/>
 </c:forEach>
