@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eomcs.pms.dao.TaskDao">
+  
+  <resultMap id="taskMap" type="task">
+    <id column="no" property="no"/>
+    <result column="content" property="content"/>
+    <result column="deadline" property="deadline"/>
+    <result column="status" property="status"/>
+    <result column="project_no" property="projectNo"/>
+    <result column="project_title" property="projectTitle"/>
+    
+    <association property="owner" javaType="member">
+	    <id column="owner_no" property="no"/>
+	    <result column="owner_name" property="name"/>
+    </association>
+  </resultMap>
+  
+  <insert id="insert" parameterType="task">
+    insert into pms_task(content,deadline,owner,status,project_no) 
+    values(#{content}, #{deadline}, #{owner.no}, #{status}, #{projectNo})
+  </insert>
+  
+  <select id="findAll" resultMap="taskMap">
+    select
+      t.no,
+      t.content,
+      t.deadline,
+      t.status,
+      m.no as owner_no,
+      m.name as owner_name,
+      p.no as project_no,
+      p.title as project_title
+    from 
+      pms_task t
+      inner join pms_member m on t.owner=m.no
+      inner join pms_project p on t.project_no=p.no
+    order by 
+      p.no desc, t.content asc
+  </select>
+  
+  <select id="findByProjectNo" resultMap="taskMap" parameterType="int">
+    select
+      t.no,
+      t.content,
+      t.deadline,
+      t.status,
+      m.no as owner_no,
+      m.name as owner_name,
+      p.no as project_no,
+      p.title as project_title
+    from 
+      pms_task t
+      inner join pms_member m on t.owner=m.no
+      inner join pms_project p on t.project_no=p.no
+    where
+      p.no = #{value}
+    order by 
+      p.no desc, t.content asc
+  </select>
+  
+  <select id="findByNo" resultMap="taskMap" parameterType="int">
+    select
+      t.no,
+      t.content,
+      t.deadline,
+      t.status,
+      m.no as owner_no,
+      m.name as owner_name,
+      p.no as project_no,
+      p.title as project_title
+    from 
+      pms_task t
+      inner join pms_member m on t.owner=m.no
+      inner join pms_project p on t.project_no=p.no
+    where
+      t.no = #{value}
+  </select>
+  
+  <update id="update" parameterType="task">
+    update pms_task set 
+      content=#{content},
+      deadline=#{deadline},
+      owner=#{owner.no},
+      status=#{status},
+      project_no=#{projectNo} 
+    where no=#{no}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    delete from pms_task 
+    where no = #{value}
+  </delete>
+
+  <delete id="deleteByProjectNo" parameterType="int">
+    delete from pms_task 
+    where project_no = #{value}
+  </delete>
+</mapper>
+
+
+
+
+
+
+
