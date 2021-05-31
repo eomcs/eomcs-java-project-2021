@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 //    
 @SuppressWarnings("serial")
 @WebServlet("/error")
-public class ErrorController extends HttpServlet {
+public class ErrorHandler extends HttpServlet {
 
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response)

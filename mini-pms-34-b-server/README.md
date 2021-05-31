@@ -26,8 +26,6 @@
     - com.eomcs.pms.web.LoginHandler 의 기능을 이 클래스로 이전하고 기존 클래스를 삭제한다.
     - com.eomcs.pms.web.LogoutHandler 의 기능을 이 클래스로 이전하고 기존 클래스를 삭제한다.
     - com.eomcs.pms.web.UserInfoHandler 의 기능을 이 클래스로 이전하고 기존 클래스를 삭제한다.
-- com.eomcs.pms.web.ErrorController 생성
-    - com.eomcs.pms.web.ErrorHandler 의 기능을 이 클래스로 이전하고 기존 클래스를 삭제한다.
 
 
 ## 실습 결과
