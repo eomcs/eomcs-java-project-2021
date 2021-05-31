@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
@@ -24,14 +26,14 @@ public class MemberController {
     this.memberService = memberService;
   }
 
-  @RequestMapping("add")
+  @GetMapping("add")
+  public String form(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    return "/jsp/member/form.jsp";
+  }
+
+  @PostMapping("add")
   public String add(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
     String uploadDir = request.getServletContext().getRealPath("/upload");
-
-    if (request.getMethod().equals("GET")) {
-      return "/jsp/member/form.jsp";
-    }
 
     Member m = new Member();
     m.setName(request.getParameter("name"));
@@ -74,7 +76,7 @@ public class MemberController {
     return "redirect:list";
   }
 
-  @RequestMapping("delete")
+  @GetMapping("delete")
   public String delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));
@@ -94,7 +96,7 @@ public class MemberController {
     return "redirect:list";
   }
 
-  @RequestMapping("detail")
+  @GetMapping("detail")
   public String detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
     int no = Integer.parseInt(request.getParameter("no"));
 
@@ -103,14 +105,14 @@ public class MemberController {
     return "/jsp/member/detail.jsp";
   }
 
-  @RequestMapping("list") 
+  @GetMapping("list") 
   public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
     List<Member> list = memberService.list(request.getParameter("keyword"));
     request.setAttribute("list", list);
     return "/jsp/member/list.jsp";
   }
 
-  @RequestMapping("update")
+  @PostMapping("update")
   public String update(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     String uploadDir = request.getServletContext().getRealPath("/upload");

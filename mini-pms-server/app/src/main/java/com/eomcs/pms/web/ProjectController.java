@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
@@ -25,19 +27,19 @@ public class ProjectController {
     this.projectService = projectService;
   }
 
-  @RequestMapping("add1")
+  @GetMapping("add1")
   public String add1(HttpServletRequest request, HttpServletResponse response) throws Exception {
     return "/jsp/project/form1.jsp";
   }
 
-  @RequestMapping("add2")
+  @PostMapping("add2")
   public String add2(HttpServletRequest request, HttpServletResponse response) throws Exception {
     HttpSession session = request.getSession();
     session.setAttribute("title", request.getParameter("title"));
     return "/jsp/project/form2.jsp";
   }
 
-  @RequestMapping("add3")
+  @PostMapping("add3")
   public String add3(HttpServletRequest request, HttpServletResponse response) throws Exception {
     HttpSession session = request.getSession();
     session.setAttribute("content", request.getParameter("content"));
@@ -49,7 +51,7 @@ public class ProjectController {
     return "/jsp/project/form3.jsp";
   }
 
-  @RequestMapping("add")
+  @PostMapping("add")
   public String add(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     HttpSession session = request.getSession();
@@ -100,7 +102,7 @@ public class ProjectController {
     return "redirect:list";
   }
 
-  @RequestMapping("detail")
+  @GetMapping("detail")
   public String detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));
@@ -123,7 +125,7 @@ public class ProjectController {
     return "/jsp/project/detail.jsp";
   }
 
-  @RequestMapping("list")
+  @GetMapping("list")
   public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     List<Project> projects = null;
@@ -150,7 +152,7 @@ public class ProjectController {
     return "/jsp/project/list.jsp";
   }
 
-  @RequestMapping("update")
+  @PostMapping("update")
   public String update(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));

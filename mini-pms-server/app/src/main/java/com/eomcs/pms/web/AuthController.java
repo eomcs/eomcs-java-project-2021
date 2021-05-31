@@ -4,7 +4,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
 
@@ -17,13 +18,13 @@ public class AuthController {
     this.memberService = memberService;
   }
 
-  @RequestMapping("/login")
+  @GetMapping("/login")
+  public String form(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    return "/jsp/login_form.jsp";
+  }
+
+  @PostMapping("/login")
   public String login(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    if (request.getMethod().equals("GET")) {
-      return "/jsp/login_form.jsp";
-    } 
-
     String email = request.getParameter("email");
     String password = request.getParameter("password");
 
@@ -51,13 +52,13 @@ public class AuthController {
     }
   }
 
-  @RequestMapping("/logout")
+  @GetMapping("/logout")
   public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
     request.getSession().invalidate();
     return "redirect:login";
   }
 
-  @RequestMapping("/userInfo")
+  @GetMapping("/userInfo")
   public String userInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
     return "/jsp/user_info.jsp";
   }

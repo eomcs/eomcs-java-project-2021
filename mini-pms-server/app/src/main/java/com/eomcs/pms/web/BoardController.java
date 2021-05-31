@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.BoardService;
@@ -19,13 +20,13 @@ public class BoardController {
     this.boardService = boardService;
   }
 
-  @RequestMapping("add")
+  @RequestMapping(path="add", method = RequestMethod.GET)
+  public String form(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    return "/jsp/board/form.jsp";
+  }
+
+  @RequestMapping(path="add", method = RequestMethod.POST)
   public String add(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    if (request.getMethod().equals("GET")) {
-      return "/jsp/board/form.jsp";
-    }
-
     Board b = new Board();
     b.setTitle(request.getParameter("title"));
     b.setContent(request.getParameter("content"));
@@ -39,7 +40,7 @@ public class BoardController {
     return "redirect:list";
   }
 
-  @RequestMapping("delete")
+  @RequestMapping(path="delete", method=RequestMethod.GET)
   public String delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int no = Integer.parseInt(request.getParameter("no"));
@@ -59,7 +60,7 @@ public class BoardController {
     return "redirect:list";
   }
 
-  @RequestMapping("detail")
+  @RequestMapping(path="detail", method=RequestMethod.GET)
   public String detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
     int no = Integer.parseInt(request.getParameter("no"));
     Board board = boardService.get(no);
@@ -67,7 +68,7 @@ public class BoardController {
     return "/jsp/board/detail.jsp";
   }
 
-  @RequestMapping("list")
+  @RequestMapping(value="list", method=RequestMethod.GET)
   public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String keyword = request.getParameter("keyword");
     List<Board> boards = null;
@@ -82,7 +83,7 @@ public class BoardController {
     return "/jsp/board/list.jsp";
   }
 
-  @RequestMapping("update")
+  @RequestMapping(value="update", method=RequestMethod.POST)
   public String update(HttpServletRequest request, HttpServletResponse response) throws Exception {
     int no = Integer.parseInt(request.getParameter("no"));
 
