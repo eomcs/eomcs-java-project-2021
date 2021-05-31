@@ -206,6 +206,7 @@
 ### 33-b. Front Controller 도입하기 : 페이지 컨트롤러를 일반 객체로 전환하기
 
 ### 34-a. Spring WebMVC 프레임워크 도입하기 : 스프링 WebMVC 적용
+### 34-b. Spring WebMVC 프레임워크 도입하기 : CRUD 요청 핸들러 합치기
 
 
 
