@@ -213,7 +213,7 @@
 
 ### 35-a. 기타 : Log4j 적용
 ### 35-b. 기타 : 페이징 처리
-
+### 35-c. 기타 : @PathVariable, @SessionAttributes, @ModelAttribute 다루기
 
 ### 32-e. MVC 아키텍처로 전환하기 : Bootstrap CSS 라이브러리 적용하기
 
