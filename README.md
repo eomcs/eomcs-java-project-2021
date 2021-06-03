@@ -211,6 +211,9 @@
 ### 34-d. Spring WebMVC 프레임워크 도입하기 : 요청 핸들러의 파라미터 다루기
 ### 34-e. Spring WebMVC 프레임워크 도입하기 : InternalResourceViewResolver 도입
 
+### 35-a. 기타 : Log4j 적용
+### 35-b. 기타 : 페이징 처리
+
 ### 32-e. MVC 아키텍처로 전환하기 : Bootstrap CSS 라이브러리 적용하기
 
 ### 46 - 객체 생성을 자동화하는 IoC 컨테이너 만들기
