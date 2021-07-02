@@ -57,11 +57,11 @@
 ### 강의 자료 가져오기
 
 - `github.com` 사이트에 가입하기
-- `github.com/eomcs/eomcs-java-project-2020` 저장소를 로컬(개발 PC)로 복제하기
+- `github.com/eomcs/eomcs-java-project-2021` 저장소를 로컬(개발 PC)로 복제하기
 
 ### 개인 저장소 만들기
 
-- github.com 에 개인 저장소 만들기
+- github.com 에 개인 저장소 만들기 
 - github.com 의 개인 저장소를 로컬로 복제하기
 
 ### 01-a. 프로젝트 준비하기 : Gradle 빌드 도구를 활용한 자바 프로젝트 구성

@@ -30,7 +30,7 @@ Gradle 도구를 이용하여 이클립스 관련 설정 파일을 준비해 보
 ## 실습
 
 ### 1단계 - 그레이들 빌드 스크립트에 이클립스 플러그인 추가한다
-
+ 
 Gradle에서 이클립스 관련 명령을 다룰 수 있도록 플러그인을 추가한다.
 다음과 같이 build.gradle 파일에 'eclispe' 플러그인을 추가한다.
 
@@ -39,6 +39,25 @@ plugins {
     id 'java'
     id 'application'
     id 'eclipse'   <== 이 코드를 추가한다.
+}
+```
+
+프로젝트 구조가 다음과 같을 경우에는 .project 파일을 생성할 때 프로젝트 이름이 디렉토리 명인 `app`으로 설정된다.
+```
+프로젝트/
+  settings.gradle
+  app/
+    src/
+    build.gradle
+```
+
+프로젝트 이름을 바꾸고 싶다면 다음과 같이 eclipse 설정을 추가한다.
+```groovy
+// eclipse 프로젝트 이름을 설정하기
+eclipse {
+    project {
+        name = "study-project"
+    }
 }
 ```
 
